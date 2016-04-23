@@ -10,5 +10,6 @@ using namespace std;
 
 int main() {
 	cout << "A codear papaaaaaaaa" << endl; // prints
+	cout << "Vos decis? Dejame pensarlo unos dias" << endl; // prints
 	return 0;
 }
