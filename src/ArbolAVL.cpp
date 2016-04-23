@@ -3,7 +3,6 @@
 // Author      : DDTeam
 // Version     :
 // Copyright   : FIUBA 2016
-// Description : Hello World in C++, Ansi-style
 //============================================================================
 
 #include <iostream>
