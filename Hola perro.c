@@ -1,6 +1,3 @@
-Subiste un archivo vacio mannn!!!
-
-
 echo "Hola mundo"
 echo "Otra linea interesante"
 

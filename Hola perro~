@@ -4,4 +4,6 @@ Subiste un archivo vacio mannn!!!
 echo "Hola mundo"
 echo "Otra linea interesante"
 
-vamo lo pibe
+while (true) {
+   echo "Santa Rosa se la comee, Munro se la da"
+}
