@@ -1,6 +1,0 @@
-echo "Hola mundo"
-echo "Otra linea interesante"
-
-while (true) {
-   echo "Santa Rosa se la comee, Munro se la da"
-}
