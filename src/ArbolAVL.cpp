@@ -13,20 +13,20 @@ struct nodo
 	int clave;
 	nodo *izquierdo;
 	nodo *derecho;
-	int height;
+	int altura;
 };
 
-int height(nodo *N)
+int getAltura(nodo *unNodo)
 {
-	if (N == NULL)
+	if (unNodo == NULL)
 		return 0;
 
-	return N->height;
+	return unNodo->altura;
 }
 
-int max(int a, int b)
+int getMax(int x, int y)
 {
-	return (a > b)? a : b;
+	return (x > y)? x : y;
 }
 
 nodo* nuevoNodo(int clave)
@@ -37,44 +37,44 @@ nodo* nuevoNodo(int clave)
 	unNodo->clave = clave;
 	unNodo->izquierdo = NULL;
 	unNodo->derecho = NULL;
-	unNodo->height = 1;
+	unNodo->altura = 1;
 
 	return(unNodo);
 }
 
-nodo *rotacionDerecha(nodo *y)
+nodo *rotacionDerecha(nodo *unNodo)
 {
-	nodo* x = y->izquierdo;
-	nodo* T2 = x->derecho;
+	nodo* izq = unNodo->izquierdo;
+	nodo* der = izq->derecho;
 
-	x->derecho = y;
-	y->izquierdo = T2;
+	izq->derecho = unNodo;
+	unNodo->izquierdo = der;
 
-	y->height = max(height(y->izquierdo), height(y->derecho))+1;
-	x->height = max(height(x->izquierdo), height(x->derecho))+1;
+	unNodo->altura = getMax(getAltura(unNodo->izquierdo), getAltura(unNodo->derecho))+1;
+	izq->altura = getMax(getAltura(izq->izquierdo), getAltura(izq->derecho))+1;
 
-	return x;
+	return izq;
 }
 
-nodo *rotacionIzquierda(nodo *x)
+nodo *rotacionIzquierda(nodo *unNodo)
 {
-	nodo *y = x->derecho;
-	nodo *T2 = y->izquierdo;
+	nodo *der = unNodo->derecho;
+	nodo *izq = der->izquierdo;
 
-	y->izquierdo = x;
-	x->derecho = T2;
+	der->izquierdo = unNodo;
+	unNodo->derecho = izq;
 
-	x->height = max(height(x->izquierdo), height(x->derecho))+1;
-	y->height = max(height(y->izquierdo), height(y->derecho))+1;
+	unNodo->altura = getMax(getAltura(unNodo->izquierdo), getAltura(unNodo->derecho))+1;
+	der->altura = getMax(getAltura(der->izquierdo), getAltura(der->derecho))+1;
 
-	return y;
+	return der;
 }
 
-int getBalance(nodo *N)
+int getDiferenciaAlturaHijos(nodo *unNodo)
 {
-	if (N == NULL)
+	if (unNodo == NULL)
 		return 0;
-	return height(N->izquierdo) - height(N->derecho);
+	return getAltura(unNodo->izquierdo) - getAltura(unNodo->derecho);
 }
 
 nodo* insert(nodo* nodo, int clave)
@@ -87,25 +87,23 @@ nodo* insert(nodo* nodo, int clave)
 	else
 		nodo->derecho = insert(nodo->derecho, clave);
 
-	nodo->height = max(height(nodo->izquierdo), height(nodo->derecho)) + 1;
+	nodo->altura = getMax(getAltura(nodo->izquierdo), getAltura(nodo->derecho)) + 1;
 
-	int balance = getBalance(nodo);
+	int diferencia = getDiferenciaAlturaHijos(nodo);
 
-	// If this nodo becomes unbalanced, then there are 4 cases
-
-	if (balance > 1 && clave < nodo->izquierdo->clave)
+	if (diferencia > 1 && clave < nodo->izquierdo->clave)
 		return rotacionDerecha(nodo);
 
-	if (balance < -1 && clave > nodo->derecho->clave)
+	if (diferencia < -1 && clave > nodo->derecho->clave)
 		return rotacionIzquierda(nodo);
 
-	if (balance > 1 && clave > nodo->izquierdo->clave)
+	if (diferencia > 1 && clave > nodo->izquierdo->clave)
 	{
 		nodo->izquierdo = rotacionIzquierda(nodo->izquierdo);
 		return rotacionDerecha(nodo);
 	}
 
-	if (balance < -1 && clave < nodo->derecho->clave)
+	if (diferencia < -1 && clave < nodo->derecho->clave)
 	{
 		nodo->derecho = rotacionDerecha(nodo->derecho);
 		return rotacionIzquierda(nodo);
@@ -114,8 +112,6 @@ nodo* insert(nodo* nodo, int clave)
 	return nodo;
 }
 
-// A utility function to print preorder traversal of the tree.
-// The function also prints height of every nodo
 void preOrder(nodo *root)
 {
 	if(root != NULL)
