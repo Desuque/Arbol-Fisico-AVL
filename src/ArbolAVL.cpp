@@ -5,47 +5,86 @@
 // Copyright   : FIUBA 2016
 //============================================================================
 
-#include<stdio.h>
-#include<stdlib.h>
+#include "ArbolAVL.h"
+#include <stdio.h>
+#include <stdlib.h>
 
-struct nodo
-{
-	int clave;
-	nodo *izquierdo;
-	nodo *derecho;
-	int altura;
-};
+using namespace TPDatos;
 
-int getAltura(nodo *unNodo)
+ArbolAVL::ArbolAVL() {
+	raiz = NULL;
+}
+
+void ArbolAVL::insertar(Registro* unRegistro) {
+	raiz = insertarEnNodo(raiz, unRegistro);
+}
+
+Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro)
 {
+	//TODO: por ahora cap max = 1 reg
+	bool entra = false;
+
 	if (unNodo == NULL)
-		return 0;
+		return(nuevoNodo(unRegistro));
 
-	return unNodo->altura;
+	if (!entra) {
+
+		unNodo->clave = unNodo->registro->id;
+		unNodo->derecho = insertarEnNodo(unNodo->derecho, unNodo->registro);
+
+		unNodo->registro = NULL;
+
+		if (unRegistro->id < unNodo->clave)
+			unNodo->izquierdo = insertarEnNodo(unNodo->izquierdo, unRegistro);
+		else
+			unNodo->derecho = insertarEnNodo(unNodo->derecho, unRegistro);
+
+	}
+
+	unNodo->altura = getMax(getAltura(unNodo->izquierdo), getAltura(unNodo->derecho)) + 1;
+
+	//TODO: metodo balancear??
+	int diferencia = getDiferenciaAlturaHijos(unNodo);
+
+	if (diferencia > 1 && unRegistro->id < unNodo->izquierdo->clave)
+		return rotacionDerecha(unNodo);
+
+	if (diferencia < -1 && unRegistro->id > unNodo->derecho->clave)
+		return rotacionIzquierda(unNodo);
+
+	if (diferencia > 1 && unRegistro->id > unNodo->izquierdo->clave)
+	{
+		unNodo->izquierdo = rotacionIzquierda(unNodo->izquierdo);
+		return rotacionDerecha(unNodo);
+	}
+
+	if (diferencia < -1 && unRegistro->id < unNodo->derecho->clave)
+	{
+		unNodo->derecho = rotacionDerecha(unNodo->derecho);
+		return rotacionIzquierda(unNodo);
+	}
+
+	return unNodo;
 }
 
-int getMax(int x, int y)
-{
-	return (x > y)? x : y;
-}
-
-nodo* nuevoNodo(int clave)
+Nodo* ArbolAVL::nuevoNodo(Registro* unRegistro)
 {
 
-	nodo* unNodo = new nodo();
+	Nodo* unNodo = new Nodo();
 
-	unNodo->clave = clave;
+	unNodo->clave = NULL;
 	unNodo->izquierdo = NULL;
 	unNodo->derecho = NULL;
+	unNodo->registro = unRegistro;
 	unNodo->altura = 1;
 
-	return(unNodo);
+	return unNodo;
 }
 
-nodo *rotacionDerecha(nodo *unNodo)
+Nodo* ArbolAVL::rotacionDerecha(Nodo *unNodo)
 {
-	nodo* izq = unNodo->izquierdo;
-	nodo* der = izq->derecho;
+	Nodo* izq = unNodo->izquierdo;
+	Nodo* der = izq->derecho;
 
 	izq->derecho = unNodo;
 	unNodo->izquierdo = der;
@@ -56,10 +95,10 @@ nodo *rotacionDerecha(nodo *unNodo)
 	return izq;
 }
 
-nodo *rotacionIzquierda(nodo *unNodo)
+Nodo* ArbolAVL::rotacionIzquierda(Nodo *unNodo)
 {
-	nodo *der = unNodo->derecho;
-	nodo *izq = der->izquierdo;
+	Nodo *der = unNodo->derecho;
+	Nodo *izq = der->izquierdo;
 
 	der->izquierdo = unNodo;
 	unNodo->derecho = izq;
@@ -70,79 +109,40 @@ nodo *rotacionIzquierda(nodo *unNodo)
 	return der;
 }
 
-int getDiferenciaAlturaHijos(nodo *unNodo)
+int ArbolAVL::getAltura(Nodo *unNodo)
+{
+	if (unNodo == NULL)
+		return 0;
+
+	return unNodo->altura;
+}
+
+int ArbolAVL::getMax(int x, int y)
+{
+	return (x > y)? x : y;
+}
+
+int ArbolAVL::getDiferenciaAlturaHijos(Nodo *unNodo)
 {
 	if (unNodo == NULL)
 		return 0;
 	return getAltura(unNodo->izquierdo) - getAltura(unNodo->derecho);
 }
 
-nodo* insert(nodo* nodo, int clave)
+void ArbolAVL::print()
 {
-	if (nodo == NULL)
-		return(nuevoNodo(clave));
-
-	if (clave < nodo->clave)
-		nodo->izquierdo = insert(nodo->izquierdo, clave);
-	else
-		nodo->derecho = insert(nodo->derecho, clave);
-
-	nodo->altura = getMax(getAltura(nodo->izquierdo), getAltura(nodo->derecho)) + 1;
-
-	int diferencia = getDiferenciaAlturaHijos(nodo);
-
-	if (diferencia > 1 && clave < nodo->izquierdo->clave)
-		return rotacionDerecha(nodo);
-
-	if (diferencia < -1 && clave > nodo->derecho->clave)
-		return rotacionIzquierda(nodo);
-
-	if (diferencia > 1 && clave > nodo->izquierdo->clave)
-	{
-		nodo->izquierdo = rotacionIzquierda(nodo->izquierdo);
-		return rotacionDerecha(nodo);
-	}
-
-	if (diferencia < -1 && clave < nodo->derecho->clave)
-	{
-		nodo->derecho = rotacionDerecha(nodo->derecho);
-		return rotacionIzquierda(nodo);
-	}
-
-	return nodo;
+	preOrder(raiz);
 }
 
-void preOrder(nodo *root)
-{
+void ArbolAVL::preOrder(Nodo* root) {
 	if(root != NULL)
 	{
-		printf("%d ", root->clave);
 		preOrder(root->izquierdo);
 		preOrder(root->derecho);
+		if (root->altura == 1) {
+			printf("%d ", root->registro->id);
+		} else {
+			printf("%d ", root->clave);
+		}
 	}
-}
-
-int main()
-{
-nodo *root = NULL;
-
-root = insert(root, 10);
-root = insert(root, 20);
-root = insert(root, 30);
-root = insert(root, 40);
-root = insert(root, 50);
-root = insert(root, 25);
-
-/* The constructed AVL Tree would be
-			30
-		/ \
-		20 40
-		/ \	 \
-	10 25 50
-*/
-
-printf("Pre order traversal of the constructed AVL tree is \n");
-preOrder(root);
-
-return 0;
 }
