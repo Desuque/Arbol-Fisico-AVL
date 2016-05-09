@@ -19,6 +19,11 @@ void ArbolAVL::insertar(Registro* unRegistro) {
 	raiz = insertarEnNodo(raiz, unRegistro);
 }
 
+int getMenorClave(Nodo* unNodo) {
+	// TODO: recorrer todos los reg del nodo
+	return unNodo->registro->id;
+}
+
 Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro)
 {
 	//TODO: por ahora cap max = 1 reg
@@ -27,19 +32,29 @@ Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro)
 	if (unNodo == NULL)
 		return(nuevoNodo(unRegistro));
 
-	if (!entra) {
+	if (unNodo->altura == 1) {
+		if (!entra) {
+			if (unRegistro->id < getMenorClave(unNodo)) {
+				unNodo->izquierdo = insertarEnNodo(unNodo->izquierdo, unRegistro);
+				unNodo->derecho = insertarEnNodo(unNodo->derecho, unNodo->registro);
+			} else {
+				unNodo->derecho = insertarEnNodo(unNodo->derecho, unRegistro);
+				unNodo->izquierdo = insertarEnNodo(unNodo->izquierdo, unNodo->registro);
+			}
 
-		unNodo->clave = unNodo->registro->id;
-		unNodo->derecho = insertarEnNodo(unNodo->derecho, unNodo->registro);
-
-		unNodo->registro = NULL;
-
-		if (unRegistro->id < unNodo->clave)
+			unNodo->registro = NULL;
+			unNodo->clave = getMenorClave(unNodo->derecho);
+		} else {
+			//TODO: cuando implemente lista de regs entonces agregar a la lista
+		}
+	} else {
+		if (unRegistro->id < unNodo->clave) {
 			unNodo->izquierdo = insertarEnNodo(unNodo->izquierdo, unRegistro);
-		else
+		} else {
 			unNodo->derecho = insertarEnNodo(unNodo->derecho, unRegistro);
-
+		}
 	}
+
 
 	unNodo->altura = getMax(getAltura(unNodo->izquierdo), getAltura(unNodo->derecho)) + 1;
 
