@@ -16,43 +16,85 @@ ArbolAVL::ArbolAVL() {
 }
 
 void ArbolAVL::insertar(Registro* unRegistro) {
-	raiz = insertarEnNodo(raiz, unRegistro);
+	raiz = insertarEnNodo(raiz, unRegistro, false);
 }
 
 int getMenorClave(Nodo* unNodo) {
-	// TODO: recorrer todos los reg del nodo
-	return unNodo->registro->id;
+	list<Registro>::iterator list_iter = unNodo->registros.begin();
+	Registro unRegistro = *list_iter;
+
+	return unRegistro.id;
 }
 
-Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro)
-{
-	//TODO: por ahora cap max = 1 reg
-	bool entra = false;
-
-	if (unNodo == NULL)
-		return(nuevoNodo(unRegistro));
-
+bool ArbolAVL::entraUnRegistroMas(Nodo* unNodo) {
 	if (unNodo->altura == 1) {
-		if (!entra) {
-			if (unRegistro->id < getMenorClave(unNodo)) {
-				unNodo->izquierdo = insertarEnNodo(unNodo->izquierdo, unRegistro);
-				unNodo->derecho = insertarEnNodo(unNodo->derecho, unNodo->registro);
-			} else {
-				unNodo->derecho = insertarEnNodo(unNodo->derecho, unRegistro);
-				unNodo->izquierdo = insertarEnNodo(unNodo->izquierdo, unNodo->registro);
-			}
-
-			unNodo->registro = NULL;
-			unNodo->clave = getMenorClave(unNodo->derecho);
-		} else {
-			//TODO: cuando implemente lista de regs entonces agregar a la lista
+		if (unNodo->registros.size() == maxHoja) {
+			return false;
 		}
 	} else {
+		if (unNodo->registros.size() == maxInternos) {
+			return false;
+		}
+	}
+	return true;
+}
+
+Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro, bool agregaNuevoNodo)
+{
+
+	if (unNodo == NULL)
+		return(nuevoNodoHoja(unRegistro));
+
+	if (unNodo->altura == 1) {
+		if (!entraUnRegistroMas(unNodo)) {
+
+			Nodo* nuevoNodoAncestro = nuevoNodoInterno(unNodo->altura);
+
+			Registro* tmpReg;
+			int i = 0;
+			int cantIzq = ((maxHoja + 1) / 2);
+			list<Registro>::iterator list_iter = unNodo->registros.begin();
+			unNodo->registros.push_back(*unRegistro);
+
+			while (i < cantIzq)
+			{
+				*tmpReg = *list_iter;
+
+				if (nuevoNodoAncestro->izquierdo == NULL) {
+					nuevoNodoAncestro->izquierdo = nuevoNodoHoja(tmpReg);
+				} else {
+					nuevoNodoAncestro->izquierdo->registros.push_back(*tmpReg);
+				}
+
+				unNodo->registros.erase(list_iter++);
+				i++;
+			}
+
+			nuevoNodoAncestro->derecho = unNodo;
+			tmpReg = new Registro();
+			//El nodo hoja SOLO tiene el ID
+			tmpReg->id = getMenorClave(nuevoNodoAncestro->derecho);
+			nuevoNodoAncestro->registros.push_back(*tmpReg);
+
+			return nuevoNodoAncestro;
+		} else {
+			unNodo->registros.push_back(*unRegistro);
+		}
+	} else {
+		if (agregaNuevoNodo) {
+			if (entraUnRegistroMas(unNodo)) {
+
+			} else {
+
+			}
+		} else {
+
+		}/*
 		if (unRegistro->id < unNodo->clave) {
 			unNodo->izquierdo = insertarEnNodo(unNodo->izquierdo, unRegistro);
 		} else {
 			unNodo->derecho = insertarEnNodo(unNodo->derecho, unRegistro);
-		}
+		}*/
 	}
 
 
@@ -61,19 +103,19 @@ Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro)
 	//TODO: metodo balancear??
 	int diferencia = getDiferenciaAlturaHijos(unNodo);
 
-	if (diferencia > 1 && unRegistro->id < unNodo->izquierdo->clave)
+	if (diferencia > 1 && unRegistro->id < getMenorClave(unNodo->izquierdo))
 		return rotacionDerecha(unNodo);
 
-	if (diferencia < -1 && unRegistro->id > unNodo->derecho->clave)
+	if (diferencia < -1 && unRegistro->id > getMenorClave(unNodo->derecho))
 		return rotacionIzquierda(unNodo);
 
-	if (diferencia > 1 && unRegistro->id > unNodo->izquierdo->clave)
+	if (diferencia > 1 && unRegistro->id > getMenorClave(unNodo->izquierdo))
 	{
 		unNodo->izquierdo = rotacionIzquierda(unNodo->izquierdo);
 		return rotacionDerecha(unNodo);
 	}
 
-	if (diferencia < -1 && unRegistro->id < unNodo->derecho->clave)
+	if (diferencia < -1 && unRegistro->id < getMenorClave(unNodo->derecho))
 	{
 		unNodo->derecho = rotacionDerecha(unNodo->derecho);
 		return rotacionIzquierda(unNodo);
@@ -82,16 +124,28 @@ Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro)
 	return unNodo;
 }
 
-Nodo* ArbolAVL::nuevoNodo(Registro* unRegistro)
+Nodo* ArbolAVL::nuevoNodoInterno(int alturaVieja)
 {
 
 	Nodo* unNodo = new Nodo();
 
-	unNodo->clave = NULL;
 	unNodo->izquierdo = NULL;
 	unNodo->derecho = NULL;
-	unNodo->registro = unRegistro;
+	unNodo->altura = alturaVieja + 1;
+
+	return unNodo;
+}
+
+Nodo* ArbolAVL::nuevoNodoHoja(Registro* unRegistro)
+{
+
+	Nodo* unNodo = new Nodo();
+
+	unNodo->izquierdo = NULL;
+	unNodo->derecho = NULL;
 	unNodo->altura = 1;
+
+	unNodo->registros.push_back(*unRegistro);
 
 	return unNodo;
 }
@@ -149,15 +203,28 @@ void ArbolAVL::print()
 	preOrder(raiz);
 }
 
-void ArbolAVL::preOrder(Nodo* root) {
-	if(root != NULL)
+void ArbolAVL::preOrder(Nodo* unNodo) {
+	Registro unRegistro;
+
+	if(unNodo != NULL)
 	{
-		preOrder(root->izquierdo);
-		preOrder(root->derecho);
-		if (root->altura == 1) {
-			printf("%d ", root->registro->id);
-		} else {
-			printf("%d ", root->clave);
+		preOrder(unNodo->izquierdo);
+		preOrder(unNodo->derecho);
+
+		printf("| ");
+		for(list<Registro>::iterator list_iter = unNodo->registros.begin();
+				list_iter != unNodo->registros.end();
+				list_iter++)
+		{
+			unRegistro = *list_iter;
+
+			if (unNodo->altura == 1) {
+				//Como es hoja, podria imprimir todo los datos del reg
+				printf("%d ", unRegistro.id);
+			} else {
+				printf("%d ", unRegistro.id);
+			}
 		}
+		printf("|");
 	}
 }

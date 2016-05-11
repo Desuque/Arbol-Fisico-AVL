@@ -7,15 +7,19 @@ int main()
 	ArbolAVL* arbol = new ArbolAVL();
 
 	unRegistro = new Registro();
-	unRegistro->id = 10;
+	unRegistro->id = 239;
 	arbol->insertar(unRegistro);
 
 	unRegistro = new Registro();
-	unRegistro->id = 11;
+	unRegistro->id = 455;
 	arbol->insertar(unRegistro);
 
 	unRegistro = new Registro();
-	unRegistro->id = 8;
+	unRegistro->id = 734;
+	arbol->insertar(unRegistro);
+
+	unRegistro = new Registro();
+	unRegistro->id = 911;
 	arbol->insertar(unRegistro);
 
 	arbol->print();

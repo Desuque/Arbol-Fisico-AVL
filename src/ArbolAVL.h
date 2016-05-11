@@ -1,16 +1,16 @@
 #ifndef ARBOLAVL_H_
 #define ARBOLAVL_H_
+#include <list>
 #include "Registro.h"
 
 namespace TPDatos {
 
 	struct Nodo
 	{
-		int clave;
 		Nodo *izquierdo;
 		Nodo *derecho;
 		int altura;
-		Registro *registro;
+		std::list <Registro> registros;
 	};
 
 	class ArbolAVL {
@@ -23,16 +23,20 @@ namespace TPDatos {
 		void print();
 	private:
 		// VARS    --------------------------
+		int maxInternos = 3; //TODO: en bytes
+		int maxHoja = 3;	 //TODO: en bytes
 		Nodo* raiz;
 		// METODOS --------------------------
-		Nodo* insertarEnNodo(Nodo* unNodo, Registro* unRegistro);
-		Nodo* nuevoNodo(Registro* unRegistro);
+		Nodo* insertarEnNodo(Nodo* unNodo, Registro* unRegistro, bool agregaNuevoNodo);
+		Nodo* nuevoNodoHoja(Registro* unRegistro);
+		Nodo* nuevoNodoInterno(int alturaVieja);
 		Nodo* rotacionDerecha(Nodo *unNodo);
 		Nodo* rotacionIzquierda(Nodo *unNodo);
 		int getMax(int x, int y);
 		int getAltura(Nodo *unNodo);
 		int getDiferenciaAlturaHijos(Nodo *unNodo);
 		void preOrder(Nodo* root);
+		bool entraUnRegistroMas(Nodo* unNodo);
 	};
 
 }
