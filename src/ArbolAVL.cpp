@@ -2,7 +2,7 @@
 // Name        : ArbolAVL.cpp
 // Author      : DDTeam
 // Version     :
-// Copyright   : FIUBA 2016
+// Copyright   : FIUBA  2016
 //============================================================================
 
 #include "ArbolAVL.h"
