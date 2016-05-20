@@ -11,8 +11,6 @@
 class Interfaz {
 private:
 	int maxParametros = 4;
-
-
 public:
 	Interfaz(int argc, char *argv[]);
 	virtual ~Interfaz();

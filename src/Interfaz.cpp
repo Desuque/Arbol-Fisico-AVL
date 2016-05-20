@@ -73,6 +73,22 @@ void Interfaz::validarParametros(int argc, char *argv[]) {
 	}
 }
 
+void Interfaz::crearInstancia(char *argv[]) {
+	//TODO
+}
+
+void Interfaz::eliminarInstancia(char *argv[]) {
+	//TODO
+}
+
+void Interfaz::modificarInstancia(char *argv[]) {
+	//TODO
+}
+
+void Interfaz::listarInstancias(char *argv[]) {
+	//TODO
+}
+
 Interfaz::~Interfaz() {
 	// TODO Auto-generated destructor stub
 }
