@@ -21,10 +21,10 @@ private:
 	void msgError();
 	void msgHelp();
 	void validarParametros(int argc, char *argv[]);
-	void crearInstancia();
-	void modificarInstancia();
-	void eliminarInstancia();
-	void listarInstancias();
+	void crearInstancia(char *argv[]);
+	void modificarInstancia(char *argv[]);
+	void eliminarInstancia(char *argv[]);
+	void listarInstancias(char *argv[]);
 };
 
 #endif /* SRC_INTERFAZ_H_ */

@@ -59,6 +59,18 @@ void Interfaz::validarParametros(int argc, char *argv[]) {
 	if ( string(argv[1]) == "--help" ) {
 		msgHelp();
 	}
+	if ( string(argv[2]) == "-a" ) {
+		crearInstancia(argv);
+	}
+	if ( string(argv[2]) == "-b" ) {
+		eliminarInstancia(argv);
+	}
+	if ( string(argv[2]) == "-m" ) {
+		modificarInstancia(argv);
+	}
+	if ( string(argv[2]) == "-q" ) {
+		listarInstancias(argv);
+	}
 }
 
 Interfaz::~Interfaz() {
