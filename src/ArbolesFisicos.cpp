@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 	Interfaz* interfaz = new Interfaz(argc, argv);
 
 	unRegistro = new Registro();
-	unRegistro->id = 239;
+	unRegistro->id = 250;
 	arbol->insertar(unRegistro);
 
 	unRegistro = new Registro();
