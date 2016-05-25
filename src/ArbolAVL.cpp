@@ -45,56 +45,20 @@ Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro, bool agregaNu
 	if (unNodo == NULL)
 		return(nuevoNodoHoja(unRegistro));
 
-	if (unNodo->altura == 1) {
-		if (!entraUnRegistroMas(unNodo)) {
-
-			Nodo* nuevoNodoAncestro = nuevoNodoInterno(unNodo->altura);
-
-			Registro* tmpReg;
-			int i = 0;
-			int cantIzq = ((maxHoja + 1) / 2);
-			list<Registro>::iterator list_iter = unNodo->registros.begin();
-			unNodo->registros.push_back(*unRegistro);
-
-			while (i < cantIzq)
-			{
-				*tmpReg = *list_iter;
-
-				if (nuevoNodoAncestro->izquierdo == NULL) {
-					nuevoNodoAncestro->izquierdo = nuevoNodoHoja(tmpReg);
-				} else {
-					nuevoNodoAncestro->izquierdo->registros.push_back(*tmpReg);
+	if (unRegistro->id < unNodo->getRegistroMasChico()->id) {
+		if (unNodo->getHijoIzquierdo() == NULL) {
+			if (!unNodo->insertar(unRegistro)) {
+				unNodo->crearHijoIzquierdo(unRegistro);
+			}
+		} else {
+			if (unRegistro->id > unNodo->getIzquierdo()->getMayor()) {
+				if (!unNodo->insertar(unRegistro)) {
+					insertarEnNodo(unNodo->getIzquierdo(), unRegistro);
 				}
-
-				unNodo->registros.erase(list_iter++);
-				i++;
-			}
-
-			nuevoNodoAncestro->derecho = unNodo;
-			tmpReg = new Registro();
-			//El nodo hoja SOLO tiene el ID
-			tmpReg->id = getMenorClave(nuevoNodoAncestro->derecho);
-			nuevoNodoAncestro->registros.push_back(*tmpReg);
-
-			return nuevoNodoAncestro;
-		} else {
-			unNodo->registros.push_back(*unRegistro);
-		}
-	} else {
-		if (agregaNuevoNodo) {
-			if (entraUnRegistroMas(unNodo)) {
-
 			} else {
-
+				insertarEnNodo(unNodo->getIzquierdo(), unRegistro);
 			}
-		} else {
-
-		}/*
-		if (unRegistro->id < unNodo->clave) {
-			unNodo->izquierdo = insertarEnNodo(unNodo->izquierdo, unRegistro);
-		} else {
-			unNodo->derecho = insertarEnNodo(unNodo->derecho, unRegistro);
-		}*/
+		}
 	}
 
 
