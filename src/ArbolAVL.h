@@ -27,7 +27,7 @@ namespace TPDatos {
 		int maxHoja = 3;	 //TODO: en bytes
 		Nodo* raiz;
 		// METODOS --------------------------
-		Nodo* insertarEnNodo(Nodo* unNodo, Registro* unRegistro, bool agregaNuevoNodo);
+		Nodo* insertarEnNodo(Nodo* unNodo, Registro* unRegistro);
 		Nodo* nuevoNodoHoja(Registro* unRegistro);
 		Nodo* nuevoNodoInterno(int alturaVieja);
 		Nodo* rotacionDerecha(Nodo *unNodo);

@@ -45,7 +45,7 @@ Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro, bool agregaNu
 	if (unNodo == NULL)
 		return(nuevoNodoHoja(unRegistro));
 
-	if (unRegistro->id < unNodo->getRegistroMasChico()->id) {
+	if (unRegistro->id < unNodo->getMenorID()) {
 		if (unNodo->getHijoIzquierdo() == NULL) {
 			if (!unNodo->insertar(unRegistro)) {
 				unNodo->crearHijoIzquierdo(unRegistro);
@@ -57,6 +57,36 @@ Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro, bool agregaNu
 				}
 			} else {
 				insertarEnNodo(unNodo->getIzquierdo(), unRegistro);
+			}
+		}
+	} else {
+		if (unRegistro->id > unNodo->getMayorID()) {
+			if (unNodo->getHijoDerecho() == NULL) {
+				if (!unNodo->insertar(unRegistro)) {
+					unNodo->crearHijoDerecho(unRegistro);
+				}
+			} else {
+				if (unRegistro->id < unNodo->getDerecho()->getMenor()) {
+					if (!unNodo->insertar(unRegistro)) {
+						insertarEnNodo(unNodo->getDerecho(), unRegistro);
+					}
+				} else {
+					insertarEnNodo(unNodo->getDerecho(), unRegistro);
+				}
+			}
+		} else {
+			if (!unNodo->insertar(unRegistro)) {
+				Registro* tmpRegistro = new Registro();
+				Registro* mayorRegistro = unNodo->getRegistroConMayorID();
+				//TODO: hacer fn copiarRegistro()
+				tmpRegistro->codigo = mayorRegistro->codigo;
+				tmpRegistro->id = mayorRegistro->id;
+				tmpRegistro->descripcion = mayorRegistro->descripcion;
+				tmpRegistro->tamanio = mayorRegistro->tamanio;
+
+				unNodo->borrarRegistro(tmpRegistro->id);
+				insertarEnNodo(unNodo->derecho, tmpRegistro);
+				insertarEnNodo(unNodo, unRegistro);
 			}
 		}
 	}
