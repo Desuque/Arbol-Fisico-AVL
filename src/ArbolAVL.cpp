@@ -39,7 +39,7 @@ bool ArbolAVL::entraUnRegistroMas(Nodo* unNodo) {
 	return true;
 }
 
-Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro, bool agregaNuevoNodo)
+Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro)
 {
 
 	if (unNodo == NULL)
