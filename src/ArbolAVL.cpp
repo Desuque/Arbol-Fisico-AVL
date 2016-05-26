@@ -5,49 +5,32 @@
 // Copyright   : FIUBA  2016
 //============================================================================
 
-#include "ArbolAVL.h"
 #include "Nodo.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include "ArbolAVL.h"
+#include <iostream>
 
-using namespace TPDatos;
+using namespace std;
 
 ArbolAVL::ArbolAVL() {
-	raiz = NULL;
+	this->raiz = 0;
 }
 
 void ArbolAVL::insertar(Registro* unRegistro) {
 	raiz = insertarEnNodo(raiz, unRegistro);
 }
 
-int getMenorClave(Nodo* unNodo) {
-	list<Registro>::iterator list_iter = unNodo->registros.begin();
-	Registro unRegistro = *list_iter;
+Nodo* ArbolAVL::crearNuevoNodo(Registro* unRegistro, int alturaPadre) {
+	Nodo* unNodo = new Nodo(alturaPadre);
+	unNodo->insertar(unRegistro);
 
-	return unRegistro.id;
-}
-
-
-//TODO: esto no tendria que ser necesario
-//la logica del nodo la maneja el nodo papa
-bool ArbolAVL::entraUnRegistroMas(Nodo* unNodo) {
-	if (unNodo->altura == 1) {
-		if (unNodo->registros.size() == maxHoja) {
-			return false;
-		}
-	} else {
-		if (unNodo->registros.size() == maxInternos) {
-			return false;
-		}
-	}
-	return true;
+	return unNodo;
 }
 
 Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro)
 {
 
-	if (unNodo == NULL)
-		return(nuevoNodoHoja(unRegistro));
+	if (unNodo == 0)
+		return(crearNuevoNodo(unRegistro, 0));
 
 	if (unRegistro->id < unNodo->getMenorID()) {
 		if (unNodo->getHijoIzquierdo() == NULL) {
@@ -89,140 +72,87 @@ Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro)
 				tmpRegistro->tamanio = mayorRegistro->tamanio;
 
 				unNodo->borrarRegistro(tmpRegistro->id);
-				insertarEnNodo(unNodo->derecho, tmpRegistro);
+				insertarEnNodo(unNodo->getHijoDerecho(), tmpRegistro);
 				insertarEnNodo(unNodo, unRegistro);
 			}
 		}
 	}
 
+	return balancear(unNodo);
+}
 
-	unNodo->altura = getMax(getAltura(unNodo->izquierdo), getAltura(unNodo->derecho)) + 1;
+int ArbolAVL::getDiferenciaAlturaHijos(Nodo* unNodo) {
+	Nodo* izq = unNodo->getHijoIzquierdo();
+	Nodo* der = unNodo->getHijoDerecho();
+	return (izq->getAltura()-der->getAltura());
+}
 
-	//TODO: metodo balancear??
+Nodo* ArbolAVL::balancear(Nodo* unNodo) {
 	int diferencia = getDiferenciaAlturaHijos(unNodo);
 
-	if (diferencia > 1 && unRegistro->id < getMenorClave(unNodo->izquierdo))
-		return rotacionDerecha(unNodo);
-
-	if (diferencia < -1 && unRegistro->id > getMenorClave(unNodo->derecho))
-		return rotacionIzquierda(unNodo);
-
-	if (diferencia > 1 && unRegistro->id > getMenorClave(unNodo->izquierdo))
-	{
-		unNodo->izquierdo = rotacionIzquierda(unNodo->izquierdo);
+	if (diferencia > 1) {
 		return rotacionDerecha(unNodo);
 	}
-
-	if (diferencia < -1 && unRegistro->id < getMenorClave(unNodo->derecho))
-	{
-		unNodo->derecho = rotacionDerecha(unNodo->derecho);
+	if (diferencia < -1) {
 		return rotacionIzquierda(unNodo);
 	}
-
-	return unNodo;
 }
 
-Nodo* ArbolAVL::nuevoNodoInterno(int alturaVieja)
-{
+Nodo* ArbolAVL::rotacionDerecha(Nodo *unNodo) {
+	Nodo* izq = unNodo->getHijoIzquierdo();
+	Nodo* der = izq->getHijoDerecho();
 
-	Nodo* unNodo = new Nodo();
+	izq->modificarHijoDerecho(unNodo);
+	unNodo->modificarHijoIzquierdo(der);
 
-	unNodo->izquierdo = NULL;
-	unNodo->derecho = NULL;
-	unNodo->altura = alturaVieja + 1;
-
-	return unNodo;
-}
-
-Nodo* ArbolAVL::nuevoNodoHoja(Registro* unRegistro)
-{
-
-	Nodo* unNodo = new Nodo();
-
-	unNodo->izquierdo = NULL;
-	unNodo->derecho = NULL;
-	unNodo->altura = 1;
-
-	unNodo->registros.push_back(*unRegistro);
-
-	return unNodo;
-}
-
-Nodo* ArbolAVL::rotacionDerecha(Nodo *unNodo)
-{
-	Nodo* izq = unNodo->izquierdo;
-	Nodo* der = izq->derecho;
-
-	izq->derecho = unNodo;
-	unNodo->izquierdo = der;
-
-	unNodo->altura = getMax(getAltura(unNodo->izquierdo), getAltura(unNodo->derecho))+1;
-	izq->altura = getMax(getAltura(izq->izquierdo), getAltura(izq->derecho))+1;
+	//Luego de rotar el hijo izquierdo pasa a ser el nodo central
+	izq->modificarAltura(unNodo->getAltura());
+	unNodo->modificarAltura((unNodo->getAltura())+1);
 
 	return izq;
 }
 
-Nodo* ArbolAVL::rotacionIzquierda(Nodo *unNodo)
-{
-	Nodo *der = unNodo->derecho;
-	Nodo *izq = der->izquierdo;
+Nodo* ArbolAVL::rotacionIzquierda(Nodo *unNodo) {
+	Nodo *der = unNodo->getHijoDerecho();
+	Nodo *izq = der->getHijoIzquierdo();
 
-	der->izquierdo = unNodo;
-	unNodo->derecho = izq;
+	der->modificarHijoIzquierdo(unNodo);
+	unNodo->modificarHijoDerecho(izq);
 
-	unNodo->altura = getMax(getAltura(unNodo->izquierdo), getAltura(unNodo->derecho))+1;
-	der->altura = getMax(getAltura(der->izquierdo), getAltura(der->derecho))+1;
+	der->modificarAltura(unNodo->getAltura());
+	unNodo->modificarAltura((unNodo->getAltura())+1);
 
 	return der;
 }
 
-int ArbolAVL::getAltura(Nodo *unNodo)
-{
-	if (unNodo == NULL)
-		return 0;
-
-	return unNodo->altura;
-}
-
-int ArbolAVL::getMax(int x, int y)
-{
-	return (x > y)? x : y;
-}
-
-int ArbolAVL::getDiferenciaAlturaHijos(Nodo *unNodo)
-{
-	if (unNodo == NULL)
-		return 0;
-	return getAltura(unNodo->izquierdo) - getAltura(unNodo->derecho);
-}
-
-void ArbolAVL::print()
-{
+void ArbolAVL::print() {
 	preOrder(raiz);
 }
 
 void ArbolAVL::preOrder(Nodo* unNodo) {
 	Registro unRegistro;
 
-	if(unNodo != NULL)
-	{
-		preOrder(unNodo->izquierdo);
-		preOrder(unNodo->derecho);
+	list<Registro*>* registros = unNodo->getRegistros();
+	if(unNodo != 0) {
+		preOrder(unNodo->getHijoIzquierdo());
+		preOrder(unNodo->getHijoDerecho());
 
-		printf("| ");
-		for(list<Registro>::iterator list_iter = unNodo->registros.begin();
-				list_iter != unNodo->registros.end();
-				list_iter++)
-		{
-			unRegistro = *list_iter;
+		cout<<"| ";
+/* No se que problema me tira el iterador
+		for(iterator list_iter = registros->begin(); list_iter != registros->end(); list_iter++) {
+			unRegistro = list_iter;
 
-			if (unNodo->altura == 1) {
+			if (unNodo->getAltura() == 1) {
 				//Como es hoja, podria imprimir todo los datos del reg
-				printf("%d ", unRegistro.id);
+				cout<<unRegistro.id<<endl;
 			} else {
-				printf("%d ", unRegistro.id);
+				cout<<unRegistro.id<<endl;
 			}
 		}
-		printf("|");
-	}
+		cout<<"|";
+*/	}
+}
+
+ArbolAVL::~ArbolAVL() {
+	// TODO Auto-generated destructor stub
 }

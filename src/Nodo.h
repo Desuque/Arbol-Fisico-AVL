@@ -8,6 +8,7 @@
 #ifndef NODO_H_
 #define NODO_H_
 #include <list>
+#include "Registro.h"
 
 using namespace std;
 
@@ -17,22 +18,28 @@ private:
 	Nodo* derecho;
 	int cantidadDeElementos;
 	int bytes_libres;
-	list<Registro*> registros;
-	int maxElementos = 3;
+	list<Registro*>* registros;
+	int maxElementos = 3; //TODO DECLARAR COMO CONSTANTE
+	int altura;
 
 public:
-	Nodo();
+	Nodo(int alturaPadre);
 
 	int getMenorID();
 	int getMayorID();
 	Nodo* getHijoIzquierdo();
 	Nodo* getHijoDerecho();
 	Registro* getRegistroConMayorID();
+	int getAltura();
+	list<Registro*>* getRegistros();
+
 	int insertar(Registro* unRegistro);
 
 	void crearHijoIzquierdo(Registro* unRegistro);
 	void crearHijoDerecho(Registro* unRegistro);
-
+	void modificarHijoIzquierdo(Nodo* nuevoNodo);
+	void modificarHijoDerecho(Nodo* nuevoNodo);
+	void modificarAltura(int nuevaAltura);
 	void borrarRegistro(int ID);
 
 	virtual ~Nodo();
