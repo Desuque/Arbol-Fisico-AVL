@@ -29,11 +29,11 @@ Nodo* ArbolAVL::crearNuevoNodo(Registro* unRegistro, int alturaPadre) {
 Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro)
 {
 
-	if (unNodo == 0)
+	if (unNodo == 0) {
 		return(crearNuevoNodo(unRegistro, 0));
-
+	}
 	if (unRegistro->id < unNodo->getMenorID()) {
-		if (unNodo->getHijoIzquierdo() == NULL) {
+		if (unNodo->getHijoIzquierdo() == 0) {
 			if (!unNodo->insertar(unRegistro)) {
 				unNodo->crearHijoIzquierdo(unRegistro);
 			}
@@ -48,7 +48,7 @@ Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro)
 		}
 	} else {
 		if (unRegistro->id > unNodo->getMayorID()) {
-			if (unNodo->getHijoDerecho() == NULL) {
+			if (unNodo->getHijoDerecho() == 0) {
 				if (!unNodo->insertar(unRegistro)) {
 					unNodo->crearHijoDerecho(unRegistro);
 				}
@@ -126,7 +126,8 @@ Nodo* ArbolAVL::rotacionIzquierda(Nodo *unNodo) {
 }
 
 void ArbolAVL::print() {
-	preOrder(raiz);
+	cout<<"EL error fue despues que esta linea";
+	//preOrder(raiz);
 }
 
 void ArbolAVL::preOrder(Nodo* unNodo) {

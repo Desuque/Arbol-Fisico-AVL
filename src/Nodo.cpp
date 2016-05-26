@@ -14,8 +14,9 @@ Nodo::Nodo(int alturaPadre) {
 	this->izquierdo = 0;
 	this->derecho = 0;
 	this->cantidadDeElementos = 0;
-	this->registros= new list<Registro*>;
-	this->altura = alturaPadre + 1;
+	this->registros = new list<Registro*>;
+	this->altura = 0;
+	this->altura = altura + alturaPadre;
 
 	//Esto es para la persistencia, 8===3
 	this->bytes_libres = 3000;
@@ -72,7 +73,7 @@ int Nodo::insertar(Registro* unRegistro) {
 
 	if (cantidadDeElementos < this->maxElementos) {
 		registros->push_front(unRegistro);
-		registros->sort(); //Siempre dejo la lista ordenada
+		//registros->sort(); //Siempre dejo la lista ordenada
 		return 0;
 	}
 	return 1;
