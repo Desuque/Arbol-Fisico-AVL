@@ -63,21 +63,21 @@ void Nodo::modificarAltura(int nuevaAltura) {
 	this->altura = nuevaAltura;
 }
 
-int Nodo::insertar(Registro* unRegistro) {
+bool Nodo::insertar(Registro* unRegistro) {
 	//TODO probablemente no sea con el tamaño de la lista, sino
 	//con la cantidad de bytes_libres
 
 	//TODO el sort ordena por lo que se le canta la chota
 	//porque como sabe que yo quiero por ID?
-	//Ya fue loco, me voy a la mierda (despues lo miro)
+	//Ya fue loco, me voy a la mierda (despues lo miro / jajajja q chupapija)
 
 	if (cantidadDeElementos < this->maxElementos) {
 		registros->push_front(unRegistro);
 		cantidadDeElementos++;
 		//registros->sort(); //Siempre dejo la lista ordenada
-		return 0;
+		return true;
 	}
-	return 1;
+	return false;
 }
 
 void Nodo::crearHijoIzquierdo(Registro* unRegistro) {

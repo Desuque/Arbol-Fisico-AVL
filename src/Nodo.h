@@ -33,7 +33,7 @@ public:
 	int getAltura();
 	list<Registro*>* getRegistros();
 
-	int insertar(Registro* unRegistro);
+	bool insertar(Registro* unRegistro);
 
 	void crearHijoIzquierdo(Registro* unRegistro);
 	void crearHijoDerecho(Registro* unRegistro);
