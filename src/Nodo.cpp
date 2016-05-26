@@ -71,17 +71,13 @@ int Nodo::insertar(Registro* unRegistro) {
 	//porque como sabe que yo quiero por ID?
 	//Ya fue loco, me voy a la mierda (despues lo miro)
 
-	registros->push_front(unRegistro);
-
-/**
 	if (cantidadDeElementos < this->maxElementos) {
 		registros->push_front(unRegistro);
+		cantidadDeElementos++;
 		//registros->sort(); //Siempre dejo la lista ordenada
 		return 0;
 	}
 	return 1;
-	**/
-	return 0;
 }
 
 void Nodo::crearHijoIzquierdo(Registro* unRegistro) {

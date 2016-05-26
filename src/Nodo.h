@@ -19,7 +19,7 @@ private:
 	int cantidadDeElementos;
 	int bytes_libres;
 	list<Registro*>* registros;
-	int maxElementos = 3; //TODO DECLARAR COMO CONSTANTE
+	int maxElementos = 4; //TODO DECLARAR COMO CONSTANTE
 	int altura;
 
 public:
