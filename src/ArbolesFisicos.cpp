@@ -6,10 +6,9 @@ using namespace std;
 
 int main() //int argc, char *argv[] -> como parametro para la interfaz
 {
-	cout<<"Entre";
 	Registro* unRegistro;
 	ArbolAVL* arbol = new ArbolAVL();
-	cout<<"Entre";
+
 	//Interfaz* interfaz = new Interfaz(argc, argv);
 
 	unRegistro = new Registro();
@@ -20,15 +19,14 @@ int main() //int argc, char *argv[] -> como parametro para la interfaz
 	unRegistro->id = 455;
 	arbol->insertar(unRegistro);
 
-	//unRegistro = new Registro();
-	//unRegistro->id = 734;
-	//arbol->insertar(unRegistro);
+	unRegistro = new Registro();
+	unRegistro->id = 734;
+	arbol->insertar(unRegistro);
 
-/**
 	unRegistro = new Registro();
 	unRegistro->id = 911;
 	arbol->insertar(unRegistro);
-**/
+
 	arbol->print();
 
 	return 0;
