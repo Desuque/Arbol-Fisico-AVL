@@ -6,6 +6,7 @@
 //============================================================================
 
 #include "ArbolAVL.h"
+#include "Nodo.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -16,7 +17,7 @@ ArbolAVL::ArbolAVL() {
 }
 
 void ArbolAVL::insertar(Registro* unRegistro) {
-	raiz = insertarEnNodo(raiz, unRegistro, false);
+	raiz = insertarEnNodo(raiz, unRegistro);
 }
 
 int getMenorClave(Nodo* unNodo) {
@@ -26,6 +27,9 @@ int getMenorClave(Nodo* unNodo) {
 	return unRegistro.id;
 }
 
+
+//TODO: esto no tendria que ser necesario
+//la logica del nodo la maneja el nodo papa
 bool ArbolAVL::entraUnRegistroMas(Nodo* unNodo) {
 	if (unNodo->altura == 1) {
 		if (unNodo->registros.size() == maxHoja) {
@@ -51,12 +55,12 @@ Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro)
 				unNodo->crearHijoIzquierdo(unRegistro);
 			}
 		} else {
-			if (unRegistro->id > unNodo->getIzquierdo()->getMayor()) {
+			if (unRegistro->id > (unNodo->getHijoIzquierdo())->getMayorID()) {
 				if (!unNodo->insertar(unRegistro)) {
-					insertarEnNodo(unNodo->getIzquierdo(), unRegistro);
+					insertarEnNodo(unNodo->getHijoIzquierdo(), unRegistro);
 				}
 			} else {
-				insertarEnNodo(unNodo->getIzquierdo(), unRegistro);
+				insertarEnNodo(unNodo->getHijoIzquierdo(), unRegistro);
 			}
 		}
 	} else {
@@ -66,12 +70,12 @@ Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro)
 					unNodo->crearHijoDerecho(unRegistro);
 				}
 			} else {
-				if (unRegistro->id < unNodo->getDerecho()->getMenor()) {
+				if (unRegistro->id < unNodo->getHijoDerecho()->getMenorID()) {
 					if (!unNodo->insertar(unRegistro)) {
-						insertarEnNodo(unNodo->getDerecho(), unRegistro);
+						insertarEnNodo(unNodo->getHijoDerecho(), unRegistro);
 					}
 				} else {
-					insertarEnNodo(unNodo->getDerecho(), unRegistro);
+					insertarEnNodo(unNodo->getHijoDerecho(), unRegistro);
 				}
 			}
 		} else {

@@ -2,16 +2,17 @@
 #define ARBOLAVL_H_
 #include <list>
 #include "Registro.h"
+#include "Nodo.h"
 
 namespace TPDatos {
 
-	struct Nodo
-	{
-		Nodo *izquierdo;
-		Nodo *derecho;
-		int altura;
-		std::list <Registro> registros;
-	};
+	//struct Nodo
+	//{
+	//	Nodo *izquierdo;
+	//	Nodo *derecho;
+	//	int altura;
+	//	std::list <Registro> registros;
+	//};
 
 	class ArbolAVL {
 
