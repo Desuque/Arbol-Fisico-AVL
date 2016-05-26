@@ -11,6 +11,7 @@ private:
 	int maxInternos = 3; //TODO: en bytes
 	int maxHoja = 3;	 //TODO: en bytes
 	Nodo* raiz;
+	int alturaRaiz = 0; //declarar como constante
 public:
 	ArbolAVL();
 
@@ -20,13 +21,13 @@ public:
 	virtual ~ArbolAVL();
 
 private:
-	Nodo* insertarEnNodo(Nodo* unNodo, Registro* unRegistro);
-	Nodo* crearNuevoNodo(Registro* unRegistro, int alturaPadre);
-	Nodo* rotacionDerecha(Nodo *unNodo);
-	Nodo* rotacionIzquierda(Nodo *unNodo);
+	void insertarEnNodo(Nodo* unNodo, Registro* unRegistro);
+	Nodo* crearNodoRaiz(Registro* unRegistro);
+	void rotacionDerecha(Nodo *unNodo);
+	void rotacionIzquierda(Nodo *unNodo);
 	int getDiferenciaAlturaHijos(Nodo* unNodo);
 	void preOrder(Nodo* root);
-	Nodo* balancear(Nodo* unNodo);
+	void balancear(Nodo* unNodo);
 };
 
 #endif
