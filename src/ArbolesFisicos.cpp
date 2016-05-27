@@ -27,6 +27,38 @@ int main() //int argc, char *argv[] -> como parametro para la interfaz
 	unRegistro->id = 734;
 	arbol->insertar(unRegistro);
 
+	unRegistro = new Registro();
+	unRegistro->id = 125;
+	arbol->insertar(unRegistro);
+
+	unRegistro = new Registro();
+	unRegistro->id = 100;
+	arbol->insertar(unRegistro);
+
+	unRegistro = new Registro();
+	unRegistro->id = 300;
+	arbol->insertar(unRegistro);
+
+	unRegistro = new Registro();
+	unRegistro->id = 800;
+	arbol->insertar(unRegistro);
+
+	unRegistro = new Registro();
+	unRegistro->id = 850;
+	arbol->insertar(unRegistro);
+
+	unRegistro = new Registro();
+	unRegistro->id = 912;
+	arbol->insertar(unRegistro);
+
+	unRegistro = new Registro();
+	unRegistro->id = 913;
+	arbol->insertar(unRegistro);
+
+	unRegistro = new Registro();
+	unRegistro->id = 914;
+	arbol->insertar(unRegistro);
+
 	arbol->print();
 
 	return 0;

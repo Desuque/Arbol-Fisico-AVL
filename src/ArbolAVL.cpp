@@ -71,11 +71,14 @@ void ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro) {
 					tmpRegistro->tamanio = mayorRegistro->tamanio;
 
 					unNodo->borrarRegistro(tmpRegistro->id);
-					unNodo->crearHijoDerecho(tmpRegistro);
+					if (unNodo->getHijoDerecho() == 0) {
+						unNodo->crearHijoDerecho(tmpRegistro);
+					} else {
+						insertarEnNodo(unNodo->getHijoDerecho(), tmpRegistro);
+					}
 					insertarEnNodo(unNodo, unRegistro);
 				}
 			}
-
 		}
 		//No se ejecuta en la primer entrada porque la raiz no hace falta balancearla
 		balancear(unNodo);
