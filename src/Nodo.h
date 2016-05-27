@@ -23,7 +23,7 @@ private:
 	int altura;
 
 public:
-	Nodo(int alturaPadre);
+	Nodo();
 
 	int getMenorID();
 	int getMayorID();
@@ -35,8 +35,6 @@ public:
 
 	bool insertar(Registro* unRegistro);
 
-	void crearHijoIzquierdo(Registro* unRegistro);
-	void crearHijoDerecho(Registro* unRegistro);
 	void modificarHijoIzquierdo(Nodo* nuevoNodo);
 	void modificarHijoDerecho(Nodo* nuevoNodo);
 	void modificarAltura(int nuevaAltura);

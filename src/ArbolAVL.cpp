@@ -16,25 +16,30 @@ ArbolAVL::ArbolAVL() {
 }
 
 void ArbolAVL::insertar(Registro* unRegistro){
-	insertarEnNodo(raiz, unRegistro);
+	raiz = insertarEnNodo(raiz, unRegistro);
 }
 
-Nodo* ArbolAVL::crearNodoRaiz(Registro* unRegistro) {
-	Nodo* unNodo = new Nodo(this->alturaRaiz);
+Nodo* ArbolAVL::crearNodo(Registro* unRegistro) {
+	Nodo* unNodo = new Nodo();
 	unNodo->insertar(unRegistro);
 
 	return unNodo;
 }
 
-void ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro) {
-	//Si es el la raiz se crea el nodo y entra directo
+int calcMax(int x, int y)
+{
+	return (x > y)? x : y;
+}
+Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro) {
+
 	if (unNodo == 0) {
-		this->raiz = crearNodoRaiz(unRegistro);
+		return crearNodo(unRegistro);
 	} else {
 		if (unRegistro->id < unNodo->getMenorID()) {
 			if (unNodo->getHijoIzquierdo() == 0) {
 				if (!unNodo->insertar(unRegistro)) {
-					unNodo->crearHijoIzquierdo(unRegistro);
+					unNodo->modificarHijoIzquierdo(insertarEnNodo(unNodo->getHijoIzquierdo(), unRegistro));
+					//unNodo->crearHijoIzquierdo(unRegistro);
 				}
 			} else {
 				if (unRegistro->id > (unNodo->getHijoIzquierdo())->getMayorID()) {
@@ -49,7 +54,8 @@ void ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro) {
 			if (unRegistro->id > unNodo->getMayorID()) {
 				if (unNodo->getHijoDerecho() == 0) {
 					if (!unNodo->insertar(unRegistro)) {
-						unNodo->crearHijoDerecho(unRegistro);
+						unNodo->modificarHijoDerecho(insertarEnNodo(unNodo->getHijoDerecho(), unRegistro));
+						//unNodo->crearHijoDerecho(unRegistro);
 					}
 				} else {
 					if (unRegistro->id < unNodo->getHijoDerecho()->getMenorID()) {
@@ -64,73 +70,95 @@ void ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro) {
 				if (!unNodo->insertar(unRegistro)) {
 					Registro* tmpRegistro = new Registro();
 					Registro* mayorRegistro = unNodo->getRegistroConMayorID();
-					//TODO: hacer fn copiarRegistro()
+
 					tmpRegistro->codigo = mayorRegistro->codigo;
 					tmpRegistro->id = mayorRegistro->id;
 					tmpRegistro->descripcion = mayorRegistro->descripcion;
 					tmpRegistro->tamanio = mayorRegistro->tamanio;
 
 					unNodo->borrarRegistro(tmpRegistro->id);
+					/*
 					if (unNodo->getHijoDerecho() == 0) {
 						unNodo->crearHijoDerecho(tmpRegistro);
 					} else {
 						insertarEnNodo(unNodo->getHijoDerecho(), tmpRegistro);
 					}
+					*/
+					unNodo->modificarHijoDerecho(insertarEnNodo(unNodo->getHijoDerecho(), tmpRegistro));
 					insertarEnNodo(unNodo, unRegistro);
 				}
 			}
 		}
-		//No se ejecuta en la primer entrada porque la raiz no hace falta balancearla
-		balancear(unNodo);
 	}
 
+	int altIzq;
+	int altDer;
+
+	if (unNodo->getHijoIzquierdo() != 0) {
+		altIzq = unNodo->getHijoIzquierdo()->getAltura();
+	} else {
+		altIzq = 0;
+	}
+
+	if (unNodo->getHijoDerecho() != 0) {
+		altDer = unNodo->getHijoDerecho()->getAltura();
+	} else {
+		altDer = 0;
+	}
+
+	unNodo->modificarAltura(calcMax(altIzq,altDer) + 1);
+
+	int diferencia = getDiferenciaAlturaHijos(unNodo);
+
+	if (diferencia > 1) {
+		return rotacionDerecha(unNodo);
+	}
+	if (diferencia < -1) {
+		return rotacionIzquierda(unNodo);
+	}
+
+	return unNodo;
 }
 
 int ArbolAVL::getDiferenciaAlturaHijos(Nodo* unNodo) {
+	if (unNodo == NULL)
+			return 0;
+
 	int alturaIzq;
 	int alturaDer;
+
 	Nodo* izq = unNodo->getHijoIzquierdo();
 	Nodo* der = unNodo->getHijoDerecho();
+
 	if (izq != 0) {
 		alturaIzq = izq->getAltura();
 	} else {
-		alturaIzq = unNodo->getAltura(); //Me quedo con la altura del padre
+		alturaIzq = 0;
 	}
+
 	if (der != 0) {
 		alturaDer = der->getAltura();
 	} else {
-		alturaDer = unNodo->getAltura();
+		alturaDer = 0;
 	}
 
 	return (alturaIzq-alturaDer);
 }
 
-void ArbolAVL::balancear(Nodo* unNodo) {
-	int diferencia = getDiferenciaAlturaHijos(unNodo);
-
-	if (diferencia > 1) {
-		rotacionDerecha(unNodo);
-	}
-	if (diferencia < -1) {
-		rotacionIzquierda(unNodo);
-	}
-}
-
-void ArbolAVL::rotacionDerecha(Nodo *unNodo) {
+Nodo* ArbolAVL::rotacionDerecha(Nodo *unNodo) {
 	Nodo* izq = unNodo->getHijoIzquierdo();
 	Nodo* der = izq->getHijoDerecho();
 
 	izq->modificarHijoDerecho(unNodo);
 	unNodo->modificarHijoIzquierdo(der);
 
-	//Luego de rotar el hijo izquierdo pasa a ser el nodo central
+	unNodo->modificarAltura(calcMax(altIzq, altDer)+ 1);
 	izq->modificarAltura(unNodo->getAltura());
-	unNodo->modificarAltura((unNodo->getAltura())+1);
 
-	//return izq;
+	return izq;
 }
 
-void ArbolAVL::rotacionIzquierda(Nodo *unNodo) {
+Nodo* ArbolAVL::rotacionIzquierda(Nodo *unNodo) {
 	Nodo *der = unNodo->getHijoDerecho();
 	Nodo *izq = der->getHijoIzquierdo();
 
@@ -140,7 +168,7 @@ void ArbolAVL::rotacionIzquierda(Nodo *unNodo) {
 	der->modificarAltura(unNodo->getAltura());
 	unNodo->modificarAltura((unNodo->getAltura())+1);
 
-	//return der;
+	return der;
 }
 
 void ArbolAVL::print() {

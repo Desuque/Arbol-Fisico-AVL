@@ -9,16 +9,15 @@
 
 using namespace std;
 
-Nodo::Nodo(int alturaPadre) {
+Nodo::Nodo() {
 	//NULL no es estandar papa, 0 es null.
 	this->izquierdo = 0;
 	this->derecho = 0;
 	this->cantidadDeElementos = 0;
 	this->registros = new list<Registro*>;
-	this->altura = 0;
-	this->altura = altura + alturaPadre;
+	this->altura = 1;
 
-	//Esto es para la persistencia, 8===3
+	//Esto es para la persistencia, 8===D
 	this->bytes_libres = 3000;
 }
 
@@ -77,17 +76,6 @@ bool Nodo::insertar(Registro* unRegistro) {
 		return true;
 	}
 	return false;
-}
-
-
-void Nodo::crearHijoIzquierdo(Registro* unRegistro) {
-	izquierdo = new Nodo(this->altura);
-	izquierdo->insertar(unRegistro);
-}
-
-void Nodo::crearHijoDerecho(Registro* unRegistro) {
-	derecho = new Nodo(this->altura);
-	derecho->insertar(unRegistro);
 }
 
 bool Nodo::borrarRegistro(int ID) {

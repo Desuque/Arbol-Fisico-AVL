@@ -21,10 +21,10 @@ public:
 	virtual ~ArbolAVL();
 
 private:
-	void insertarEnNodo(Nodo* unNodo, Registro* unRegistro);
-	Nodo* crearNodoRaiz(Registro* unRegistro);
-	void rotacionDerecha(Nodo *unNodo);
-	void rotacionIzquierda(Nodo *unNodo);
+	Nodo* insertarEnNodo(Nodo* unNodo, Registro* unRegistro);
+	Nodo* crearNodo(Registro* unRegistro);
+	Nodo* rotacionDerecha(Nodo *unNodo);
+	Nodo* rotacionIzquierda(Nodo *unNodo);
 	int getDiferenciaAlturaHijos(Nodo* unNodo);
 	void preOrder(Nodo* root);
 	void balancear(Nodo* unNodo);
