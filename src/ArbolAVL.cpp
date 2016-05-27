@@ -30,13 +30,7 @@ void ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro) {
 	//Si es el la raiz se crea el nodo y entra directo
 	if (unNodo == 0) {
 		this->raiz = crearNodoRaiz(unRegistro);
-
-		//Debug cabeza :)
-		cout<<"Aca tengo que entrar una unica vez si no hay alguna validacion mal hecha, SOY LA RAIZ!!!"<<endl;
-		cout<<"Esto tiene adentro: "<<unRegistro->id<<endl;
-
 	} else {
-		cout<<"Esto tiene adentro: "<<unRegistro->id<<endl;
 		if (unRegistro->id < unNodo->getMenorID()) {
 			if (unNodo->getHijoIzquierdo() == 0) {
 				if (!unNodo->insertar(unRegistro)) {
@@ -151,27 +145,25 @@ void ArbolAVL::print() {
 }
 
 void ArbolAVL::preOrder(Nodo* unNodo) {
-	Registro unRegistro;
+	Registro* unRegistro;
 
-	list<Registro*>* registros = unNodo->getRegistros();
 	if(unNodo != 0) {
+		list<Registro*>* registros = unNodo->getRegistros();
 		preOrder(unNodo->getHijoIzquierdo());
 		preOrder(unNodo->getHijoDerecho());
 
 		cout<<"| ";
-/* No se que problema me tira el iterador
-		for(iterator list_iter = registros->begin(); list_iter != registros->end(); list_iter++) {
-			unRegistro = list_iter;
-
+		for(list<Registro*>::iterator list_iter = registros->begin(); list_iter != registros->end(); list_iter++) {
+			unRegistro = *list_iter;
 			if (unNodo->getAltura() == 1) {
 				//Como es hoja, podria imprimir todo los datos del reg
-				cout<<unRegistro.id<<endl;
+				cout<<unRegistro->id<<endl;
 			} else {
-				cout<<unRegistro.id<<endl;
+				cout<<unRegistro->id<<endl;
 			}
 		}
 		cout<<"|";
-*/	}
+	}
 }
 
 ArbolAVL::~ArbolAVL() {
