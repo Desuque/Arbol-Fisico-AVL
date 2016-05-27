@@ -71,7 +71,7 @@ void ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro) {
 					tmpRegistro->tamanio = mayorRegistro->tamanio;
 
 					unNodo->borrarRegistro(tmpRegistro->id);
-					insertarEnNodo(unNodo->getHijoDerecho(), tmpRegistro);
+					unNodo->crearHijoDerecho(tmpRegistro);
 					insertarEnNodo(unNodo, unRegistro);
 				}
 			}
@@ -148,21 +148,20 @@ void ArbolAVL::preOrder(Nodo* unNodo) {
 	Registro* unRegistro;
 
 	if(unNodo != 0) {
-		list<Registro*>* registros = unNodo->getRegistros();
-		preOrder(unNodo->getHijoIzquierdo());
-		preOrder(unNodo->getHijoDerecho());
-
 		cout<<"| ";
+		list<Registro*>* registros = unNodo->getRegistros();
 		for(list<Registro*>::iterator list_iter = registros->begin(); list_iter != registros->end(); list_iter++) {
 			unRegistro = *list_iter;
 			if (unNodo->getAltura() == 1) {
 				//Como es hoja, podria imprimir todo los datos del reg
-				cout<<unRegistro->id<<endl;
+				cout<<unRegistro->id<<" ";
 			} else {
-				cout<<unRegistro->id<<endl;
+				cout<<unRegistro->id<<" ";
 			}
 		}
-		cout<<"|";
+		cout<<"|"<<endl;
+		preOrder(unNodo->getHijoIzquierdo());
+		preOrder(unNodo->getHijoDerecho());
 	}
 }
 

@@ -40,9 +40,10 @@ public:
 	void modificarHijoIzquierdo(Nodo* nuevoNodo);
 	void modificarHijoDerecho(Nodo* nuevoNodo);
 	void modificarAltura(int nuevaAltura);
-	void borrarRegistro(int ID);
+	bool borrarRegistro(int ID);
 
 	virtual ~Nodo();
+
 };
 
 #endif /* NODO_H_ */

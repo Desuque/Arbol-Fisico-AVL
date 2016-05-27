@@ -63,22 +63,22 @@ void Nodo::modificarAltura(int nuevaAltura) {
 	this->altura = nuevaAltura;
 }
 
+bool comparaRegistros(Registro* a, Registro* b) { return a->id < b->id; }
+
+
 bool Nodo::insertar(Registro* unRegistro) {
 	//TODO probablemente no sea con el tamaño de la lista, sino
 	//con la cantidad de bytes_libres
 
-	//TODO el sort ordena por lo que se le canta la chota
-	//porque como sabe que yo quiero por ID?
-	//Ya fue loco, me voy a la mierda (despues lo miro / jajajja q chupapija)
-
 	if (cantidadDeElementos < this->maxElementos) {
 		registros->push_front(unRegistro);
 		cantidadDeElementos++;
-		//registros->sort(); //Siempre dejo la lista ordenada
+		registros->sort(comparaRegistros);
 		return true;
 	}
 	return false;
 }
+
 
 void Nodo::crearHijoIzquierdo(Registro* unRegistro) {
 	izquierdo = new Nodo(this->altura);
@@ -90,20 +90,21 @@ void Nodo::crearHijoDerecho(Registro* unRegistro) {
 	derecho->insertar(unRegistro);
 }
 
-void Nodo::borrarRegistro(int ID) {
+bool Nodo::borrarRegistro(int ID) {
 	bool encontrado = false;
-	list<Registro*>::iterator it=registros->begin();
-/** ERROR PAPAAAA
-	while((!encontrado) && (it != registros->end())) {
-		list<Registro*>::iterator regIt;
-		regIt  = it;
-		if (regIt->id == ID) {
-			registros->remove(regIt);
+	Registro* unRegistro;
+
+	for(list<Registro*>::iterator list_iter = registros->begin(); list_iter != registros->end(); list_iter++) {
+		unRegistro = *list_iter;
+		if (unRegistro->id == ID) {
+			registros->remove(unRegistro);
 			encontrado = true;
+			cantidadDeElementos--;
+			break;
 		}
-		it++;
 	}
-	**/
+
+	return encontrado;
 }
 
 Registro* Nodo::getRegistroConMayorID() {

@@ -16,15 +16,15 @@ int main() //int argc, char *argv[] -> como parametro para la interfaz
 	arbol->insertar(unRegistro);
 
 	unRegistro = new Registro();
+	unRegistro->id = 911;
+	arbol->insertar(unRegistro);
+
+	unRegistro = new Registro();
 	unRegistro->id = 455;
 	arbol->insertar(unRegistro);
 
 	unRegistro = new Registro();
 	unRegistro->id = 734;
-	arbol->insertar(unRegistro);
-
-	unRegistro = new Registro();
-	unRegistro->id = 911;
 	arbol->insertar(unRegistro);
 
 	arbol->print();
