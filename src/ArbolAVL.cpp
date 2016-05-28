@@ -39,7 +39,6 @@ Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro) {
 			if (unNodo->getHijoIzquierdo() == 0) {
 				if (!unNodo->insertar(unRegistro)) {
 					unNodo->modificarHijoIzquierdo(insertarEnNodo(unNodo->getHijoIzquierdo(), unRegistro));
-					//unNodo->crearHijoIzquierdo(unRegistro);
 				}
 			} else {
 				if (unRegistro->id > (unNodo->getHijoIzquierdo())->getMayorID()) {
@@ -55,7 +54,6 @@ Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro) {
 				if (unNodo->getHijoDerecho() == 0) {
 					if (!unNodo->insertar(unRegistro)) {
 						unNodo->modificarHijoDerecho(insertarEnNodo(unNodo->getHijoDerecho(), unRegistro));
-						//unNodo->crearHijoDerecho(unRegistro);
 					}
 				} else {
 					if (unRegistro->id < unNodo->getHijoDerecho()->getMenorID()) {
@@ -77,13 +75,6 @@ Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro) {
 					tmpRegistro->tamanio = mayorRegistro->tamanio;
 
 					unNodo->borrarRegistro(tmpRegistro->id);
-					/*
-					if (unNodo->getHijoDerecho() == 0) {
-						unNodo->crearHijoDerecho(tmpRegistro);
-					} else {
-						insertarEnNodo(unNodo->getHijoDerecho(), tmpRegistro);
-					}
-					*/
 					unNodo->modificarHijoDerecho(insertarEnNodo(unNodo->getHijoDerecho(), tmpRegistro));
 					insertarEnNodo(unNodo, unRegistro);
 				}
@@ -145,6 +136,13 @@ int ArbolAVL::getDiferenciaAlturaHijos(Nodo* unNodo) {
 	return (alturaIzq-alturaDer);
 }
 
+int altura(Nodo* unNodo) {
+	if (unNodo == 0)
+		return 0;
+
+	return unNodo->getAltura();
+}
+
 Nodo* ArbolAVL::rotacionDerecha(Nodo *unNodo) {
 	Nodo* izq = unNodo->getHijoIzquierdo();
 	Nodo* der = izq->getHijoDerecho();
@@ -152,8 +150,8 @@ Nodo* ArbolAVL::rotacionDerecha(Nodo *unNodo) {
 	izq->modificarHijoDerecho(unNodo);
 	unNodo->modificarHijoIzquierdo(der);
 
-	unNodo->modificarAltura(calcMax(altIzq, altDer)+ 1);
-	izq->modificarAltura(unNodo->getAltura());
+	unNodo->modificarAltura(calcMax(altura(unNodo->getHijoIzquierdo()), altura(unNodo->getHijoDerecho())) + 1);
+	izq->modificarAltura(calcMax(altura(izq->getHijoIzquierdo()), altura(izq->getHijoDerecho())) + 1);
 
 	return izq;
 }
@@ -165,8 +163,8 @@ Nodo* ArbolAVL::rotacionIzquierda(Nodo *unNodo) {
 	der->modificarHijoIzquierdo(unNodo);
 	unNodo->modificarHijoDerecho(izq);
 
-	der->modificarAltura(unNodo->getAltura());
-	unNodo->modificarAltura((unNodo->getAltura())+1);
+	unNodo->modificarAltura(calcMax(altura(unNodo->getHijoIzquierdo()), altura(unNodo->getHijoDerecho())) + 1);
+	der->modificarAltura(calcMax(altura(der->getHijoIzquierdo()), altura(der->getHijoDerecho())) + 1);
 
 	return der;
 }
