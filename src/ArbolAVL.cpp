@@ -15,6 +15,13 @@ ArbolAVL::ArbolAVL() {
 	this->raiz = 0;
 }
 
+int altura(Nodo* unNodo) {
+	if (unNodo == 0)
+		return 0;
+
+	return unNodo->getAltura();
+}
+
 void ArbolAVL::insertar(Registro* unRegistro){
 	raiz = insertarEnNodo(raiz, unRegistro);
 }
@@ -76,26 +83,14 @@ Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro) {
 
 					unNodo->borrarRegistro(tmpRegistro->id);
 					unNodo->modificarHijoDerecho(insertarEnNodo(unNodo->getHijoDerecho(), tmpRegistro));
-					insertarEnNodo(unNodo, unRegistro);
+					insertarEnNodo(unNodo, unRegistro); //TODO: Esto seguramente este mal, tendria que asignarle el return a algo
 				}
 			}
 		}
 	}
 
-	int altIzq;
-	int altDer;
-
-	if (unNodo->getHijoIzquierdo() != 0) {
-		altIzq = unNodo->getHijoIzquierdo()->getAltura();
-	} else {
-		altIzq = 0;
-	}
-
-	if (unNodo->getHijoDerecho() != 0) {
-		altDer = unNodo->getHijoDerecho()->getAltura();
-	} else {
-		altDer = 0;
-	}
+	int altIzq = altura(unNodo->getHijoIzquierdo());
+	int altDer = altura(unNodo->getHijoDerecho());
 
 	unNodo->modificarAltura(calcMax(altIzq,altDer) + 1);
 
@@ -104,43 +99,49 @@ Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro) {
 	if (diferencia > 1) {
 		return rotacionDerecha(unNodo);
 	}
+
 	if (diferencia < -1) {
 		return rotacionIzquierda(unNodo);
 	}
+
+	/*
+	// Left Left Case
+	if (balance > 1 && key < node->left->key)
+		return rightRotate(node);
+
+	// Right Right Case
+	if (balance < -1 && key > node->right->key)
+		return leftRotate(node);
+
+	// Left Right Case
+	if (balance > 1 && key > node->left->key)
+	{
+		node->left = leftRotate(node->left);
+		return rightRotate(node);
+	}
+
+	// Right Left Case
+	if (balance < -1 && key < node->right->key)
+	{
+		node->right = rightRotate(node->right);
+		return leftRotate(node);
+	}
+	 */
 
 	return unNodo;
 }
 
 int ArbolAVL::getDiferenciaAlturaHijos(Nodo* unNodo) {
-	if (unNodo == NULL)
+	if (unNodo == 0)
 			return 0;
-
-	int alturaIzq;
-	int alturaDer;
 
 	Nodo* izq = unNodo->getHijoIzquierdo();
 	Nodo* der = unNodo->getHijoDerecho();
 
-	if (izq != 0) {
-		alturaIzq = izq->getAltura();
-	} else {
-		alturaIzq = 0;
-	}
-
-	if (der != 0) {
-		alturaDer = der->getAltura();
-	} else {
-		alturaDer = 0;
-	}
+	int alturaIzq = altura(izq);
+	int alturaDer = altura(der);
 
 	return (alturaIzq-alturaDer);
-}
-
-int altura(Nodo* unNodo) {
-	if (unNodo == 0)
-		return 0;
-
-	return unNodo->getAltura();
 }
 
 Nodo* ArbolAVL::rotacionDerecha(Nodo *unNodo) {
@@ -182,7 +183,6 @@ void ArbolAVL::preOrder(Nodo* unNodo) {
 		for(list<Registro*>::iterator list_iter = registros->begin(); list_iter != registros->end(); list_iter++) {
 			unRegistro = *list_iter;
 			if (unNodo->getAltura() == 1) {
-				//Como es hoja, podria imprimir todo los datos del reg
 				cout<<unRegistro->id<<" ";
 			} else {
 				cout<<unRegistro->id<<" ";
