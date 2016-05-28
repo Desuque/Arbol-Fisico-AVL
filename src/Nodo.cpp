@@ -99,6 +99,10 @@ Registro* Nodo::getRegistroConMayorID() {
 	return registros->back();
 }
 
+Registro* Nodo::getRegistroConMenorID() {
+	return registros->front();
+}
+
 
 Nodo::~Nodo() {
 	//TODO Como es una lista de punteros que pidieron memoria, hay que recorrer la lista y borrarlos de a uno

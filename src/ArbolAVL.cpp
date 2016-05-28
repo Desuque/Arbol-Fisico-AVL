@@ -96,37 +96,27 @@ Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro) {
 
 	int diferencia = getDiferenciaAlturaHijos(unNodo);
 
-	if (diferencia > 1) {
+	//TODO: probar a fondo todas las rots. Algunos getHijoIzq a veces devuelven null o 0
+
+	if ((diferencia > 1) && (unRegistro->id < unNodo->getHijoIzquierdo()->getRegistroConMenorID()->id)) {
 		return rotacionDerecha(unNodo);
 	}
 
-	if (diferencia < -1) {
+	if ((diferencia < -1) && (unRegistro->id > unNodo->getHijoDerecho()->getRegistroConMayorID()->id)) {
 		return rotacionIzquierda(unNodo);
 	}
 
-	/*
-	// Left Left Case
-	if (balance > 1 && key < node->left->key)
-		return rightRotate(node);
-
-	// Right Right Case
-	if (balance < -1 && key > node->right->key)
-		return leftRotate(node);
-
-	// Left Right Case
-	if (balance > 1 && key > node->left->key)
+	if ((diferencia > 1) && (unRegistro->id > unNodo->getHijoIzquierdo()->getRegistroConMayorID()->id))
 	{
-		node->left = leftRotate(node->left);
-		return rightRotate(node);
+		unNodo->modificarHijoIzquierdo(rotacionIzquierda(unNodo->getHijoIzquierdo()));
+		return rotacionIzquierda(unNodo);
 	}
 
-	// Right Left Case
-	if (balance < -1 && key < node->right->key)
+	if ((diferencia < -1) && (unRegistro->id < unNodo->getHijoDerecho()->getRegistroConMenorID()->id))
 	{
-		node->right = rightRotate(node->right);
-		return leftRotate(node);
+		unNodo->modificarHijoDerecho(rotacionDerecha(unNodo->getHijoDerecho()));
+		return rotacionIzquierda(unNodo);
 	}
-	 */
 
 	return unNodo;
 }

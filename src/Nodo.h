@@ -30,6 +30,7 @@ public:
 	Nodo* getHijoIzquierdo();
 	Nodo* getHijoDerecho();
 	Registro* getRegistroConMayorID();
+	Registro* getRegistroConMenorID();
 	int getAltura();
 	list<Registro*>* getRegistros();
 
