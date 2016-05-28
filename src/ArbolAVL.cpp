@@ -43,10 +43,10 @@ Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro) {
 			} else {
 				if (unRegistro->id > (unNodo->getHijoIzquierdo())->getMayorID()) {
 					if (!unNodo->insertar(unRegistro)) {
-						insertarEnNodo(unNodo->getHijoIzquierdo(), unRegistro);
+						unNodo->modificarHijoIzquierdo(insertarEnNodo(unNodo->getHijoIzquierdo(), unRegistro));
 					}
 				} else {
-					insertarEnNodo(unNodo->getHijoIzquierdo(), unRegistro);
+					unNodo->modificarHijoIzquierdo(insertarEnNodo(unNodo->getHijoIzquierdo(), unRegistro));
 				}
 			}
 		} else {
@@ -58,10 +58,10 @@ Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro) {
 				} else {
 					if (unRegistro->id < unNodo->getHijoDerecho()->getMenorID()) {
 						if (!unNodo->insertar(unRegistro)) {
-							insertarEnNodo(unNodo->getHijoDerecho(), unRegistro);
+							unNodo->modificarHijoDerecho(insertarEnNodo(unNodo->getHijoDerecho(), unRegistro));
 						}
 					} else {
-						insertarEnNodo(unNodo->getHijoDerecho(), unRegistro);
+						unNodo->modificarHijoDerecho(insertarEnNodo(unNodo->getHijoDerecho(), unRegistro));
 					}
 				}
 			} else {
