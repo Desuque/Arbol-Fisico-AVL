@@ -30,14 +30,14 @@ void Persistencia::grabar(ArbolAVL* unArbol) {
 
 void Persistencia::cargar() {
 	  fstream myFile ("myfile.bin", ios::in | ios::binary);
-	  Registro unRegistro;
+	  Registro* unRegistro;
 
 	  myFile.seekg (ios::beg);
 
-	  myFile.read ((char*)&unRegistro, sizeof(Registro));
-	  std::cout<<unRegistro.codigo<<endl;
-
-	  if (strcmp(unRegistro.codigo, "AAX") == 0) {
-		  std::cout<<"Piola"<<endl;
-	  }
+	  myFile.read ((char*)unRegistro, sizeof(Registro));
+	  std::cout<<unRegistro->codigo<<endl;
+	  myFile.read ((char*)unRegistro, sizeof(Registro));
+	  std::cout<<unRegistro->codigo<<endl;
+	  myFile.read ((char*)unRegistro, sizeof(Registro));
+	  std::cout<<unRegistro->codigo<<endl;
 }

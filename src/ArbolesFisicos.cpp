@@ -22,7 +22,7 @@ int main() //int argc, char *argv[] -> como parametro para la interfaz
 
 	//Interfaz* interfaz = new Interfaz(argc, argv);
 
-	creg(9, "AAX", "Descripcion larga 1", arbol);
+	creg(9, "AAA", "Descripcion larga 1", arbol);
 	creg(10, "APL", "Descripcion larga 2", arbol);
 	creg(11, "ZUC", "Descripcion larga 3", arbol);
 
