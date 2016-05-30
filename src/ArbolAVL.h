@@ -17,7 +17,7 @@ public:
 
 	void insertar(Registro* unRegistro);
 	void print();
-
+	Nodo* getRaiz();
 	virtual ~ArbolAVL();
 
 private:

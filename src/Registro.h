@@ -7,8 +7,8 @@ using namespace std;
 
 struct Registro	{
 	int id;
-	string codigo;
-	string descripcion;
+	char codigo [3];
+	char descripcion [1000];
 
 	//pueden agregarse metadatos??
 	int tamanio;

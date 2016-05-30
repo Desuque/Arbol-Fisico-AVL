@@ -8,6 +8,7 @@
 #include "Nodo.h"
 #include "ArbolAVL.h"
 #include <iostream>
+#include <string.h>
 
 using namespace std;
 
@@ -76,9 +77,9 @@ Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro) {
 					Registro* tmpRegistro = new Registro();
 					Registro* mayorRegistro = unNodo->getRegistroConMayorID();
 
-					tmpRegistro->codigo = mayorRegistro->codigo;
 					tmpRegistro->id = mayorRegistro->id;
-					tmpRegistro->descripcion = mayorRegistro->descripcion;
+					strcpy(tmpRegistro->codigo, mayorRegistro->codigo); 			//tmpRegistro->codigo = mayorRegistro->codigo;
+					strcpy(tmpRegistro->descripcion, mayorRegistro->descripcion); 	//tmpRegistro->descripcion = mayorRegistro->descripcion;
 					tmpRegistro->tamanio = mayorRegistro->tamanio;
 
 					unNodo->borrarRegistro(tmpRegistro->id);
@@ -158,6 +159,10 @@ Nodo* ArbolAVL::rotacionIzquierda(Nodo *unNodo) {
 	der->modificarAltura(calcMax(altura(der->getHijoIzquierdo()), altura(der->getHijoDerecho())) + 1);
 
 	return der;
+}
+
+Nodo* ArbolAVL::getRaiz() {
+	return raiz;
 }
 
 void ArbolAVL::print() {
