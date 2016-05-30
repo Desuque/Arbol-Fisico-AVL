@@ -26,9 +26,6 @@ list<Registro*>* Nodo::getRegistros() {
 }
 
 int Nodo::getMenorID() {
-	//Por la documentacion de list, ordena por defecto en forma ascendente
-	//Asi que el primer elemento de la lista es el registro que necesito
-
 	Registro* regTmp = registros->front();
 	return regTmp->id;
 }
@@ -95,6 +92,20 @@ bool Nodo::borrarRegistro(int ID) {
 	return encontrado;
 }
 
+bool Nodo::buscarID(int idBuscado) {
+	bool encontrado = false;
+	Registro* unRegistro;
+
+	for(list<Registro*>::iterator list_iter = registros->begin(); list_iter != registros->end(); list_iter++) {
+		unRegistro = *list_iter;
+		if (unRegistro->id == idBuscado) {
+			encontrado = true;
+			break;
+		}
+	}
+	return encontrado;
+}
+
 Registro* Nodo::getRegistroConMayorID() {
 	return registros->back();
 }
@@ -103,6 +114,9 @@ Registro* Nodo::getRegistroConMenorID() {
 	return registros->front();
 }
 
+int Nodo::getCantidadDeRegistros() {
+	return cantidadDeElementos;
+}
 
 Nodo::~Nodo() {
 	//TODO Como es una lista de punteros que pidieron memoria, hay que recorrer la lista y borrarlos de a uno

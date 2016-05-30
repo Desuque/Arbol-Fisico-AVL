@@ -26,6 +26,10 @@ int main() //int argc, char *argv[] -> como parametro para la interfaz
 	creg(10, "APL", "Descripcion larga 2", arbol);
 	creg(11, "ZUC", "Descripcion larga 3", arbol);
 
+	//beta borrar registro
+	arbol->print();
+	arbol->borrarRegistro(1);
+
 	Persistencia pers;
 	pers.grabar(arbol);
 

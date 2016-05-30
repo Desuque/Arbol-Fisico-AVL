@@ -40,6 +40,10 @@ public:
 	void modificarHijoDerecho(Nodo* nuevoNodo);
 	void modificarAltura(int nuevaAltura);
 	bool borrarRegistro(int ID);
+	bool buscarID(int idBuscado);
+	int getCantidadDeRegistros();
+
+
 
 	virtual ~Nodo();
 

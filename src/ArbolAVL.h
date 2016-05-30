@@ -18,6 +18,8 @@ public:
 	void insertar(Registro* unRegistro);
 	void print();
 	Nodo* getRaiz();
+	Nodo* buscarNodoPorID(Nodo* unNodo, int idBuscado);
+	void borrarRegistro(int idBuscado);
 	virtual ~ArbolAVL();
 
 private:
@@ -28,6 +30,7 @@ private:
 	int getDiferenciaAlturaHijos(Nodo* unNodo);
 	void preOrder(Nodo* root);
 	void balancear(Nodo* unNodo);
+
 };
 
 #endif
