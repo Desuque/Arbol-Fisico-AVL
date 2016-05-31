@@ -66,12 +66,21 @@ bool Nodo::insertar(Registro* unRegistro) {
 	//TODO probablemente no sea con el tamaño de la lista, sino
 	//con la cantidad de bytes_libres
 
-	if (cantidadDeElementos < this->maxElementos) {
+	if (cantidadDeElementos < this->maxPorNodo) {
 		registros->push_front(unRegistro);
 		cantidadDeElementos++;
 		registros->sort(comparaRegistros);
 		return true;
 	}
+	return false;
+}
+
+bool Nodo::estaEnUnderflow() {
+
+	if (cantidadDeElementos < this->minPorNodo) {
+		return true;
+	}
+
 	return false;
 }
 
@@ -92,7 +101,7 @@ bool Nodo::borrarRegistro(int ID) {
 	return encontrado;
 }
 
-bool Nodo::buscarID(int idBuscado) {
+bool Nodo::existeRegistroConID(int idBuscado) {
 	bool encontrado = false;
 	Registro* unRegistro;
 

@@ -22,20 +22,27 @@ int main() //int argc, char *argv[] -> como parametro para la interfaz
 
 	//Interfaz* interfaz = new Interfaz(argc, argv);
 
+	creg(1, "AAA", "Descripcion larga 1", arbol);
+	creg(2, "APL", "Descripcion larga 2", arbol);
+	creg(3, "ZUC", "Descripcion larga 3", arbol);
+	creg(4, "AAA", "Descripcion larga 1", arbol);
+	creg(5, "AAA", "Descripcion larga 1", arbol);
+	creg(6, "ZUC", "Descripcion larga 3", arbol);
+	creg(7, "AAA", "Descripcion larga 1", arbol);
+	creg(8, "AAA", "Descripcion larga 1", arbol);
 	creg(9, "AAA", "Descripcion larga 1", arbol);
-	creg(10, "APL", "Descripcion larga 2", arbol);
-	creg(11, "ZUC", "Descripcion larga 3", arbol);
-
-	//beta borrar registro
-	arbol->print();
-	arbol->borrarRegistro(1);
-
-	Persistencia pers;
-	pers.grabar(arbol);
 
 	arbol->print();
+	arbol->borrarRegistro(9);
+	arbol->borrarRegistro(7);
+	arbol->borrarRegistro(6);
+	arbol->print();
 
-	pers.cargar();
+	//Persistencia pers;
+	//pers.grabar(arbol);
+
+
+	//pers.cargar();
 	return 0;
 }
 

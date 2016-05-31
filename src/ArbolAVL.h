@@ -8,18 +8,17 @@ using namespace std;
 
 class ArbolAVL {
 private:
-	int maxInternos = 3; //TODO: en bytes
-	int maxHoja = 3;	 //TODO: en bytes
 	Nodo* raiz;
 	int alturaRaiz = 0; //declarar como constante
 public:
 	ArbolAVL();
 
 	void insertar(Registro* unRegistro);
+	void borrarRegistro(int unID);
 	void print();
 	Nodo* getRaiz();
 	Nodo* buscarNodoPorID(Nodo* unNodo, int idBuscado);
-	void borrarRegistro(int idBuscado);
+	Nodo* borrarRegistroPorID(Nodo* unNodo, int idBuscado);
 	virtual ~ArbolAVL();
 
 private:

@@ -19,11 +19,13 @@ private:
 	int cantidadDeElementos;
 	int bytes_libres;
 	list<Registro*>* registros;
-	int maxElementos = 3; //TODO DECLARAR COMO CONSTANTE
 	int altura;
 
 public:
 	Nodo();
+
+	int maxPorNodo = 3; //TODO: en bytes
+	int minPorNodo = 2; //TODO: en bytes
 
 	int getMenorID();
 	int getMayorID();
@@ -33,6 +35,7 @@ public:
 	Registro* getRegistroConMenorID();
 	int getAltura();
 	list<Registro*>* getRegistros();
+	bool estaEnUnderflow();
 
 	bool insertar(Registro* unRegistro);
 
@@ -40,10 +43,8 @@ public:
 	void modificarHijoDerecho(Nodo* nuevoNodo);
 	void modificarAltura(int nuevaAltura);
 	bool borrarRegistro(int ID);
-	bool buscarID(int idBuscado);
+	bool existeRegistroConID(int idBuscado);
 	int getCantidadDeRegistros();
-
-
 
 	virtual ~Nodo();
 

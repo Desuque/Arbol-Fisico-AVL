@@ -190,47 +190,71 @@ void ArbolAVL::preOrder(Nodo* unNodo) {
 	}
 }
 
-//Se le pasa el nodo padre y el nodo hijo y se actualiza la
-//altura y las relaciones entre punteros
-void actualizarRelacionPadreHijo(Nodo* nodoPadre, Nodo* nodoHijo, string ) {
-	nodoPadre->modificarHijoDerecho()
+void ArbolAVL::borrarRegistro(int unID) {
+	raiz = borrarRegistroPorID(raiz, unID);
 }
 
-Nodo* ArbolAVL::borrarNodo(Nodo* unNodo, Nodo* nodoVacio) {
+Nodo* ArbolAVL::borrarRegistroPorID(Nodo* unNodo, int idBuscado) {
 	if(unNodo != 0) {
 		int menorID = unNodo->getMenorID();
 		int mayorID = unNodo->getMayorID();
-		if (unNodo->buscarID(idBuscado) == false) {
+		if (!unNodo->existeRegistroConID(idBuscado)) {
 			if (idBuscado < menorID) {
-				return buscarNodoPorID(unNodo->getHijoIzquierdo(), idBuscado);
+				unNodo->modificarHijoIzquierdo(borrarRegistroPorID(unNodo->getHijoIzquierdo(), idBuscado));
 			}
 			if (idBuscado > mayorID) {
-				return buscarNodoPorID(unNodo->getHijoDerecho(), idBuscado);
+				unNodo->modificarHijoDerecho(borrarRegistroPorID(unNodo->getHijoDerecho(), idBuscado));
+
+				if (unNodo->getHijoDerecho() != 0) {
+					if (unNodo->getHijoDerecho()->estaEnUnderflow()) {
+						Registro* tmpReg;
+
+						if (unNodo->getRegistros()->size() - 1 >= unNodo->minPorNodo) {
+							// Si al ancestro le sobra un registro entonces bajo uno
+							unNodo->modificarHijoDerecho(insertarEnNodo(unNodo->getHijoDerecho(), unNodo->getRegistroConMayorID()));
+							unNodo->borrarRegistro(unNodo->getMayorID());
+						} else {
+							// Si al ancestro no le sobra uno, me fijo si le puedo pedir al hijo izq
+							bool suboYBorro = false;
+							if (unNodo->getHijoIzquierdo() != 0) {
+								if (unNodo->getHijoIzquierdo()->getRegistros()->size() - 1 >= unNodo->minPorNodo) {
+									// El mayor del ancestro se lo paso al hijo derecho
+									tmpReg = unNodo->getRegistroConMayorID();
+									unNodo = borrarRegistroPorID(unNodo, unNodo->getMayorID());
+									unNodo->modificarHijoDerecho(insertarEnNodo(unNodo->getHijoDerecho(), tmpReg));
+									// El mayor del hijo izq se lo paso al ancestro para que no quede en UF
+									tmpReg = unNodo->getHijoIzquierdo()->getRegistroConMayorID();
+									unNodo->modificarHijoIzquierdo(borrarRegistroPorID(unNodo->getHijoIzquierdo(), unNodo->getHijoIzquierdo()->getMayorID()));
+									unNodo = insertarEnNodo(unNodo, tmpReg);
+								} else {
+									suboYBorro = true;
+								}
+							} else {
+								suboYBorro = true;
+							}
+							if (suboYBorro) {/*
+								if ((unNodo->getRegistros()->size() + unNodo->getHijoDerecho()->getRegistros()->size()) <= unNodo->maxPorNodo()) {
+									//TODO
+								}*/
+							}
+						}
+
+					}
+				}
 			}
 		} else {
-			return unNodo;
+			unNodo->borrarRegistro(idBuscado);
 		}
 	}
-	return 0;
 
-}
-
-void ArbolAVL::borrarRegistro(int idBuscado) {
-	Nodo* unNodo = buscarNodoPorID(raiz, idBuscado);
-
-	if (unNodo != 0) {
-		unNodo->borrarRegistro(idBuscado);
-		if(unNodo->getCantidadDeRegistros()== 0) {
-			raiz = borrarNodo(raiz, unNodo);
-		}
-	}
+	return unNodo;
 }
 
 Nodo* ArbolAVL::buscarNodoPorID(Nodo* unNodo, int idBuscado) {
 	if(unNodo != 0) {
 		int menorID = unNodo->getMenorID();
 		int mayorID = unNodo->getMayorID();
-		if (unNodo->buscarID(idBuscado) == false) {
+		if (!unNodo->existeRegistroConID(idBuscado)) {
 			if (idBuscado < menorID) {
 				return buscarNodoPorID(unNodo->getHijoIzquierdo(), idBuscado);
 			}
