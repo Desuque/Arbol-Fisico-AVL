@@ -29,13 +29,15 @@ int main() //int argc, char *argv[] -> como parametro para la interfaz
 	creg(5, "AAA", "Descripcion larga 1", arbol);
 	creg(6, "ZUC", "Descripcion larga 3", arbol);
 	creg(7, "AAA", "Descripcion larga 1", arbol);
-	creg(8, "AAA", "Descripcion larga 1", arbol);
-	creg(9, "AAA", "Descripcion larga 1", arbol);
+	//creg(8, "AAA", "Descripcion larga 1", arbol);
+	//creg(9, "AAA", "Descripcion larga 1", arbol);
 
 	arbol->print();
-	arbol->borrarRegistro(9);
-	arbol->borrarRegistro(7);
+	arbol->borrarRegistro(3);
+	arbol->borrarRegistro(4);
+	arbol->borrarRegistro(5);
 	arbol->borrarRegistro(6);
+	//arbol->borrarRegistro(6);
 	arbol->print();
 
 	//Persistencia pers;

@@ -201,6 +201,8 @@ Nodo* ArbolAVL::borrarRegistroPorID(Nodo* unNodo, int idBuscado) {
 		if (!unNodo->existeRegistroConID(idBuscado)) {
 			if (idBuscado < menorID) {
 				unNodo->modificarHijoIzquierdo(borrarRegistroPorID(unNodo->getHijoIzquierdo(), idBuscado));
+
+				//TODO: idem derecho pero con izquierdo
 			}
 			if (idBuscado > mayorID) {
 				unNodo->modificarHijoDerecho(borrarRegistroPorID(unNodo->getHijoDerecho(), idBuscado));
@@ -209,14 +211,16 @@ Nodo* ArbolAVL::borrarRegistroPorID(Nodo* unNodo, int idBuscado) {
 					if (unNodo->getHijoDerecho()->estaEnUnderflow()) {
 						Registro* tmpReg;
 
-						if (unNodo->getRegistros()->size() - 1 >= unNodo->minPorNodo) {
+						//TODO: if (unNodo->getTamanio() - unNodo->getRegistroConMayorID()->getTamanio() >= (unNodo->bytesLibres / 2)) {
+						if (unNodo->getTamanio() - 1 >= unNodo->minPorNodo) {
 							// Si al ancestro le sobra un registro entonces bajo uno
 							unNodo->modificarHijoDerecho(insertarEnNodo(unNodo->getHijoDerecho(), unNodo->getRegistroConMayorID()));
 							unNodo->borrarRegistro(unNodo->getMayorID());
 						} else {
 							// Si al ancestro no le sobra uno, me fijo si le puedo pedir al hijo izq
-							bool suboYBorro = false;
+							bool suboYBorroNodo = false;
 							if (unNodo->getHijoIzquierdo() != 0) {
+								//TODO: if (unNodo->getHijoIzquierdo->getTamanio() - unNodo->getHijoIzquierdo->getRegistroConMayorID()->getTamanio() >= (unNodo->getHijoIzquierdo()->bytesLibres / 2)) {
 								if (unNodo->getHijoIzquierdo()->getRegistros()->size() - 1 >= unNodo->minPorNodo) {
 									// El mayor del ancestro se lo paso al hijo derecho
 									tmpReg = unNodo->getRegistroConMayorID();
@@ -227,15 +231,19 @@ Nodo* ArbolAVL::borrarRegistroPorID(Nodo* unNodo, int idBuscado) {
 									unNodo->modificarHijoIzquierdo(borrarRegistroPorID(unNodo->getHijoIzquierdo(), unNodo->getHijoIzquierdo()->getMayorID()));
 									unNodo = insertarEnNodo(unNodo, tmpReg);
 								} else {
-									suboYBorro = true;
+									suboYBorroNodo = true;
 								}
 							} else {
-								suboYBorro = true;
+								suboYBorroNodo = true;
 							}
-							if (suboYBorro) {/*
-								if ((unNodo->getRegistros()->size() + unNodo->getHijoDerecho()->getRegistros()->size()) <= unNodo->maxPorNodo()) {
-									//TODO
-								}*/
+							if (suboYBorroNodo) {
+								list<Registro*>* registros = unNodo->getHijoDerecho()->getRegistros();
+								Registro* unRegistro;
+								unNodo->modificarHijoDerecho(0); //TODO: hay q hacer delete p liberar mem?? -> ojo pq puedo perder la list de registros
+								for(list<Registro*>::iterator list_iter = registros->begin(); list_iter != registros->end(); list_iter++) {
+									unRegistro = *list_iter;
+									unNodo = insertarEnNodo(unNodo, unRegistro);
+								}
 							}
 						}
 

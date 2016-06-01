@@ -24,7 +24,7 @@ private:
 public:
 	Nodo();
 
-	int maxPorNodo = 3; //TODO: en bytes
+	int maxPorNodo = 5; //TODO: en bytes
 	int minPorNodo = 2; //TODO: en bytes
 
 	int getMenorID();
@@ -34,6 +34,7 @@ public:
 	Registro* getRegistroConMayorID();
 	Registro* getRegistroConMenorID();
 	int getAltura();
+	int getTamanio();
 	list<Registro*>* getRegistros();
 	bool estaEnUnderflow();
 
