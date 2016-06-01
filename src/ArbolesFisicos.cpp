@@ -6,13 +6,10 @@
 
 using namespace std;
 
-void creg(int id, char codigo [3], char descr [1000], ArbolAVL* arbol) {
+void creg(int id, string codigo, string descr , ArbolAVL* arbol) {
 	Registro* unRegistro;
 
-	unRegistro = new Registro();
-	unRegistro->id = id;
-	strcpy(unRegistro->codigo, codigo);
-	strcpy(unRegistro->descripcion, descr);
+	unRegistro = new Registro(id, codigo, descr);
 	arbol->insertar(unRegistro);
 }
 

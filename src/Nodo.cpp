@@ -39,12 +39,12 @@ int Nodo::getTamanio() {
 
 int Nodo::getMenorID() {
 	Registro* regTmp = registros->front();
-	return regTmp->id;
+	return regTmp->getId();
 }
 
 int Nodo::getMayorID() {
 	Registro* regTmp = registros->back();
-	return regTmp->id;
+	return regTmp->getId();
 }
 
 Nodo* Nodo::getHijoIzquierdo() {
@@ -71,7 +71,7 @@ void Nodo::modificarAltura(int nuevaAltura) {
 	this->altura = nuevaAltura;
 }
 
-bool comparaRegistros(Registro* a, Registro* b) { return a->id < b->id; }
+bool comparaRegistros(Registro* a, Registro* b) { return a->getId() < b->getId(); }
 
 
 bool Nodo::insertar(Registro* unRegistro) {
@@ -110,7 +110,7 @@ bool Nodo::borrarRegistro(int ID) {
 
 	for(list<Registro*>::iterator list_iter = registros->begin(); list_iter != registros->end(); list_iter++) {
 		unRegistro = *list_iter;
-		if (unRegistro->id == ID) {
+		if (unRegistro->getId() == ID) {
 			registros->remove(unRegistro);
 			encontrado = true;
 			cantidadDeElementos--;
@@ -127,7 +127,7 @@ bool Nodo::existeRegistroConID(int idBuscado) {
 
 	for(list<Registro*>::iterator list_iter = registros->begin(); list_iter != registros->end(); list_iter++) {
 		unRegistro = *list_iter;
-		if (unRegistro->id == idBuscado) {
+		if (unRegistro->getId() == idBuscado) {
 			encontrado = true;
 			break;
 		}

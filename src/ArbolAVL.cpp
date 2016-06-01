@@ -44,13 +44,13 @@ Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro) {
 	if (unNodo == 0) {
 		return crearNodo(unRegistro);
 	} else {
-		if (unRegistro->id < unNodo->getMenorID()) {
+		if (unRegistro->getId() < unNodo->getMenorID()) {
 			if (unNodo->getHijoIzquierdo() == 0) {
 				if (!unNodo->insertar(unRegistro)) {
 					unNodo->modificarHijoIzquierdo(insertarEnNodo(unNodo->getHijoIzquierdo(), unRegistro));
 				}
 			} else {
-				if (unRegistro->id > (unNodo->getHijoIzquierdo())->getMayorID()) {
+				if (unRegistro->getId() > (unNodo->getHijoIzquierdo())->getMayorID()) {
 					if (!unNodo->insertar(unRegistro)) {
 						unNodo->modificarHijoIzquierdo(insertarEnNodo(unNodo->getHijoIzquierdo(), unRegistro));
 					}
@@ -59,13 +59,13 @@ Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro) {
 				}
 			}
 		} else {
-			if (unRegistro->id > unNodo->getMayorID()) {
+			if (unRegistro->getId() > unNodo->getMayorID()) {
 				if (unNodo->getHijoDerecho() == 0) {
 					if (!unNodo->insertar(unRegistro)) {
 						unNodo->modificarHijoDerecho(insertarEnNodo(unNodo->getHijoDerecho(), unRegistro));
 					}
 				} else {
-					if (unRegistro->id < unNodo->getHijoDerecho()->getMenorID()) {
+					if (unRegistro->getId() < unNodo->getHijoDerecho()->getMenorID()) {
 						if (!unNodo->insertar(unRegistro)) {
 							unNodo->modificarHijoDerecho(insertarEnNodo(unNodo->getHijoDerecho(), unRegistro));
 						}
@@ -75,15 +75,10 @@ Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro) {
 				}
 			} else {
 				if (!unNodo->insertar(unRegistro)) {
-					Registro* tmpRegistro = new Registro();
 					Registro* mayorRegistro = unNodo->getRegistroConMayorID();
+					Registro* tmpRegistro = new Registro(mayorRegistro->getId(), mayorRegistro->getCodigo(), mayorRegistro->getDescripcion());
 
-					tmpRegistro->id = mayorRegistro->id;
-					strcpy(tmpRegistro->codigo, mayorRegistro->codigo); 			//tmpRegistro->codigo = mayorRegistro->codigo;
-					strcpy(tmpRegistro->descripcion, mayorRegistro->descripcion); 	//tmpRegistro->descripcion = mayorRegistro->descripcion;
-					tmpRegistro->tamanio = mayorRegistro->tamanio;
-
-					unNodo->borrarRegistro(tmpRegistro->id);
+					unNodo->borrarRegistro(tmpRegistro->getId());
 					unNodo->modificarHijoDerecho(insertarEnNodo(unNodo->getHijoDerecho(), tmpRegistro));
 					insertarEnNodo(unNodo, unRegistro); //TODO: Esto seguramente este mal, tendria que asignarle el return a algo
 				}
@@ -100,21 +95,21 @@ Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro) {
 
 	//TODO: probar a fondo todas las rots. Algunos getHijoIzq a veces devuelven null o 0
 
-	if ((diferencia > 1) && (unRegistro->id < unNodo->getHijoIzquierdo()->getRegistroConMenorID()->id)) {
+	if ((diferencia > 1) && (unRegistro->getId() < unNodo->getHijoIzquierdo()->getMenorID())) {
 		return rotacionDerecha(unNodo);
 	}
 
-	if ((diferencia < -1) && (unRegistro->id > unNodo->getHijoDerecho()->getRegistroConMayorID()->id)) {
+	if ((diferencia < -1) && (unRegistro->getId() > unNodo->getHijoDerecho()->getMayorID())) {
 		return rotacionIzquierda(unNodo);
 	}
 
-	if ((diferencia > 1) && (unRegistro->id > unNodo->getHijoIzquierdo()->getRegistroConMayorID()->id))
+	if ((diferencia > 1) && (unRegistro->getId() > unNodo->getHijoIzquierdo()->getMayorID()))
 	{
 		unNodo->modificarHijoIzquierdo(rotacionIzquierda(unNodo->getHijoIzquierdo()));
 		return rotacionIzquierda(unNodo);
 	}
 
-	if ((diferencia < -1) && (unRegistro->id < unNodo->getHijoDerecho()->getRegistroConMenorID()->id))
+	if ((diferencia < -1) && (unRegistro->getId() < unNodo->getHijoDerecho()->getMenorID()))
 	{
 		unNodo->modificarHijoDerecho(rotacionDerecha(unNodo->getHijoDerecho()));
 		return rotacionIzquierda(unNodo);
@@ -179,9 +174,9 @@ void ArbolAVL::preOrder(Nodo* unNodo) {
 		for(list<Registro*>::iterator list_iter = registros->begin(); list_iter != registros->end(); list_iter++) {
 			unRegistro = *list_iter;
 			if (unNodo->getAltura() == 1) {
-				cout<<unRegistro->id<<" ";
+				cout<<unRegistro->getId()<<" ";
 			} else {
-				cout<<unRegistro->id<<" ";
+				cout<<unRegistro->getId()<<" ";
 			}
 		}
 		cout<<"|"<<endl;

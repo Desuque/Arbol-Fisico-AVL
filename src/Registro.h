@@ -5,14 +5,19 @@
 
 using namespace std;
 
-struct Registro	{
-	int id;
-	//TODO: ok 1+ para el 0 terminator?
-	char codigo [4];
-	char descripcion [1001];
+class Registro {
 
-	//pueden agregarse metadatos??
-	int tamanio;
+	private:
+		int id;
+		char codigo [4];
+		char descripcion [1001];
+
+	public:
+		Registro(int id, string codigo, string descripcion);
+		int getId();
+		string getCodigo();
+		string getDescripcion();
+		int getTamanio();
 };
 
 #endif

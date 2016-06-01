@@ -10,12 +10,18 @@
 
 using namespace std;
 
+struct pNodo {
+	int tamano;
+
+	int offsetIzq;
+	int offsetDer;
+};
+
 void Persistencia::grabar(ArbolAVL* unArbol) {
 	  fstream myFile ("myfile.bin", ios::out | ios::binary);
 	  myFile.seekp(0);
 
 	  Nodo* unNodo = unArbol->getRaiz();
-	  Registro memreg;
 	  Registro* unRegistro;
 
 		list<Registro*>* registros = unNodo->getRegistros();
@@ -35,9 +41,9 @@ void Persistencia::cargar() {
 	  myFile.seekg (ios::beg);
 
 	  myFile.read ((char*)unRegistro, sizeof(Registro));
-	  std::cout<<unRegistro->codigo<<endl;
+	  std::cout<<unRegistro->getCodigo()<<endl;
 	  myFile.read ((char*)unRegistro, sizeof(Registro));
-	  std::cout<<unRegistro->codigo<<endl;
+	  std::cout<<unRegistro->getCodigo()<<endl;
 	  myFile.read ((char*)unRegistro, sizeof(Registro));
-	  std::cout<<unRegistro->codigo<<endl;
+	  std::cout<<unRegistro->getCodigo()<<endl;
 }
