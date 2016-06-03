@@ -9,8 +9,8 @@ class Registro {
 
 	private:
 		int id;
-		char codigo [4];
-		char descripcion [1001];
+		string codigo;
+		string descripcion;
 
 	public:
 		Registro(int id, string codigo, string descripcion);
@@ -18,6 +18,7 @@ class Registro {
 		string getCodigo();
 		string getDescripcion();
 		int getTamanio();
+		int getTamanioDescripcion();
 };
 
 #endif

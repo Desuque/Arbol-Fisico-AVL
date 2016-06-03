@@ -88,6 +88,7 @@ bool Nodo::insertar(Registro* unRegistro) {
 		registros->push_front(unRegistro);
 		cantidadDeElementos++;
 		registros->sort(comparaRegistros);
+
 		return true;
 	}
 	return false;
