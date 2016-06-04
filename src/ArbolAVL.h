@@ -9,7 +9,8 @@ using namespace std;
 class ArbolAVL {
 private:
 	Nodo* raiz;
-	int indiceMasGrande;
+	int mayorIdReg;
+
 public:
 	ArbolAVL();
 

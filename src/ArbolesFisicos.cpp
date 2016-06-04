@@ -42,8 +42,6 @@ int main() //int argc, char *argv[] -> como parametro para la interfaz
 	creg("AAA", "Descripcion larga 1", arbol);
 	creg("AAB", "Descripcion larga 2", arbol);
 	creg("AAC", "Descripcion larga 3", arbol);
-	creg("AAD", "Descripcion larga 4", arbol);
-	creg("AAE", "Descripcion larga 5", arbol);
 
 	arbol->print();
 

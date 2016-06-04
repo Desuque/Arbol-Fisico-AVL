@@ -15,8 +15,7 @@ using namespace std;
 ArbolAVL::ArbolAVL() {
 	this->raiz = 0;
 	//TODO: Abrir el archivo
-	//TODO: Lo lee del archivo (o de la raiz o busca el mayor)
-	this->indiceMasGrande = 0;
+	this->mayorIdReg = 0; //TODO: Lo lee del archivo (Metadato de la raiz)
 }
 
 int altura(Nodo* unNodo) {
@@ -27,8 +26,8 @@ int altura(Nodo* unNodo) {
 }
 
 void ArbolAVL::insertar(Registro* unRegistro){
-	indiceMasGrande++;
-	unRegistro->setId(indiceMasGrande);
+	unRegistro->setId(mayorIdReg);
+	mayorIdReg++;
 	raiz = insertarEnNodo(raiz, unRegistro);
 }
 
