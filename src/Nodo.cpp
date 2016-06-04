@@ -105,6 +105,11 @@ bool Nodo::estaEnUnderflow() {
 	return false;
 }
 
+bool Nodo::esHoja() {
+
+	return this->altura == 1;
+}
+
 bool Nodo::borrarRegistro(int ID) {
 	bool encontrado = false;
 	Registro* unRegistro;

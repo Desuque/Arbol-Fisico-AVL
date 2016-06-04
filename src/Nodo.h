@@ -24,8 +24,8 @@ private:
 public:
 	Nodo();
 
-	int maxPorNodo = 5; //TODO: en bytes
-	int minPorNodo = 2; //TODO: en bytes
+	int maxPorNodo = 3; //TODO: en bytes
+	int minPorNodo = 1; //TODO: en bytes
 
 	int getMenorID();
 	int getMayorID();
@@ -37,6 +37,7 @@ public:
 	int getTamanio();
 	list<Registro*>* getRegistros();
 	bool estaEnUnderflow();
+	bool esHoja();
 
 	bool insertar(Registro* unRegistro);
 
