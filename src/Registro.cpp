@@ -4,10 +4,13 @@
 
 using namespace std;
 
-Registro::Registro(int id, string codigo, string descripcion) {
-	this->id = id; //esto se tiene que ir, hay un id por nodo, automatico
+Registro::Registro(string codigo, string descripcion) {
 	this->codigo = codigo;
 	this->descripcion = descripcion;
+}
+
+void Registro::setId(int unId) {
+	this->id = unId;
 }
 
 int Registro::getId() {

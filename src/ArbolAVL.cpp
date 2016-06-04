@@ -14,6 +14,9 @@ using namespace std;
 
 ArbolAVL::ArbolAVL() {
 	this->raiz = 0;
+	//TODO: Abrir el archivo
+	//TODO: Lo lee del archivo (o de la raiz o busca el mayor)
+	this->indiceMasGrande = 0;
 }
 
 int altura(Nodo* unNodo) {
@@ -24,6 +27,8 @@ int altura(Nodo* unNodo) {
 }
 
 void ArbolAVL::insertar(Registro* unRegistro){
+	indiceMasGrande++;
+	unRegistro->setId(indiceMasGrande);
 	raiz = insertarEnNodo(raiz, unRegistro);
 }
 
@@ -76,7 +81,8 @@ Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro) {
 			} else {
 				if (!unNodo->insertar(unRegistro)) {
 					Registro* mayorRegistro = unNodo->getRegistroConMayorID();
-					Registro* tmpRegistro = new Registro(mayorRegistro->getId(), mayorRegistro->getCodigo(), mayorRegistro->getDescripcion());
+					Registro* tmpRegistro = new Registro(mayorRegistro->getCodigo(), mayorRegistro->getDescripcion());
+					tmpRegistro->setId(mayorRegistro->getId());
 
 					unNodo->borrarRegistro(tmpRegistro->getId());
 					unNodo->modificarHijoDerecho(insertarEnNodo(unNodo->getHijoDerecho(), tmpRegistro));

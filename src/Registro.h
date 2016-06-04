@@ -13,7 +13,8 @@ class Registro {
 		string descripcion;
 
 	public:
-		Registro(int id, string codigo, string descripcion);
+		Registro(string codigo, string descripcion);
+		void setId(int unId);
 		int getId();
 		string getCodigo();
 		string getDescripcion();

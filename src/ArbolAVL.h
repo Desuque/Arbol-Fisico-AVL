@@ -9,7 +9,7 @@ using namespace std;
 class ArbolAVL {
 private:
 	Nodo* raiz;
-	int alturaRaiz = 0; //declarar como constante
+	int indiceMasGrande;
 public:
 	ArbolAVL();
 
