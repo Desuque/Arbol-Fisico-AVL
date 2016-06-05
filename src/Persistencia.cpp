@@ -15,7 +15,6 @@ using namespace std;
 
 Persistencia::Persistencia() {
 	buff_bloque = new char[tam_bloque];
-	buff_espacioLibre = new char[tam_espacioLibre];
 	buff_flagDeTipo = new char[tam_flagDeTipo];
 	buff_codigo = new char[tam_codigo];
 	buff_tam_descripcion = new char[tam_descripcion];
@@ -23,21 +22,70 @@ Persistencia::Persistencia() {
 	buff_hijoIzquierdo = new char[tam_hijoIzquierdo];
 	buff_hijoDerecho = new char[tam_hijoDerecho];
 
-	bloque = new char[tam_bloque];
 }
 
-void Persistencia::leerBloque(int idNodo) {
-	fstream archivo ("ArbolAVL.bin", ios::in | ios::binary);
+void Persistencia::setNombreArchivo(string nombreArchivo) {
+	this->nombreArchivo = nombreArchivo;
+}
+
+int Persistencia::leerMayorIdNodo() {
+	int buffer;
+	fstream archivo (nombreArchivo.c_str() , ios::in | ios::binary);
+
+	archivo.seekg (0, ios::beg);
+	archivo.read ((char*)&buffer, tam_meta_id);
+
+	return buffer;
+}
+
+int Persistencia::leerMayorIdReg() {
+	int buffer;
+	fstream archivo (nombreArchivo.c_str() , ios::in | ios::binary);
+
+	archivo.seekg (tam_meta_id, ios::beg);
+	archivo.read ((char*)&buffer, tam_meta_id);
+
+	return buffer;
+}
+
+char* Persistencia::leerBloque(int idNodo) {
+	bloque = new char[tam_bloque];
+	fstream archivo (nombreArchivo.c_str() , ios::in | ios::binary);
 
 	archivo.seekg (idNodo*tam_bloque);
 	archivo.read (bloque, tam_bloque);
 
-	for(int i=0; i<tam_bloque; i++) {
-		cout<<bloque[i];
-	}
+	return bloque;
+}
+
+char* Persistencia::calcularEspacioLibreBloque(Registro* unRegistro) {
+	buff_espacioLibre = new char[tam_espacioLibre];
+
+	//Calculo el espacio libre luego de insertar el registro
+	int resto = tam_espacioLibre + tam_flagDeTipo + tam_codigo + tam_descripcion + unRegistro->getTamanioDescripcion() + tam_flagExisteRegistro + tam_hijoIzquierdo + tam_hijoDerecho;
+	int espacioLibre =  tam_bloque - resto;
+
+	string s_espacioLibre; //Convierto el tamanio de espacio libre a string
+	stringstream convertir;
+	convertir << espacioLibre;
+	s_espacioLibre = convertir.str();
+
+	ostringstream espacioLibre_padding; //Relleno los espacios para mantener el bloque
+	espacioLibre_padding<<setfill('0')<<setw(tam_espacioLibre);
+	espacioLibre_padding<<s_espacioLibre;
+	s_espacioLibre = espacioLibre_padding.str();
+	strcpy(buff_espacioLibre, (s_espacioLibre).c_str());
+
+	return buff_espacioLibre;
 }
 
 void Persistencia::grabar(Registro* unRegistro, int idNodo) {
+	//Grabo el espacio libre
+	escribirMetadatosNodo(calcularEspacioLibreBloque(unRegistro), 2); //offset= 2
+
+
+	cout<<"sale"<<endl;
+	/**
 	leerBloque(idNodo); //Queda el bloque a leer cargado en la variable bloque
 
 	//TODO falta calcular que el registro a ingresar tiene mas de 1000 caracteres, aca supongo que es fijo siempre
@@ -48,7 +96,34 @@ void Persistencia::grabar(Registro* unRegistro, int idNodo) {
 		grabarRegistroLongFija(unRegistro, idNodo, tam_espacioLibre);
 	} else { //Supongo que ya hay un registro cargado
 		grabarRegistroLongFija(unRegistro, idNodo, cargaDeBloque);
-	}
+	}**/
+	//grabarRegistroLongFija(unRegistro, idNodo, 0);
+}
+
+void Persistencia::escribirMaxIDNodo(int maxID) {
+	fstream archivo;
+	archivo.open(nombreArchivo.c_str(), ios::out | ios::binary | ios::app );
+	archivo.seekp(0, ios::beg);
+	archivo.write(reinterpret_cast<const char *>(&maxID), tam_meta_id);
+	archivo.close();
+}
+
+void Persistencia::escribirMaxIDReg(int maxID) {
+	fstream archivo;
+	archivo.open(nombreArchivo.c_str(), ios::out | ios::binary | ios::app );
+	archivo.seekp(tam_meta_id, ios::beg);
+	archivo.write(reinterpret_cast<const char *>(&maxID), tam_meta_id);
+	archivo.close();
+}
+
+void Persistencia::escribirMetadatosNodo(char* buffer, int posicion) {
+	fstream archivo;
+	archivo.open(nombreArchivo.c_str(), ios::out | ios::binary );
+	archivo.seekp(posicion);
+	string str(buffer);
+	archivo.write(buffer, str.size());
+	archivo.close();
+	delete buffer;
 }
 
 void Persistencia::grabarRegistroLongFija(Registro* unRegistro, int idNodo, int padding) {
@@ -81,25 +156,6 @@ void Persistencia::grabarRegistroLongFija(Registro* unRegistro, int idNodo, int 
 	strcpy (buff_hijoDerecho, "V");
 	strcpy (buff_flagExisteRegistro, "0");
 
-	//Calculo el espacio libre luego de insertar el registro
-	int resto = tam_espacioLibre + tam_flagDeTipo + tam_codigo + tam_descripcion + unRegistro->getTamanioDescripcion() + tam_flagExisteRegistro + tam_hijoIzquierdo + tam_hijoDerecho;
-	int espacioLibre =  tam_bloque - resto;
-	cout<<"Resto:"<<resto<<endl;
-	cout<<"EspacioLibre"<<espacioLibre<<endl;
-
-	string s_espacioLibre; //Convierto el tamanio de espacio libre a string
-	stringstream convertir;
-	convertir << espacioLibre;
-	s_espacioLibre = convertir.str();
-	ostringstream espacioLibre_padding; //Relleno los espacios para mantener el bloque
-	espacioLibre_padding<<setfill('0')<<setw(tam_espacioLibre);
-	espacioLibre_padding<<s_espacioLibre;
-	s_espacioLibre = espacioLibre_padding.str();
-	strcpy(buff_espacioLibre, (s_espacioLibre).c_str());
-
-	//Escribo los primeros 4 caracteres del espacio solo al principio
-	escribir(buff_espacioLibre, idNodo, 0);
-
 	//Creo el bloque
 	strcat (buff_bloque, buff_flagDeTipo);
 	strcat (buff_bloque, buff_codigo);
@@ -112,18 +168,25 @@ void Persistencia::grabarRegistroLongFija(Registro* unRegistro, int idNodo, int 
 	for(int i=0; i<tam_bloque; i++) {
 		cout<<buff_bloque[i];
 	}
-	escribir(buff_bloque, idNodo, padding);
+	//escribir(buff_bloque, idNodo, tam_bloque, 4);
 
 }
 
-void Persistencia::escribir(char* buffer, int idNodo, int padding) {
-	fstream archivo ("ArbolAVL.bin", ios::out | ios::binary);
-
-	archivo.seekp((idNodo*tam_bloque)+padding);
-
-	int cargaDeBloque = strlen(buffer);
-
-	archivo.write(buffer, cargaDeBloque);
-	archivo.flush();
+void Persistencia::escribirBloqueAlFinal(char* buffer, int idNodo) {
+	fstream archivo;
+	archivo.open(nombreArchivo.c_str(), ios::in | ios::out | ios::binary | ios::app);
+	archivo.seekp(0, ios::end);
+	archivo.write(buffer, tam_bloque);
 	archivo.close();
+
+	delete (buffer);
+}
+
+void Persistencia::escribirBloque(char* buffer, int idNodo, int posicion) { //posicion tiene que venir con +4 de metadatos
+	fstream archivo;
+	archivo.open(nombreArchivo.c_str(), ios::out | ios::in | ios::binary);
+	archivo.seekp(posicion, ios::beg);
+	archivo.write(buffer, tam_bloque);
+	archivo.close();
+	delete buffer;
 }

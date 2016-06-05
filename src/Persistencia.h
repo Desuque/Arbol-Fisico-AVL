@@ -31,6 +31,7 @@ private:
 	int tam_flagExisteRegistro = 1; // 1 o 0 segun exista otro registro (1) o no (0)
 	int tam_hijoIzquierdo = 4; // Tamaño del ID del hijo izquierdo
 	int tam_hijoDerecho = 4;
+	int tam_meta_id = 4; //Tamaño metadato mayor id registro, mayor id nodo
 
 	char* buff_espacioLibre;
 	char* buff_bloque;
@@ -44,15 +45,27 @@ private:
 
 	char* bloque;
 
+	string nombreArchivo;
+
 public:
 	Persistencia();
-	void leerBloque(int id);
+	void setNombreArchivo(string nombreArchivo);
+	char* leerBloque(int id);
 	void grabar(Registro* unRegistro, int idNodo);
+
+	int leerMayorIdNodo();
+	int leerMayorIdReg();
+
+	void escribirMaxIDNodo(int maxID);
+	void escribirMaxIDReg(int maxID);
 
 	//El padding sirve para grabar mas de un registro sabiendo hasta donde esta cargado
 	void grabarRegistroLongFija(Registro* unRegistro, int idNodo, int padding);
 	int calcularEspacioLibre(int padding, int tamanioDescripcion);
-	void escribir(char* bloque, int idNodo, int padding);
+	void escribirMetadatosNodo(char* buffer, int posicion);
+	void escribirBloqueAlFinal(char* buffer, int idNodo);
+	void escribirBloque(char* buffer, int idNodo, int posicion);
+	char* calcularEspacioLibreBloque(Registro* unRegistro);
 	~Persistencia();
 };
 
