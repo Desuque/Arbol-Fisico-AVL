@@ -4,25 +4,28 @@ using namespace std;
 
 struct ClaveValor {
 	int clave;
-	int valor;
+	int espacio;
 };
 
 ArchivoLibres::ArchivoLibres(string nombre) {
-	nombre = nombre + ".bin";
-	archivo.open(nombre.c_str(), ios::binary | ios::in | ios::out);
+	this->nombre = nombre + ".bin";
 }
 
-void ArchivoLibres::grabar(int clave, int valor) {
-	archivo.seekp( ios::end );
-
+void ArchivoLibres::grabar(int clave, int espacio) {
 	ClaveValor reg;
 	reg.clave = clave;
-	reg.valor = valor;
+	reg.espacio = espacio;
 
+	fstream archivo;
+	archivo.open(this->nombre.c_str(), ios::binary | ios::out | ios::app);
+	archivo.seekp( 0,  ios::end );
 	archivo.write((char*) &reg, sizeof(ClaveValor));
+	archivo.close();
 }
 
-int ArchivoLibres::buscar(int clave) {
+int ArchivoLibres::buscarEspacioLibre(int espacio) {
+	fstream archivo;
+	archivo.open(this->nombre.c_str(), ios::binary | ios::in);
 	archivo.seekg( ios::beg );
 
 	bool found = false;
@@ -30,19 +33,19 @@ int ArchivoLibres::buscar(int clave) {
 
 	while (!archivo.eof() && !found) {
 		archivo.read (reinterpret_cast<char *>(&reg), sizeof(ClaveValor));
-		if (reg.clave == clave) {
+		if (reg.espacio >= espacio) {
 			found = true;
 		}
 	}
 
 	if (found) {
 		//TODO: si encuentra.. borrar siempre?
-		return reg.valor;
+		return reg.clave;
 	} else {
 		return 0;
 	}
 }
 
 ArchivoLibres::~ArchivoLibres() {
-	archivo.close();
+
 }

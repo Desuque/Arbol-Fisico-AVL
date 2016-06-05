@@ -2,17 +2,22 @@
 #define ARBOLAVL_H_
 #include "Registro.h"
 #include "Nodo.h"
+#include "Persistencia.h"
 #include <list>
 
 using namespace std;
 
+class Persistencia;
+
 class ArbolAVL {
 private:
+	static const int idRaiz = 0;
 	Nodo* raiz;
 	int mayorIdReg;
+	Persistencia* archivoArbol; //TODO: A Persistencia llamarla como ArchivoArbol()
 
 public:
-	ArbolAVL();
+	ArbolAVL(string nombreArch);
 
 	void insertar(Registro* unRegistro);
 	void borrarRegistro(int unID);

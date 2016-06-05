@@ -1,6 +1,7 @@
 #include "ArbolAVL.h"
 #include "Interfaz.h"
 #include "Persistencia.h"
+#include "ArchivoLibres.h"
 #include <string.h>
 #include <iostream>
 
@@ -35,13 +36,13 @@ int main() //int argc, char *argv[] -> como parametro para la interfaz
 	//Fin test persistencia
 	*/
 
-	ArbolAVL* arbol = new ArbolAVL();
+	ArbolAVL* arbol = new ArbolAVL("DNIs");
 
 	//Interfaz* interfaz = new Interfaz(argc, argv);
 
-	creg("AAA", "Descripcion larga 1", arbol);
-	creg("AAB", "Descripcion larga 2", arbol);
-	creg("AAC", "Descripcion larga 3", arbol);
+	creg("LGD", "Leandro Gonzalo Devesa", arbol);
+	creg("LHD", "Leandro Huemul Desuque", arbol);
+	creg("ZZZ", "Z Z Z", arbol);
 
 	arbol->print();
 

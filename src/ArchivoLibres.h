@@ -15,12 +15,12 @@ using namespace std;
 class ArchivoLibres {
 
 private:
-	fstream archivo;
+	string nombre;
 
 public:
 	ArchivoLibres(string nombre);
-	void grabar(int clave, int valor);
-	int buscar(int clave);
+	void grabar(int clave, int espacio);
+	int buscarEspacioLibre(int espacio);
 	~ArchivoLibres();
 };
 

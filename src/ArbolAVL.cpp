@@ -12,10 +12,29 @@
 
 using namespace std;
 
-ArbolAVL::ArbolAVL() {
-	this->raiz = 0;
-	//TODO: Abrir el archivo
-	this->mayorIdReg = 0; //TODO: Lo lee del archivo (Metadato de la raiz)
+ArbolAVL::ArbolAVL(string nombreArch) {
+	this->mayorIdReg = 0;
+
+	//archivoArbol.setNombreArchivo(nombreArch);
+	//this->raiz = armarNodo(archivoArbol->leerBloque(idRaiz));
+	//this->mayorIdReg = archivoArbol->leerMayorIdReg();
+	//this->mayorIdNodo = archivoArbol->leerMayorIdNodo();
+}
+
+Nodo* armarNodo(char* unBloque) {
+	int id;
+	string codigo;
+	string descr;
+
+	if (unBloque[0] == 0) {
+		return 0;
+	} else {
+		Nodo* unNodo = new Nodo();
+		// TODO: armar nodo
+
+		return unNodo;
+	}
+
 }
 
 int altura(Nodo* unNodo) {
