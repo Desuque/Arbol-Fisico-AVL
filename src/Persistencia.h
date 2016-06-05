@@ -56,6 +56,7 @@ public:
 	int leerMayorIdNodo();
 	int leerMayorIdReg();
 
+	void escribirUnInt(int unInt, int unaPos);
 	void escribirMaxIDNodo(int maxID);
 	void escribirMaxIDReg(int maxID);
 

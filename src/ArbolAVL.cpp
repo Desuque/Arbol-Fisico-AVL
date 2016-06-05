@@ -12,16 +12,15 @@
 
 using namespace std;
 
-ArbolAVL::ArbolAVL(string nombreArch) {
-	this->mayorIdReg = 0;
-
-	//archivoArbol.setNombreArchivo(nombreArch);
-	//this->raiz = armarNodo(archivoArbol->leerBloque(idRaiz));
-	//this->mayorIdReg = archivoArbol->leerMayorIdReg();
-	//this->mayorIdNodo = archivoArbol->leerMayorIdNodo();
+ArbolAVL::ArbolAVL(string nombre) {
+	archivoArbol = new Persistencia();
+	archivoArbol->setNombreArchivo(nombre);
+	this->raiz = armarNodo(archivoArbol->leerBloque(idRaiz));
+	this->mayorIdReg = archivoArbol->leerMayorIdReg();
+	this->mayorIdNodo = archivoArbol->leerMayorIdNodo();
 }
 
-Nodo* armarNodo(char* unBloque) {
+Nodo* ArbolAVL::armarNodo(char* unBloque) {
 	int id;
 	string codigo;
 	string descr;

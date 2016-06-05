@@ -25,7 +25,7 @@ Persistencia::Persistencia() {
 }
 
 void Persistencia::setNombreArchivo(string nombreArchivo) {
-	this->nombreArchivo = nombreArchivo;
+	this->nombreArchivo = nombreArchivo + ".bin";
 }
 
 int Persistencia::leerMayorIdNodo() {
@@ -100,20 +100,20 @@ void Persistencia::grabar(Registro* unRegistro, int idNodo) {
 	//grabarRegistroLongFija(unRegistro, idNodo, 0);
 }
 
-void Persistencia::escribirMaxIDNodo(int maxID) {
+void Persistencia::escribirUnInt(int unInt, int unaPos) {
 	fstream archivo;
 	archivo.open(nombreArchivo.c_str(), ios::out | ios::binary | ios::app );
 	archivo.seekp(0, ios::beg);
-	archivo.write(reinterpret_cast<const char *>(&maxID), tam_meta_id);
+	archivo.write(reinterpret_cast<const char *>(&unInt), 4);
 	archivo.close();
 }
 
+void Persistencia::escribirMaxIDNodo(int maxID) {
+	escribirUnInt(maxID, 0);
+}
+
 void Persistencia::escribirMaxIDReg(int maxID) {
-	fstream archivo;
-	archivo.open(nombreArchivo.c_str(), ios::out | ios::binary | ios::app );
-	archivo.seekp(tam_meta_id, ios::beg);
-	archivo.write(reinterpret_cast<const char *>(&maxID), tam_meta_id);
-	archivo.close();
+	escribirUnInt(maxID, tam_meta_id);
 }
 
 void Persistencia::escribirMetadatosNodo(char* buffer, int posicion) {

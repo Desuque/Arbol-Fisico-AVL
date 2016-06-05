@@ -14,10 +14,11 @@ private:
 	static const int idRaiz = 0;
 	Nodo* raiz;
 	int mayorIdReg;
+	int mayorIdNodo;
 	Persistencia* archivoArbol; //TODO: A Persistencia llamarla como ArchivoArbol()
 
 public:
-	ArbolAVL(string nombreArch);
+	ArbolAVL(string nombre);
 
 	void insertar(Registro* unRegistro);
 	void borrarRegistro(int unID);
@@ -25,6 +26,7 @@ public:
 	Nodo* getRaiz();
 	Nodo* buscarNodoPorID(Nodo* unNodo, int idBuscado);
 	Nodo* borrarRegistroPorID(Nodo* unNodo, int idBuscado);
+	Nodo* armarNodo(char* unBloque);
 	virtual ~ArbolAVL();
 
 private:
