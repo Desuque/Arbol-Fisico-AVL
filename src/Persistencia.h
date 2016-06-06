@@ -23,6 +23,8 @@ class Persistencia {
 	 */
 
 private:
+	static const int maxCaracteresRegistroFijo = 1000;
+
 	int tam_bloque = 4096;
 	int tam_espacioLibre = 4;
 	int tam_flagDeTipo = 1; // 1 o 0 segun bloque de long fija (1) o bloque de long variable (0)
@@ -57,6 +59,7 @@ public:
 	int leerMayorIdNodo();
 	int leerMayorIdReg();
 
+	bool esRegistroFijo(Registro* unRegistro);
 	void escribirUnInt(int unInt, int unaPos);
 	void escribirUnString(string array, int unaPos);
 	void escribirMaxIDNodo(int maxID);
