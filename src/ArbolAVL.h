@@ -13,9 +13,8 @@ class ArbolAVL {
 private:
 	static const int idRaiz = 0;
 	Nodo* raiz;
-	int mayorIdReg;
-	int mayorIdNodo;
 	Persistencia* archivoArbol; //TODO: A Persistencia llamarla como ArchivoArbol()
+	int maxIdReg;
 
 public:
 	ArbolAVL(string nombre);
@@ -26,7 +25,6 @@ public:
 	Nodo* getRaiz();
 	Nodo* buscarNodoPorID(Nodo* unNodo, int idBuscado);
 	Nodo* borrarRegistroPorID(Nodo* unNodo, int idBuscado);
-	Nodo* armarNodo(char* unBloque);
 	virtual ~ArbolAVL();
 
 private:

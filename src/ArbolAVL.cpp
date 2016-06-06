@@ -14,26 +14,8 @@ using namespace std;
 
 ArbolAVL::ArbolAVL(string nombre) {
 	archivoArbol = new Persistencia(nombre);
-	this->raiz = armarNodo(archivoArbol->leerBloque(idRaiz));
-	this->mayorIdReg = archivoArbol->leerMayorIdReg();
-	this->mayorIdNodo = archivoArbol->leerMayorIdNodo();
-}
-
-Nodo* ArbolAVL::armarNodo(char* unBloque) {
-	int id;
-	string codigo;
-	string descr;
-
-	if (unBloque[0] == 0) {
-		return 0;
-	} else {
-
-		//Nodo* unNodo = new Nodo();
-		// TODO: armar nodo
-
-		//return unNodo;
-	}
-
+	this->raiz = archivoArbol->devolverNodo(idRaiz);
+	this->maxIdReg = archivoArbol->leerMayorIdReg();
 }
 
 int altura(Nodo* unNodo) {
@@ -43,21 +25,15 @@ int altura(Nodo* unNodo) {
 	return unNodo->getAltura();
 }
 
-void ArbolAVL::insertar(Registro* unRegistro){
-	unRegistro->setId(mayorIdReg);
-	mayorIdReg++;
+void ArbolAVL::insertar(Registro* unRegistro) {
+	unRegistro->setId(maxIdReg);
+	maxIdReg++;
 	raiz = insertarEnNodo(raiz, unRegistro);
 }
 
 Nodo* ArbolAVL::crearNodo(Registro* unRegistro) {
-	Nodo* unNodo = new Nodo(mayorIdNodo);
-	mayorIdNodo++;
-	unNodo->insertar(unRegistro);
-
 	/** Beta persistencia **/
-	archivoArbol->grabar(unNodo, unRegistro);
-
-	return unNodo;
+	return archivoArbol->crearNodo(unRegistro);
 }
 
 int calcMax(int x, int y)
@@ -112,7 +88,7 @@ Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro) {
 			}
 		}
 
-		archivoArbol->grabar(unNodo, unRegistro);
+		//archivoArbol->grabar(unNodo, unRegistro);
 
 	}
 

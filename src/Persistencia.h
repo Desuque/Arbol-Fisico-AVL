@@ -23,7 +23,7 @@ class Persistencia {
 	 */
 
 private:
-	static const int maxCaracteresRegistroFijo = 1000;
+	static const int maxCharDescr = 1000;
 
 	int tam_bloque = 4096;
 	int tam_espacioLibre = 4;
@@ -51,25 +51,34 @@ private:
 
 	string nombreArchivo;
 
+	Nodo* armarNodo(char* unBloque);
+	int calcularOffsetRegistro(int idNodo);
+	int calcularOffsetNodo(int idNodo);
+	void crearArchivoVacio();
+	void inicializarNodo(int idNodo);
+
 public:
 	Persistencia(string nombreArchivo);
 	char* leerBloque(int id);
-	void grabar(Nodo* unNodo, Registro* unRegistro);
+	void escribirNodo(Nodo* unNodo, Registro* unRegistro); // TODO: creo que tiene q ser private
+	Nodo* crearNodo(Registro* unRegistro);
+	bool insertar(Nodo* unNodo, Registro* unRegistro);
 	int leerMayorIdNodo();
 	int leerMayorIdReg();
 
-	bool esRegistroFijo(Registro* unRegistro);
+	Nodo* devolverNodo(int idNodo);
+
 	void escribirUnInt(int unInt, int unaPos);
 	void escribirUnString(string array, int unaPos);
 	void escribirMaxIDNodo(int maxID);
 	void escribirMaxIDReg(int maxID);
-	void escribirRegistro(Nodo* unNodo, Registro* unRegistro);
+	void escribirRegistro(Nodo* unNodo, Registro* unRegistro);  // TODO: creo que tiene q ser private
 
 
 	//El padding sirve para grabar mas de un registro sabiendo hasta donde esta cargado
 	void grabarRegistroLongFija(Registro* unRegistro, int idNodo, int padding);
 	int calcularEspacioLibre(int padding, int tamanioDescripcion);
-	void escribirMetadatosNodo(Nodo* unNodo);
+	void escribirMetadatosNodo(Nodo* unNodo);  // TODO: creo que tiene q ser private
 	char* calcularEspacioLibreBloque(Registro* unRegistro);
 	~Persistencia();
 };

@@ -40,7 +40,6 @@ public:
 	bool estaEnUnderflow();
 	bool esHoja();
 	int getID();
-	int getEspacioLibre();
 	bool insertar(Registro* unRegistro);
 
 	void modificarHijoIzquierdo(Nodo* nuevoNodo);

@@ -17,8 +17,8 @@ int main() //int argc, char *argv[] -> como parametro para la interfaz
 {
 	ArbolAVL* arbol = new ArbolAVL("DNIs");
 
-	creg("LGD", "Leandro Gonzalo Devesa1", arbol);
-	creg("LHD", "Leandro Huemul Desuque1", arbol);
+	creg("LGD", "Leandro Gonzalo Devesa", arbol);
+	creg("LHD", "Leandro Huemul Desuque", arbol);
 	//creg("ZZZ", "Z Z Z", arbol);
 
 	arbol->print();

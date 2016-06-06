@@ -15,8 +15,6 @@ Nodo::Nodo(int id) {
 	this->cantidadDeElementos = 0;
 	this->registros = new list<Registro*>;
 	this->altura = 1;
-
-	this->bytes_libres = 3024; // 1008 cada registro. Admite hasta 3 reg llenos
 	this->id = id;
 }
 
@@ -28,9 +26,6 @@ int Nodo::getID() {
 	return id;
 }
 
-int Nodo::getEspacioLibre() {
-	return bytes_libres;
-}
 
 int Nodo::getTamanio() {
 	Registro* unRegistro;
@@ -38,9 +33,7 @@ int Nodo::getTamanio() {
 
 	for(list<Registro*>::iterator list_iter = registros->begin(); list_iter != registros->end(); list_iter++) {
 		unRegistro = *list_iter;
-		//TODO:
-		//tamanio += unRegistro->getTamanio();
-		tamanio += 1;
+		tamanio += unRegistro->getTamanio();
 	}
 
 	return tamanio;
@@ -92,7 +85,7 @@ bool Nodo::insertar(Registro* unRegistro) {
 	//      this->bytesLibres -= unRegistro->getTamanio();
 	//		return true;
 	// }
-
+/*
 	if (cantidadDeElementos < this->maxPorNodo) {
 		registros->push_front(unRegistro);
 		cantidadDeElementos++;
@@ -101,6 +94,11 @@ bool Nodo::insertar(Registro* unRegistro) {
 		return true;
 	}
 	return false;
+	*/
+
+	registros->push_front(unRegistro);
+	registros->sort(comparaRegistros);
+	return true; //TODO: Creo que deberia ser void
 }
 
 bool Nodo::estaEnUnderflow() {

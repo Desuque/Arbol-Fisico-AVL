@@ -23,16 +23,33 @@ Persistencia::Persistencia(string nombreArchivo) {
 	buff_hijoDerecho = new char[tam_hijoDerecho];
 
 	this->nombreArchivo = nombreArchivo + ".bin";
+	crearArchivoVacio();
+}
+
+void Persistencia::crearArchivoVacio() {
+	fstream archivo (nombreArchivo.c_str() , ios::in | ios::binary);
+	if (!archivo) {
+		archivo.open(nombreArchivo.c_str() , ios::out | ios::binary);
+		// FIX: Escribo los metadatos iniciales en 0
+		escribirUnInt(0, 0);
+		escribirUnInt(0, 4);
+	} else {
+		archivo.close();
+	}
 }
 
 int Persistencia::leerMayorIdNodo() {
 	int buffer;
 	fstream archivo (nombreArchivo.c_str() , ios::in | ios::binary);
 
-	archivo.seekg (0, ios::beg);
-	archivo.read ((char*)&buffer, tam_meta_id);
+	if (archivo) {
+		archivo.seekg (0, ios::beg);
+		archivo.read ((char*)&buffer, tam_meta_id);
+		archivo.close();
+	} else {
+		buffer = 0;
+	}
 
-	cout<<"IDNODO:"<<buffer<<endl;
 
 	return buffer;
 }
@@ -41,59 +58,120 @@ int Persistencia::leerMayorIdReg() {
 	int buffer;
 	fstream archivo (nombreArchivo.c_str() , ios::in | ios::binary);
 
-	archivo.seekg (tam_meta_id, ios::beg);
-	archivo.read ((char*)&buffer, tam_meta_id);
-
-	cout<<"IDreg:"<<buffer<<endl;
+	if (archivo) {
+		archivo.seekg (tam_meta_id, ios::beg);
+		archivo.read ((char*)&buffer, tam_meta_id);
+		archivo.close();
+	} else {
+		buffer = 0;
+	}
 
 
 	return buffer;
 }
 
-char* Persistencia::leerBloque(int idNodo) {
-	bloque = new char[tam_bloque];
-	fstream archivo (nombreArchivo.c_str() , ios::in | ios::binary);
+Nodo* Persistencia::devolverNodo(int idNodo) {
+	char* bloque = leerBloque(idNodo);
+	Nodo* unNodo = armarNodo(bloque);
 
-	archivo.seekg (idNodo*tam_bloque);
-	archivo.read (bloque, tam_bloque);
-
-	return bloque;
+	return unNodo;
 }
 
-void Persistencia::grabar(Nodo* unNodo, Registro* unRegistro) {
-	/**
-	 * Se escriben los primeros 8 bytes, que contienen el mayor ID del nodo
-	 * y el mayor ID del registro
-	 */
-	escribirMaxIDNodo(unNodo->getID());
-	escribirMaxIDReg(unRegistro->getId());
+char* Persistencia::leerBloque(int idNodo) {
+	char* unBloque = new char[tam_bloque];
+	fstream archivo (nombreArchivo.c_str() , ios::in | ios::binary);
 
-	/**
-	 * Se escriben los metadatos y el registro ingresado en el bloque determindo
-	 * para el nodo
-	 */
+	if (archivo) {
+		archivo.seekg (idNodo*tam_bloque);
+		archivo.read (unBloque, tam_bloque);
+		archivo.close();
+	} else {
+		unBloque[0] = 0;
+	}
+
+
+	return unBloque;
+}
+
+
+Nodo* Persistencia::armarNodo(char* unBloque) {
+	int id;
+	string codigo;
+	string descr;
+
+	if (unBloque[0] == 0) {
+		return 0;
+	} else {
+
+		//Nodo* unNodo = new Nodo();
+		// TODO: armar nodo
+
+		//return unNodo;
+	}
+
+}
+
+Nodo* Persistencia::crearNodo(Registro* unRegistro) {
+	//TODO: Buscar algun bloque vacio en el mapa de bits o archivo de vacios
+
+	// Creo el nuevo nodo e incremento el IDMAX
+	int idNodo = leerMayorIdNodo();
+	Nodo* unNodo = new Nodo(idNodo);
+	idNodo++;
+	escribirMaxIDNodo(idNodo);
+
+	// Escribo en el arch
+	escribirNodo(unNodo, unRegistro);
+
+	return unNodo;
+}
+
+bool Persistencia::insertar(Nodo* unNodo, Registro* unRegistro) {
+	Nodo* nodo = armarNodo(leerBloque(unNodo->getID()));
+	int tamanioRealRegistro = unRegistro->getTamanio();
+
+	if (unRegistro->getTamanioDescripcion() > maxCharDescr) {
+		// Si long de descr es > que lo aceptado -> solo se grabara el offset del archivo de descrips (de 4bytes)
+		tamanioRealRegistro = tamanioRealRegistro - unRegistro->getTamanioDescripcion() + 4;
+	}
+
+	if (unNodo->getTamanio() + tamanioRealRegistro > tam_bloque) {
+		return false;
+	}
+
+	escribirNodo(unNodo, unRegistro);
+
+	return true;
+}
+
+void Persistencia::escribirNodo(Nodo* unNodo, Registro* unRegistro) {
+	unNodo->insertar(unRegistro);
 	escribirMetadatosNodo(unNodo);
 	escribirRegistro(unNodo, unRegistro);
 }
 
-bool Persistencia::esRegistroFijo(Registro* unRegistro) {
-	int cantidadDeCaracteres = (unRegistro->getDescripcion()).size();
-	if (cantidadDeCaracteres > maxCaracteresRegistroFijo) {
-		return false;
-	}
-	else {
-		return true;
-	}
+int Persistencia::calcularOffsetRegistro(int idNodo) {
+	return (idNodo*tam_bloque) + tam_meta_arbol + tam_meta_nodo;
+}
+
+int Persistencia::calcularOffsetNodo(int idNodo) {
+	return (idNodo*tam_bloque) + tam_meta_arbol;
 }
 
 void Persistencia::escribirRegistro(Nodo* unNodo, Registro* unRegistro) {
-	int offset = (unNodo->getID())*tam_bloque+tam_meta_arbol+tam_meta_nodo;
+	escribirMaxIDReg(unRegistro->getId());
+
+	int offset = calcularOffsetRegistro(unNodo->getID());
 	escribirUnInt(unRegistro->getId(), offset);
 	offset += 4;
 	escribirUnString(unRegistro->getCodigo(), offset);
 	offset += 3; //El codigo es un string de 3 caracteres
 
-	if (esRegistroFijo(unRegistro)) {
+	if ((unRegistro->getDescripcion()).size() > maxCharDescr) {
+		escribirUnString("O", offset); //O = Offset
+		offset += 1;
+		//TODO registros long variable
+	} else {
 		//TODO siempre se mete de un registro, aca hay que ver que tanto hay ocupado del bloque
 		//para ver si entra el nuevo registro que se quiere meter. En caso de entrar, se actualiza
 		//el flag de proximo registro en el registro ya cargado, y se le pone F en el flag del nuevo
@@ -101,15 +179,12 @@ void Persistencia::escribirRegistro(Nodo* unNodo, Registro* unRegistro) {
 		escribirUnString("F", offset); //F = fijo!
 		offset += 1;
 		escribirUnString(unRegistro->getDescripcion(), offset);
-
-	} else {
-		//TODO registros long variable
 	}
 }
 
 void Persistencia::escribirUnString(string array, int unaPos) {
 	fstream archivo;
-	archivo.open(nombreArchivo.c_str(), ios::out | ios::binary | ios::app );
+	archivo.open(nombreArchivo.c_str(), ios::in | ios::out | ios::binary | ios::app );
 	archivo.seekp(unaPos, ios::beg);
 	archivo.write(array.c_str(), array.size());
 	archivo.close();
@@ -117,7 +192,7 @@ void Persistencia::escribirUnString(string array, int unaPos) {
 
 void Persistencia::escribirUnInt(int unInt, int unaPos) {
 	fstream archivo;
-	archivo.open(nombreArchivo.c_str(), ios::out | ios::binary | ios::app );
+	archivo.open(nombreArchivo.c_str(), ios::in | ios::out | ios::binary );
 	archivo.seekp(unaPos, ios::beg);
 	archivo.write(reinterpret_cast<const char *>(&unInt), 4);
 	archivo.close();
@@ -131,11 +206,23 @@ void Persistencia::escribirMaxIDReg(int maxID) {
 	escribirUnInt(maxID, tam_meta_id);
 }
 
+void Persistencia::inicializarNodo(int idNodo) {
+	int offset = calcularOffsetNodo(idNodo);
+	string vacio = string(4096, '.');
+	fstream archivo;
+	archivo.open(nombreArchivo.c_str(), ios::in | ios::out | ios::binary | ios::app );
+	archivo.seekp(offset, ios::beg);
+	archivo.write(vacio.c_str(), vacio.size());
+	archivo.close();
+}
+
 void Persistencia::escribirMetadatosNodo(Nodo* unNodo) {
-	int offset = ((unNodo->getID())*tam_bloque)+tam_meta_arbol;
+	//inicializarNodo(unNodo->getID());
+	int offset = calcularOffsetNodo(unNodo->getID());
 	escribirUnInt(unNodo->getID(), offset);
 	offset += 4;
-	escribirUnInt(unNodo->getEspacioLibre(), offset);
+	int espacioLibre = tam_bloque - unNodo->getTamanio();
+	escribirUnInt(espacioLibre, offset);
 	offset += 4;
 
 	if (unNodo->getHijoIzquierdo() != 0) {
