@@ -13,7 +13,7 @@
 
 using namespace std;
 
-Persistencia::Persistencia() {
+Persistencia::Persistencia(string nombreArchivo) {
 	buff_bloque = new char[tam_bloque];
 	buff_flagDeTipo = new char[tam_flagDeTipo];
 	buff_codigo = new char[tam_codigo];
@@ -22,9 +22,6 @@ Persistencia::Persistencia() {
 	buff_hijoIzquierdo = new char[tam_hijoIzquierdo];
 	buff_hijoDerecho = new char[tam_hijoDerecho];
 
-}
-
-void Persistencia::setNombreArchivo(string nombreArchivo) {
 	this->nombreArchivo = nombreArchivo + ".bin";
 }
 
@@ -35,6 +32,8 @@ int Persistencia::leerMayorIdNodo() {
 	archivo.seekg (0, ios::beg);
 	archivo.read ((char*)&buffer, tam_meta_id);
 
+	cout<<"IDNODO:"<<buffer<<endl;
+
 	return buffer;
 }
 
@@ -44,6 +43,9 @@ int Persistencia::leerMayorIdReg() {
 
 	archivo.seekg (tam_meta_id, ios::beg);
 	archivo.read ((char*)&buffer, tam_meta_id);
+
+	cout<<"IDreg:"<<buffer<<endl;
+
 
 	return buffer;
 }
@@ -59,6 +61,17 @@ char* Persistencia::leerBloque(int idNodo) {
 }
 
 void Persistencia::grabar(Nodo* unNodo, Registro* unRegistro) {
+	/**
+	 * Se escriben los primeros 8 bytes, que contienen el mayor ID del nodo
+	 * y el mayor ID del registro
+	 */
+	escribirMaxIDNodo(unNodo->getID());
+	escribirMaxIDReg(unRegistro->getId());
+
+	/**
+	 * Se escriben los metadatos y el registro ingresado en el bloque determindo
+	 * para el nodo
+	 */
 	escribirMetadatosNodo(unNodo);
 	escribirRegistro(unNodo, unRegistro);
 }
@@ -124,9 +137,18 @@ void Persistencia::escribirMetadatosNodo(Nodo* unNodo) {
 	offset += 4;
 	escribirUnInt(unNodo->getEspacioLibre(), offset);
 	offset += 4;
-	escribirUnInt((unNodo->getHijoIzquierdo())->getID(), offset);
+
+	if (unNodo->getHijoIzquierdo() != 0) {
+		escribirUnInt((unNodo->getHijoIzquierdo())->getID(), offset);
+	} else {
+		escribirUnInt(0, offset);
+	}
 	offset += 4;
-	escribirUnInt((unNodo->getHijoDerecho())->getID(), offset);
+	if (unNodo->getHijoDerecho() != 0) {
+		escribirUnInt((unNodo->getHijoDerecho())->getID(), offset);
+	} else {
+		escribirUnInt(0, offset);
+	}
 }
 
 void Persistencia::grabarRegistroLongFija(Registro* unRegistro, int idNodo, int padding) {

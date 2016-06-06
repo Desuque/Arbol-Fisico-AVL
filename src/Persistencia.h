@@ -52,8 +52,7 @@ private:
 	string nombreArchivo;
 
 public:
-	Persistencia();
-	void setNombreArchivo(string nombreArchivo);
+	Persistencia(string nombreArchivo);
 	char* leerBloque(int id);
 	void grabar(Nodo* unNodo, Registro* unRegistro);
 	int leerMayorIdNodo();

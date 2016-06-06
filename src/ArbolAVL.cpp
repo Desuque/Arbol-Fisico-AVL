@@ -13,8 +13,7 @@
 using namespace std;
 
 ArbolAVL::ArbolAVL(string nombre) {
-	archivoArbol = new Persistencia();
-	archivoArbol->setNombreArchivo(nombre);
+	archivoArbol = new Persistencia(nombre);
 	this->raiz = armarNodo(archivoArbol->leerBloque(idRaiz));
 	this->mayorIdReg = archivoArbol->leerMayorIdReg();
 	this->mayorIdNodo = archivoArbol->leerMayorIdNodo();
@@ -54,6 +53,9 @@ Nodo* ArbolAVL::crearNodo(Registro* unRegistro) {
 	Nodo* unNodo = new Nodo(mayorIdNodo);
 	mayorIdNodo++;
 	unNodo->insertar(unRegistro);
+
+	/** Beta persistencia **/
+	archivoArbol->grabar(unNodo, unRegistro);
 
 	return unNodo;
 }
