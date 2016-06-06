@@ -58,8 +58,11 @@ public:
 	int leerMayorIdReg();
 
 	void escribirUnInt(int unInt, int unaPos);
+	void escribirUnString(string array, int unaPos);
 	void escribirMaxIDNodo(int maxID);
 	void escribirMaxIDReg(int maxID);
+	void escribirRegistro(Nodo* unNodo, Registro* unRegistro);
+
 
 	//El padding sirve para grabar mas de un registro sabiendo hasta donde esta cargado
 	void grabarRegistroLongFija(Registro* unRegistro, int idNodo, int padding);

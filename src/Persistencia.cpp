@@ -65,15 +65,19 @@ void Persistencia::grabar(Nodo* unNodo, Registro* unRegistro) {
 
 void Persistencia::escribirRegistro(Nodo* unNodo, Registro* unRegistro) {
 	int offset = (unNodo->getID())*tam_bloque+tam_meta_arbol+tam_meta_nodo;
-	escribirUnInt(unRegistro->getID(), offset);
+	escribirUnInt(unRegistro->getId(), offset);
 	offset += 4;
-	escribirUnInt(unRegistro->getCodigo(), offset);
-	offset += 4;
+	escribirUnString(unRegistro->getCodigo(), offset); //El codigo es un string de 3 caracteres
+	offset += 3;
+	//TODO registros long variable
+	//TODO siempre se mete de un registro, aca hay que ver que tanto hay ocupado del bloque
+	//para ver si entra el nuevo registro que se quiere meter. En caso de entrar, se actualiza
+	//el flag de proximo registro en el registro ya cargado, y se le pone F en el flag del nuevo
+	//registro cargado.
 	escribirUnString("F", offset);
 	offset += 1;
 	escribirUnString(unRegistro->getDescripcion(), offset);
 
-	//TODO registros long variable
 
 }
 
