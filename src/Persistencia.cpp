@@ -196,22 +196,3 @@ void Persistencia::grabarRegistroLongFija(Registro* unRegistro, int idNodo, int 
 	//escribir(buff_bloque, idNodo, tam_bloque, 4);
 
 }
-
-void Persistencia::escribirBloqueAlFinal(char* buffer, int idNodo) {
-	fstream archivo;
-	archivo.open(nombreArchivo.c_str(), ios::in | ios::out | ios::binary | ios::app);
-	archivo.seekp(0, ios::end);
-	archivo.write(buffer, tam_bloque);
-	archivo.close();
-
-	delete (buffer);
-}
-
-void Persistencia::escribirBloque(char* buffer, int idNodo, int posicion) { //posicion tiene que venir con +4 de metadatos
-	fstream archivo;
-	archivo.open(nombreArchivo.c_str(), ios::out | ios::in | ios::binary);
-	archivo.seekp(posicion, ios::beg);
-	archivo.write(buffer, tam_bloque);
-	archivo.close();
-	delete buffer;
-}

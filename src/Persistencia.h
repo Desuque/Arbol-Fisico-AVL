@@ -70,8 +70,6 @@ public:
 	void grabarRegistroLongFija(Registro* unRegistro, int idNodo, int padding);
 	int calcularEspacioLibre(int padding, int tamanioDescripcion);
 	void escribirMetadatosNodo(Nodo* unNodo);
-	void escribirBloqueAlFinal(char* buffer, int idNodo);
-	void escribirBloque(char* buffer, int idNodo, int posicion);
 	char* calcularEspacioLibreBloque(Registro* unRegistro);
 	~Persistencia();
 };

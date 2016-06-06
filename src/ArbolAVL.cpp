@@ -111,6 +111,9 @@ Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro) {
 				}
 			}
 		}
+
+		archivoArbol->grabar(unNodo, unRegistro);
+
 	}
 
 	int altIzq = altura(unNodo->getHijoIzquierdo());
