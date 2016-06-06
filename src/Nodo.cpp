@@ -9,7 +9,7 @@
 
 using namespace std;
 
-Nodo::Nodo() {
+Nodo::Nodo(int id) {
 	this->izquierdo = 0;
 	this->derecho = 0;
 	this->cantidadDeElementos = 0;
@@ -17,10 +17,19 @@ Nodo::Nodo() {
 	this->altura = 1;
 
 	this->bytes_libres = 3024; // 1008 cada registro. Admite hasta 3 reg llenos
+	this->id = id;
 }
 
 list<Registro*>* Nodo::getRegistros() {
 	return registros;
+}
+
+int Nodo::getID() {
+	return id;
+}
+
+int Nodo::getEspacioLibre() {
+	return bytes_libres;
 }
 
 int Nodo::getTamanio() {

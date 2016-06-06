@@ -18,7 +18,7 @@ int main() //int argc, char *argv[] -> como parametro para la interfaz
 {
 	//Interfaz* interfaz = new Interfaz(argc, argv);
 	// Test persistencia
-	Nodo* miNodo = new Nodo();
+	Nodo* miNodo = new Nodo(0);
 	Registro* miRegistro = new Registro("123","hola");
 	//Registro* otroRegistro = new Registro("23","hola, soy un test muy eficiente");
 	//Registro* ultimoReg = new Registro("1", "Este es el ultimo registro que cargo papa");

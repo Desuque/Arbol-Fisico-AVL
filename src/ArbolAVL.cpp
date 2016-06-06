@@ -28,10 +28,11 @@ Nodo* ArbolAVL::armarNodo(char* unBloque) {
 	if (unBloque[0] == 0) {
 		return 0;
 	} else {
-		Nodo* unNodo = new Nodo();
+
+		//Nodo* unNodo = new Nodo();
 		// TODO: armar nodo
 
-		return unNodo;
+		//return unNodo;
 	}
 
 }
@@ -50,7 +51,8 @@ void ArbolAVL::insertar(Registro* unRegistro){
 }
 
 Nodo* ArbolAVL::crearNodo(Registro* unRegistro) {
-	Nodo* unNodo = new Nodo();
+	Nodo* unNodo = new Nodo(mayorIdNodo);
+	mayorIdNodo++;
 	unNodo->insertar(unRegistro);
 
 	return unNodo;

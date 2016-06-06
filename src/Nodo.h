@@ -20,9 +20,10 @@ private:
 	int bytes_libres;
 	list<Registro*>* registros;
 	int altura;
+	int id;
 
 public:
-	Nodo();
+	Nodo(int id);
 
 	int maxPorNodo = 3; //TODO: en bytes
 	int minPorNodo = 1; //TODO: en bytes
@@ -38,7 +39,8 @@ public:
 	list<Registro*>* getRegistros();
 	bool estaEnUnderflow();
 	bool esHoja();
-
+	int getID();
+	int getEspacioLibre();
 	bool insertar(Registro* unRegistro);
 
 	void modificarHijoIzquierdo(Nodo* nuevoNodo);

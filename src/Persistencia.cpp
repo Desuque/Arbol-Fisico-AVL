@@ -58,52 +58,37 @@ char* Persistencia::leerBloque(int idNodo) {
 	return bloque;
 }
 
-char* Persistencia::calcularEspacioLibreBloque(Registro* unRegistro) {
-	buff_espacioLibre = new char[tam_espacioLibre];
-
-	//Calculo el espacio libre luego de insertar el registro
-	int resto = tam_espacioLibre + tam_flagDeTipo + tam_codigo + tam_descripcion + unRegistro->getTamanioDescripcion() + tam_flagExisteRegistro + tam_hijoIzquierdo + tam_hijoDerecho;
-	int espacioLibre =  tam_bloque - resto;
-
-	string s_espacioLibre; //Convierto el tamanio de espacio libre a string
-	stringstream convertir;
-	convertir << espacioLibre;
-	s_espacioLibre = convertir.str();
-
-	ostringstream espacioLibre_padding; //Relleno los espacios para mantener el bloque
-	espacioLibre_padding<<setfill('0')<<setw(tam_espacioLibre);
-	espacioLibre_padding<<s_espacioLibre;
-	s_espacioLibre = espacioLibre_padding.str();
-	strcpy(buff_espacioLibre, (s_espacioLibre).c_str());
-
-	return buff_espacioLibre;
+void Persistencia::grabar(Nodo* unNodo, Registro* unRegistro) {
+	escribirMetadatosNodo(unNodo);
+	escribirRegistro(unNodo, unRegistro);
 }
 
-void Persistencia::grabar(Registro* unRegistro, int idNodo) {
-	//Grabo el espacio libre
-	escribirMetadatosNodo(calcularEspacioLibreBloque(unRegistro), 2); //offset= 2
+void Persistencia::escribirRegistro(Nodo* unNodo, Registro* unRegistro) {
+	int offset = (unNodo->getID())*tam_bloque+tam_meta_arbol+tam_meta_nodo;
+	escribirUnInt(unRegistro->getID(), offset);
+	offset += 4;
+	escribirUnInt(unRegistro->getCodigo(), offset);
+	offset += 4;
+	escribirUnString("F", offset);
+	offset += 1;
+	escribirUnString(unRegistro->getDescripcion(), offset);
 
+	//TODO registros long variable
 
-	cout<<"sale"<<endl;
-	/**
-	leerBloque(idNodo); //Queda el bloque a leer cargado en la variable bloque
+}
 
-	//TODO falta calcular que el registro a ingresar tiene mas de 1000 caracteres, aca supongo que es fijo siempre
-
-	int cargaDeBloque = strlen(bloque);
-
-	if (cargaDeBloque == 0) { //Quiere decir que el bloque esta vacio, habria que ver con lo del espacio libre como hacemos
-		grabarRegistroLongFija(unRegistro, idNodo, tam_espacioLibre);
-	} else { //Supongo que ya hay un registro cargado
-		grabarRegistroLongFija(unRegistro, idNodo, cargaDeBloque);
-	}**/
-	//grabarRegistroLongFija(unRegistro, idNodo, 0);
+void Persistencia::escribirUnString(string array, int unaPos) {
+	fstream archivo;
+	archivo.open(nombreArchivo.c_str(), ios::out | ios::binary | ios::app );
+	archivo.seekp(unaPos, ios::beg);
+	archivo.write(array.c_str(), array.size());
+	archivo.close();
 }
 
 void Persistencia::escribirUnInt(int unInt, int unaPos) {
 	fstream archivo;
 	archivo.open(nombreArchivo.c_str(), ios::out | ios::binary | ios::app );
-	archivo.seekp(0, ios::beg);
+	archivo.seekp(unaPos, ios::beg);
 	archivo.write(reinterpret_cast<const char *>(&unInt), 4);
 	archivo.close();
 }
@@ -116,14 +101,15 @@ void Persistencia::escribirMaxIDReg(int maxID) {
 	escribirUnInt(maxID, tam_meta_id);
 }
 
-void Persistencia::escribirMetadatosNodo(char* buffer, int posicion) {
-	fstream archivo;
-	archivo.open(nombreArchivo.c_str(), ios::out | ios::binary );
-	archivo.seekp(posicion);
-	string str(buffer);
-	archivo.write(buffer, str.size());
-	archivo.close();
-	delete buffer;
+void Persistencia::escribirMetadatosNodo(Nodo* unNodo) {
+	int offset = ((unNodo->getID())*tam_bloque)+tam_meta_arbol;
+	escribirUnInt(unNodo->getID(), offset);
+	offset += 4;
+	escribirUnInt(unNodo->getEspacioLibre(), offset);
+	offset += 4;
+	escribirUnInt((unNodo->getHijoIzquierdo())->getID(), offset);
+	offset += 4;
+	escribirUnInt((unNodo->getHijoDerecho())->getID(), offset);
 }
 
 void Persistencia::grabarRegistroLongFija(Registro* unRegistro, int idNodo, int padding) {
