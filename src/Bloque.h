@@ -11,11 +11,12 @@ class Persistencia;
 class Bloque {
 private:
 	static const int tamanio = 4096;
-	static const int tamanio_meta = 13;
+	static const int tamanio_meta = 17;
 	static const int tamanio_max_descrinterna = 1000;
 	string nombreArchivo;
 	int id;
 	int bytes_ocupados;
+	int cantidad_registros;
 	Persistencia* archivoArbol;
 
 	void inicializarBloque();
@@ -25,6 +26,7 @@ private:
 	int leerMayorIdReg();
 	void escribirFlagExistencia();
 	void escribirEspacioLibre();
+	void escribirCantidadRegistros();
 public:
 	Bloque(string nombreArchivo);
 	Bloque(string nombreArchivo, int id);

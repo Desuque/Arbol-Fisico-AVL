@@ -5,8 +5,8 @@
 using namespace std;
 
 Registro::Registro(string codigo, string descripcion) {
-	this->codigo = codigo;
-	this->descripcion = descripcion;
+	this->codigo = codigo.substr(0, 3);
+	this->descripcion = descripcion.substr(0, 1000);
 }
 
 void Registro::setId(int unId) {

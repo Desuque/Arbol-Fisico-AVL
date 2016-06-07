@@ -9,6 +9,8 @@
 
 using namespace std;
 
+// ------------------------------------------------------------------------
+// Si es construido solo con el nombre de archivo, inicializa el nodo vacio
 Nodo::Nodo(string nombreArchivo) {
 	this->izquierdo = 0;
 	this->derecho = 0;
@@ -17,7 +19,8 @@ Nodo::Nodo(string nombreArchivo) {
 	this->nombreArchivo = nombreArchivo;
 	bloque = 0;
 }
-
+// ------------------------------------------------------------------------
+// Si es construido con el nombre de archivo y el id de su bloque -> carga el nodo con lo que haya en el disco
 Nodo::Nodo(string nombreArchivo, int idBloque) {
 	bloque = new Bloque(nombreArchivo, idBloque);
 	Nodo* unNodo = bloque->devolverNodo();
@@ -34,11 +37,14 @@ Nodo::Nodo(string nombreArchivo, int idBloque) {
 		this->altura = 1;
 	}
 }
-
+// ------------------------------------------------------------------------
+// Devuelve la lista de toodos los registros
 list<Registro*>* Nodo::getRegistros() {
 	return registros;
 }
-
+// ------------------------------------------------------------------------
+// Devuelve cuanto ocupan todos los registros dentro del nodo
+// TODO: Ver si faltan metadatos, y ver si descr es mayor q 1000 q habria q mandar
 int Nodo::getTamanio() {
 	Registro* unRegistro;
 	int tamanio = 0;
@@ -50,12 +56,14 @@ int Nodo::getTamanio() {
 
 	return tamanio;
 }
-
+// ------------------------------------------------------------------------
+// Devuelve el nodo con el id mas pequenio
 int Nodo::getMenorID() {
 	Registro* regTmp = registros->front();
 	return regTmp->getId();
 }
-
+// ------------------------------------------------------------------------
+// Devuelve el nodo con el id mas grande
 int Nodo::getMayorID() {
 	Registro* regTmp = registros->back();
 	return regTmp->getId();
