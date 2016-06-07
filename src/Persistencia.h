@@ -1,17 +1,9 @@
-/*
- * Nodo.h
- *
- *  Created on: 26 de may. de 2016
- *      Author: desuque
- */
-
 #ifndef PERSISTENCIA_H_
 #define PERSISTENCIA_H_
 #include "ArbolAVL.h"
 #include "Nodo.h"
 #include "Registro.h"
 #include <fstream>
-
 
 class Persistencia {
 
@@ -51,7 +43,6 @@ private:
 
 	string nombreArchivo;
 
-	Nodo* armarNodo(char* unBloque);
 	int calcularOffsetRegistro(int idNodo);
 	int calcularOffsetNodo(int idNodo);
 	void crearArchivoVacio();
@@ -66,14 +57,13 @@ public:
 	int leerMayorIdNodo();
 	int leerMayorIdReg();
 
-	Nodo* devolverNodo(int idNodo);
-
-	void escribirUnInt(int unInt, int unaPos);
-	void escribirUnString(string array, int unaPos);
+	void escribirUnInt(int unInt, int &unaPos);
+	void escribirUnString(string array, int &unaPos);
 	void escribirMaxIDNodo(int maxID);
 	void escribirMaxIDReg(int maxID);
 	void escribirRegistro(Nodo* unNodo, Registro* unRegistro);  // TODO: creo que tiene q ser private
 
+	int getTamanioMetadatos();
 
 	//El padding sirve para grabar mas de un registro sabiendo hasta donde esta cargado
 	void grabarRegistroLongFija(Registro* unRegistro, int idNodo, int padding);
@@ -83,4 +73,4 @@ public:
 	~Persistencia();
 };
 
-#endif /* NODO_H_ */
+#endif /* PERSISTENCIA_H */

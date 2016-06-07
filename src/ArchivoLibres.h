@@ -24,4 +24,4 @@ public:
 	~ArchivoLibres();
 };
 
-#endif
+#endif /* ARCHIVOLIBRES_H */

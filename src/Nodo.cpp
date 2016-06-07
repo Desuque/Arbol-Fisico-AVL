@@ -9,23 +9,35 @@
 
 using namespace std;
 
-Nodo::Nodo(int id) {
+Nodo::Nodo(string nombreArchivo) {
 	this->izquierdo = 0;
 	this->derecho = 0;
-	this->cantidadDeElementos = 0;
 	this->registros = new list<Registro*>;
 	this->altura = 1;
-	this->id = id;
+	this->nombreArchivo = nombreArchivo;
+	bloque = 0;
+}
+
+Nodo::Nodo(string nombreArchivo, int idBloque) {
+	bloque = new Bloque(nombreArchivo, idBloque);
+	Nodo* unNodo = bloque->devolverNodo();
+
+	if (unNodo != 0) {
+		this->izquierdo = unNodo->getHijoIzquierdo();
+		this->derecho = unNodo->getHijoDerecho();
+		this->registros = unNodo->getRegistros();
+		this->altura = unNodo->getAltura();
+	} else {
+		this->izquierdo = 0;
+		this->derecho = 0;
+		this->registros = 0;
+		this->altura = 1;
+	}
 }
 
 list<Registro*>* Nodo::getRegistros() {
 	return registros;
 }
-
-int Nodo::getID() {
-	return id;
-}
-
 
 int Nodo::getTamanio() {
 	Registro* unRegistro;
@@ -77,39 +89,26 @@ bool comparaRegistros(Registro* a, Registro* b) { return a->getId() < b->getId()
 
 
 bool Nodo::insertar(Registro* unRegistro) {
-	//TODO:
-	// if (unRegistro->getTamanio() <= this->bytesLibres) {
-	//		registros->push_front(unRegistro);
-	//		cantidadDeElementos++;
-	//		registros->sort(comparaRegistros);
-	//      this->bytesLibres -= unRegistro->getTamanio();
-	//		return true;
-	// }
-/*
-	if (cantidadDeElementos < this->maxPorNodo) {
-		registros->push_front(unRegistro);
-		cantidadDeElementos++;
+	if (bloque == 0) {
+		bloque = new Bloque(nombreArchivo);
+	}
+	if (bloque->entra(unRegistro)) {
+
+		registros->push_back(unRegistro);
 		registros->sort(comparaRegistros);
+		bloque->grabar(this);
 
 		return true;
-	}
-	return false;
-	*/
+	} else {
 
-	registros->push_front(unRegistro);
-	registros->sort(comparaRegistros);
-	return true; //TODO: Creo que deberia ser void
+		return false;
+	}
 }
 
 bool Nodo::estaEnUnderflow() {
 
 	//TODO:
-	//if (getTamanio() < (bytesLibres / 2))
-	if (cantidadDeElementos < this->minPorNodo) {
-		return true;
-	}
-
-	return false;
+	// return bloque->estaEnUnderflow();
 }
 
 bool Nodo::esHoja() {
@@ -126,7 +125,6 @@ bool Nodo::borrarRegistro(int ID) {
 		if (unRegistro->getId() == ID) {
 			registros->remove(unRegistro);
 			encontrado = true;
-			cantidadDeElementos--;
 			break;
 		}
 	}
@@ -154,10 +152,6 @@ Registro* Nodo::getRegistroConMayorID() {
 
 Registro* Nodo::getRegistroConMenorID() {
 	return registros->front();
-}
-
-int Nodo::getCantidadDeRegistros() {
-	return cantidadDeElementos;
 }
 
 Nodo::~Nodo() {

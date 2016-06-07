@@ -13,9 +13,17 @@
 using namespace std;
 
 ArbolAVL::ArbolAVL(string nombre) {
-	archivoArbol = new Persistencia(nombre);
-	this->raiz = archivoArbol->devolverNodo(idRaiz);
-	this->maxIdReg = archivoArbol->leerMayorIdReg();
+	this->nombre = nombre;
+	this->raiz = cargarRaiz(nombre);
+}
+
+Nodo* ArbolAVL::cargarRaiz(string nombre) {
+	Nodo* unNodo = new Nodo(nombre, idRaiz);
+	if (unNodo->getRegistros() == 0) {
+		return 0;
+	} else {
+		return unNodo;
+	}
 }
 
 int altura(Nodo* unNodo) {
@@ -26,14 +34,14 @@ int altura(Nodo* unNodo) {
 }
 
 void ArbolAVL::insertar(Registro* unRegistro) {
-	unRegistro->setId(maxIdReg);
-	maxIdReg++;
 	raiz = insertarEnNodo(raiz, unRegistro);
 }
 
 Nodo* ArbolAVL::crearNodo(Registro* unRegistro) {
-	/** Beta persistencia **/
-	return archivoArbol->crearNodo(unRegistro);
+	Nodo* unNodo = new Nodo(this->nombre);
+	unNodo->insertar(unRegistro);
+
+	return unNodo;
 }
 
 int calcMax(int x, int y)

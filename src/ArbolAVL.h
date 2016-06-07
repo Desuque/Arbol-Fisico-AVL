@@ -1,21 +1,20 @@
 #ifndef ARBOLAVL_H_
 #define ARBOLAVL_H_
 #include "Registro.h"
-#include "Nodo.h"
-#include "Persistencia.h"
 #include <list>
 
 using namespace std;
 
-class Persistencia;
+class Nodo;
 
+#include "Nodo.h"
 class ArbolAVL {
 private:
 	static const int idRaiz = 0;
 	Nodo* raiz;
-	Persistencia* archivoArbol; //TODO: A Persistencia llamarla como ArchivoArbol()
-	int maxIdReg;
+	string nombre;
 
+	Nodo* cargarRaiz(string nombre);
 public:
 	ArbolAVL(string nombre);
 
@@ -38,4 +37,4 @@ private:
 
 };
 
-#endif
+#endif /* ARBOLAVL_H */

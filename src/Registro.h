@@ -22,4 +22,4 @@ class Registro {
 		int getTamanioDescripcion();
 };
 
-#endif
+#endif /* REGISTRO_H */

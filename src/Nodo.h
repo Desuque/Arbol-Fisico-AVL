@@ -1,33 +1,34 @@
-/*
- * Nodo.h
- *
- *  Created on: 26 de may. de 2016
- *      Author: desuque
- */
-
 #ifndef NODO_H_
 #define NODO_H_
+
 #include <list>
+
+#include "Bloque.h"
 #include "Registro.h"
 
 using namespace std;
+
+class Bloque;
 
 class Nodo {
 private:
 	Nodo* izquierdo;
 	Nodo* derecho;
-	int cantidadDeElementos;
 	int bytes_libres;
 	list<Registro*>* registros;
 	int altura;
 	int id;
+	Bloque* bloque;
+	string nombreArchivo;
 
 public:
-	Nodo(int id);
+	Nodo(string nombreArchivo);
+	Nodo(string nombreArchivo, int idBloque);
 
 	int maxPorNodo = 3; //TODO: en bytes
 	int minPorNodo = 1; //TODO: en bytes
 
+	Bloque* getBloque();
 	int getMenorID();
 	int getMayorID();
 	Nodo* getHijoIzquierdo();
@@ -47,10 +48,9 @@ public:
 	void modificarAltura(int nuevaAltura);
 	bool borrarRegistro(int ID);
 	bool existeRegistroConID(int idBuscado);
-	int getCantidadDeRegistros();
 
 	virtual ~Nodo();
 
 };
 
-#endif /* NODO_H_ */
+#endif  /* NODO_H */
