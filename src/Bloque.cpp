@@ -6,6 +6,8 @@
  */
 
 #include "Bloque.h"
+#include <iostream>
+#include<sstream>
 
 using namespace std;
 
@@ -180,9 +182,27 @@ void Bloque::grabar(Nodo* unNodo) {
 		archivoArbol->escribirUnString(unRegistro->getCodigo(), offset);
 
 		if ((unRegistro->getDescripcion()).size() > tamanio_max_descrinterna) {
+			archivoDescripciones = new ArchivoDescrips(nombreArchivo);
+
+			//TODO BUSCAR EN EL ARCHIVO DE LIBRES ANTES!!!
+
+			cout<<unRegistro->getDescripcion()<<endl;
+			int offsetArchivoDescrips = archivoDescripciones->grabar(unRegistro->getDescripcion());
+
 			archivoArbol->escribirUnString("N", offset); //N = No contiene el dato
+
+			//Convierto el offset a string para que lo grabe como "descripcion"
+			string c_offsetArchivoDescrips;
+			stringstream convert;
+			convert << offsetArchivoDescrips;
+			c_offsetArchivoDescrips = convert.str();
+
+			//Escribo la posicion del archivoDescrips en el archivoArbol
+			archivoArbol->escribirUnString(c_offsetArchivoDescrips, offset);
 			bytes_ocupados += 4; // 4 = tam offset
-			//TODO registros long variable
+
+			delete archivoDescripciones;
+
 		} else {
 			archivoArbol->escribirUnString("S", offset); //S = Si contiene el dato
 			archivoArbol->escribirUnString(unRegistro->getDescripcion(), offset);

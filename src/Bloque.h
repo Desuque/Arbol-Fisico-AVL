@@ -3,6 +3,7 @@
 
 #include "Registro.h"
 #include "Persistencia.h"
+#include "ArchivoDescrips.h"
 
 using namespace std;
 
@@ -18,6 +19,7 @@ private:
 	int bytes_ocupados;
 	int cantidad_registros;
 	Persistencia* archivoArbol;
+	ArchivoDescrips* archivoDescripciones;
 
 	void inicializarBloque();
 	int calcularOffsetRegistros();
