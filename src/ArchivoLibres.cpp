@@ -8,7 +8,7 @@ struct ClaveValor {
 };
 
 ArchivoLibres::ArchivoLibres(string nombre) {
-	this->nombre = nombre + ".bin";
+	this->nombre = nombre + "_libres.bin";
 }
 
 void ArchivoLibres::grabar(int clave, int espacio) {
@@ -42,7 +42,7 @@ int ArchivoLibres::buscarEspacioLibre(int espacio) {
 		//TODO: si encuentra.. borrar siempre?
 		return reg.clave;
 	} else {
-		return 0;
+		return -1;
 	}
 }
 

@@ -9,6 +9,16 @@
 
 using namespace std;
 
+// ---------------    Bloque    -------------------------------
+//     [1b]         [4b]      [4b]     [4b]
+// Flag Existe - Esp Libre - Id Izq - Id Der - Registros
+// ---------------    Registro    -------------------------------
+//     [4b]     [4b]     [3b]       [1b]          [xb]
+// Tam Descr - Id Reg - Codigo - Flag Descr - Descripcion (u offset)
+
+
+
+
 // ------------------------------------------------------------------------
 // Si es construido solo con el nombre de archivo -> ya escribe el bloque en el archivo
 Bloque::Bloque(string nombreArchivo) {
@@ -24,6 +34,9 @@ Bloque::Bloque(string nombreArchivo, int id) {
 	this->nombreArchivo = nombreArchivo;
 	this->archivoArbol = new Persistencia(nombreArchivo);
 	this->id = id;
+}
+int Bloque::getId() {
+	return this->id;
 }
 // ------------------------------------------------------------------------
 // Parsea todo el bloque y devuelve el nodo correspondiente
@@ -68,7 +81,7 @@ Nodo* Bloque::devolverNodo() {
 				descrReg[tamDescr] = '\0';
 				offset += tamDescr;
 			} else {
-				// TODO: Leer del arch de libres
+				// TODO: Leer del arch de descrips
 				offset += 4;
 			}
 			unRegistro = new Registro(string(codReg), string(descrReg));
@@ -147,12 +160,6 @@ bool Bloque::entra(Registro* &unRegistro) {
 		return false;
 	}
 
-	// Como entra, ya le asigno su ID
-	int maxIdReg = archivoArbol->leerMayorIdReg();
-	unRegistro->setId(maxIdReg);
-	maxIdReg++;
-	archivoArbol->escribirMaxIDReg(maxIdReg);
-
 	return true;
 }
 // ------------------------------------------------------------------------
@@ -160,6 +167,7 @@ bool Bloque::entra(Registro* &unRegistro) {
 void Bloque::grabar(Nodo* unNodo) {
 	bytes_ocupados = tamanio_meta;
 	cantidad_registros = 0;
+	int maxIdReg = archivoArbol->leerMayorIdReg();
 	int offset = calcularOffsetRegistros();
 	list<Registro*>* registros = unNodo->getRegistros();
 	Registro* unRegistro;
@@ -186,10 +194,21 @@ void Bloque::grabar(Nodo* unNodo) {
 		bytes_ocupados += 3; // Codigo
 		bytes_ocupados += 1; // Flag descr
 		cantidad_registros++;
+
+		if (unRegistro->getId() > maxIdReg) {
+			maxIdReg = unRegistro->getId();
+		}
 	}
 
+	archivoArbol->escribirMaxIDReg(maxIdReg);
+	escribirIdIzq(unNodo->getHijoIzquierdo());
+	escribirIdDer(unNodo->getHijoDerecho());
 	escribirEspacioLibre();
 	escribirCantidadRegistros();
+}
+
+int Bloque::getMaxIdReg() {
+	return archivoArbol->leerMayorIdReg();
 }
 
 Bloque::~Bloque() {

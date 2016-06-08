@@ -14,16 +14,30 @@ using namespace std;
 
 ArbolAVL::ArbolAVL(string nombre) {
 	this->nombre = nombre;
-	this->raiz = cargarRaiz(nombre);
+	this->raiz = cargarRaiz();
 }
 
-Nodo* ArbolAVL::cargarRaiz(string nombre) {
-	Nodo* unNodo = new Nodo(nombre, idRaiz);
-	if (unNodo->getRegistros() == 0) {
-		return 0;
+Nodo* ArbolAVL::cargarRaiz() {
+	Nodo* unNodo = devolverNodo(idRaiz);
+
+	if (unNodo == 0) {
+		maxIdReg = 0;
 	} else {
-		return unNodo;
+		maxIdReg = unNodo->getMaxIdReg() + 1;
 	}
+
+	return unNodo;
+}
+
+Nodo* ArbolAVL::devolverNodo(int unId) {
+	if (unId >= 0) {
+		Nodo* unNodo = new Nodo(this->nombre, unId);
+		if (unNodo->getRegistros() != 0) {
+			return unNodo;
+		}
+	}
+
+	return 0;
 }
 
 int altura(Nodo* unNodo) {
@@ -34,6 +48,9 @@ int altura(Nodo* unNodo) {
 }
 
 void ArbolAVL::insertar(Registro* unRegistro) {
+	unRegistro->setId(maxIdReg);
+	maxIdReg++;
+
 	raiz = insertarEnNodo(raiz, unRegistro);
 }
 
@@ -54,6 +71,7 @@ Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro) {
 	if (unNodo == 0) {
 		return crearNodo(unRegistro);
 	} else {
+		/*
 		if (unRegistro->getId() < unNodo->getMenorID()) {
 			if (unNodo->getHijoIzquierdo() == 0) {
 				if (!unNodo->insertar(unRegistro)) {
@@ -69,21 +87,26 @@ Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro) {
 				}
 			}
 		} else {
+			*/
 			if (unRegistro->getId() > unNodo->getMayorID()) {
-				if (unNodo->getHijoDerecho() == 0) {
+				if (unNodo->getHijoDerecho() == -1) {
 					if (!unNodo->insertar(unRegistro)) {
-						unNodo->modificarHijoDerecho(insertarEnNodo(unNodo->getHijoDerecho(), unRegistro));
+						Nodo* nuevoNodo = crearNodo(unRegistro);
+						unNodo->modificarHijoDerecho(nuevoNodo->getBloque()->getId());
 					}
 				} else {
+					/*
 					if (unRegistro->getId() < unNodo->getHijoDerecho()->getMenorID()) {
 						if (!unNodo->insertar(unRegistro)) {
 							unNodo->modificarHijoDerecho(insertarEnNodo(unNodo->getHijoDerecho(), unRegistro));
 						}
 					} else {
-						unNodo->modificarHijoDerecho(insertarEnNodo(unNodo->getHijoDerecho(), unRegistro));
-					}
+					*/
+						Nodo* nuevoNodo = insertarEnNodo(devolverNodo(unNodo->getHijoDerecho()), unRegistro);
+						unNodo->modificarHijoDerecho(nuevoNodo->getBloque()->getId());
+					/*}*/
 				}
-			} else {
+			}/* else {
 				if (!unNodo->insertar(unRegistro)) {
 					Registro* mayorRegistro = unNodo->getRegistroConMayorID();
 					Registro* tmpRegistro = new Registro(mayorRegistro->getCodigo(), mayorRegistro->getDescripcion());
@@ -95,13 +118,14 @@ Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro) {
 				}
 			}
 		}
+			*/
 
 		//archivoArbol->grabar(unNodo, unRegistro);
 
 	}
 
-	int altIzq = altura(unNodo->getHijoIzquierdo());
-	int altDer = altura(unNodo->getHijoDerecho());
+	int altIzq = altura(devolverNodo(unNodo->getHijoIzquierdo()));
+	int altDer = altura(devolverNodo(unNodo->getHijoDerecho()));
 
 	unNodo->modificarAltura(calcMax(altIzq,altDer) + 1);
 
@@ -109,24 +133,24 @@ Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro) {
 
 	//TODO: probar a fondo todas las rots. Algunos getHijoIzq a veces devuelven null o 0
 
-	if ((diferencia > 1) && (unRegistro->getId() < unNodo->getHijoIzquierdo()->getMenorID())) {
-		return rotacionDerecha(unNodo);
+	if ((diferencia > 1) && (unRegistro->getId() < devolverNodo(unNodo->getHijoIzquierdo())->getMenorID())) {
+		return devolverNodo(rotacionDerecha(unNodo));
 	}
 
-	if ((diferencia < -1) && (unRegistro->getId() > unNodo->getHijoDerecho()->getMayorID())) {
-		return rotacionIzquierda(unNodo);
+	if ((diferencia < -1) && (unRegistro->getId() > devolverNodo(unNodo->getHijoDerecho())->getMayorID())) {
+		return devolverNodo(rotacionIzquierda(unNodo));
 	}
 
-	if ((diferencia > 1) && (unRegistro->getId() > unNodo->getHijoIzquierdo()->getMayorID()))
+	if ((diferencia > 1) && (unRegistro->getId() > devolverNodo(unNodo->getHijoIzquierdo())->getMayorID()))
 	{
-		unNodo->modificarHijoIzquierdo(rotacionIzquierda(unNodo->getHijoIzquierdo()));
-		return rotacionIzquierda(unNodo);
+		unNodo->modificarHijoIzquierdo(rotacionIzquierda(devolverNodo(unNodo->getHijoIzquierdo())));
+		return devolverNodo(rotacionIzquierda(unNodo));
 	}
 
-	if ((diferencia < -1) && (unRegistro->getId() < unNodo->getHijoDerecho()->getMenorID()))
+	if ((diferencia < -1) && (unRegistro->getId() < devolverNodo(unNodo->getHijoDerecho())->getMenorID()))
 	{
-		unNodo->modificarHijoDerecho(rotacionDerecha(unNodo->getHijoDerecho()));
-		return rotacionIzquierda(unNodo);
+		unNodo->modificarHijoDerecho(rotacionDerecha(devolverNodo(unNodo->getHijoDerecho())));
+		return devolverNodo(rotacionIzquierda(unNodo));
 	}
 
 	return unNodo;
@@ -136,8 +160,8 @@ int ArbolAVL::getDiferenciaAlturaHijos(Nodo* unNodo) {
 	if (unNodo == 0)
 			return 0;
 
-	Nodo* izq = unNodo->getHijoIzquierdo();
-	Nodo* der = unNodo->getHijoDerecho();
+	Nodo* izq = devolverNodo(unNodo->getHijoIzquierdo());
+	Nodo* der = devolverNodo(unNodo->getHijoDerecho());
 
 	int alturaIzq = altura(izq);
 	int alturaDer = altura(der);
@@ -145,30 +169,30 @@ int ArbolAVL::getDiferenciaAlturaHijos(Nodo* unNodo) {
 	return (alturaIzq-alturaDer);
 }
 
-Nodo* ArbolAVL::rotacionDerecha(Nodo *unNodo) {
-	Nodo* izq = unNodo->getHijoIzquierdo();
-	Nodo* der = izq->getHijoDerecho();
+int ArbolAVL::rotacionDerecha(Nodo *unNodo) {
+	Nodo* izq = devolverNodo(unNodo->getHijoIzquierdo());
+	Nodo* der = devolverNodo(izq->getHijoDerecho());
 
-	izq->modificarHijoDerecho(unNodo);
-	unNodo->modificarHijoIzquierdo(der);
+	izq->modificarHijoDerecho(unNodo->getBloque()->getId());
+	unNodo->modificarHijoIzquierdo(der->getBloque()->getId());
 
-	unNodo->modificarAltura(calcMax(altura(unNodo->getHijoIzquierdo()), altura(unNodo->getHijoDerecho())) + 1);
-	izq->modificarAltura(calcMax(altura(izq->getHijoIzquierdo()), altura(izq->getHijoDerecho())) + 1);
+	unNodo->modificarAltura(calcMax(altura(devolverNodo(unNodo->getHijoIzquierdo())), altura(devolverNodo(unNodo->getHijoDerecho()))) + 1);
+	izq->modificarAltura(calcMax(altura(devolverNodo(izq->getHijoIzquierdo())), altura(devolverNodo(izq->getHijoDerecho()))) + 1);
 
-	return izq;
+	return izq->getBloque()->getId();
 }
 
-Nodo* ArbolAVL::rotacionIzquierda(Nodo *unNodo) {
-	Nodo *der = unNodo->getHijoDerecho();
-	Nodo *izq = der->getHijoIzquierdo();
+int ArbolAVL::rotacionIzquierda(Nodo *unNodo) {
+	Nodo *der = devolverNodo(unNodo->getHijoDerecho());
+	Nodo *izq = devolverNodo(der->getHijoIzquierdo());
 
-	der->modificarHijoIzquierdo(unNodo);
-	unNodo->modificarHijoDerecho(izq);
+	der->modificarHijoIzquierdo(unNodo->getBloque()->getId());
+	unNodo->modificarHijoDerecho(izq->getBloque()->getId());
 
-	unNodo->modificarAltura(calcMax(altura(unNodo->getHijoIzquierdo()), altura(unNodo->getHijoDerecho())) + 1);
-	der->modificarAltura(calcMax(altura(der->getHijoIzquierdo()), altura(der->getHijoDerecho())) + 1);
+	unNodo->modificarAltura(calcMax(altura(devolverNodo(unNodo->getHijoIzquierdo())), altura(devolverNodo(unNodo->getHijoDerecho()))) + 1);
+	der->modificarAltura(calcMax(altura(devolverNodo(der->getHijoIzquierdo())), altura(devolverNodo(der->getHijoDerecho()))) + 1);
 
-	return der;
+	return der->getBloque()->getId();
 }
 
 Nodo* ArbolAVL::getRaiz() {
@@ -194,8 +218,8 @@ void ArbolAVL::preOrder(Nodo* unNodo) {
 			}
 		}
 		cout<<"|"<<endl;
-		preOrder(unNodo->getHijoIzquierdo());
-		preOrder(unNodo->getHijoDerecho());
+		preOrder(devolverNodo(unNodo->getHijoIzquierdo()));
+		preOrder(devolverNodo(unNodo->getHijoDerecho()));
 	}
 }
 
@@ -204,6 +228,7 @@ void ArbolAVL::borrarRegistro(int unID) {
 }
 
 Nodo* ArbolAVL::borrarRegistroPorID(Nodo* unNodo, int idBuscado) {
+	/*
 	if(unNodo != 0) {
 		int menorID = unNodo->getMenorID();
 		int mayorID = unNodo->getMayorID();
@@ -263,7 +288,7 @@ Nodo* ArbolAVL::borrarRegistroPorID(Nodo* unNodo, int idBuscado) {
 			unNodo->borrarRegistro(idBuscado);
 		}
 	}
-
+*/
 	return unNodo;
 }
 
@@ -273,10 +298,10 @@ Nodo* ArbolAVL::buscarNodoPorID(Nodo* unNodo, int idBuscado) {
 		int mayorID = unNodo->getMayorID();
 		if (!unNodo->existeRegistroConID(idBuscado)) {
 			if (idBuscado < menorID) {
-				return buscarNodoPorID(unNodo->getHijoIzquierdo(), idBuscado);
+				return buscarNodoPorID(devolverNodo(unNodo->getHijoIzquierdo()), idBuscado);
 			}
 			if (idBuscado > mayorID) {
-				return buscarNodoPorID(unNodo->getHijoDerecho(), idBuscado);
+				return buscarNodoPorID(devolverNodo(unNodo->getHijoDerecho()), idBuscado);
 			}
 		} else {
 			return unNodo;

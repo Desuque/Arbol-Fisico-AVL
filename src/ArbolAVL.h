@@ -13,8 +13,8 @@ private:
 	static const int idRaiz = 0;
 	Nodo* raiz;
 	string nombre;
+	int maxIdReg;
 
-	Nodo* cargarRaiz(string nombre);
 public:
 	ArbolAVL(string nombre);
 
@@ -29,11 +29,13 @@ public:
 private:
 	Nodo* insertarEnNodo(Nodo* unNodo, Registro* unRegistro);
 	Nodo* crearNodo(Registro* unRegistro);
-	Nodo* rotacionDerecha(Nodo *unNodo);
-	Nodo* rotacionIzquierda(Nodo *unNodo);
+	int rotacionDerecha(Nodo *unNodo);
+	int rotacionIzquierda(Nodo *unNodo);
 	int getDiferenciaAlturaHijos(Nodo* unNodo);
 	void preOrder(Nodo* root);
 	void balancear(Nodo* unNodo);
+	Nodo* cargarRaiz();
+	Nodo* devolverNodo(int unId);
 
 };
 

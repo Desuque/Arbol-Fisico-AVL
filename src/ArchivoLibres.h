@@ -1,10 +1,3 @@
-/*
- * Nodo.h
- *
- *  Created on: 26 de may. de 2016
- *      Author: desuque
- */
-
 #ifndef ARCHIVOLIBRES_H_
 #define ARCHIVOLIBRES_H_
 

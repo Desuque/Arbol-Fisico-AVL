@@ -12,8 +12,8 @@ using namespace std;
 // ------------------------------------------------------------------------
 // Si es construido solo con el nombre de archivo, inicializa el nodo vacio
 Nodo::Nodo(string nombreArchivo) {
-	this->izquierdo = 0;
-	this->derecho = 0;
+	this->izquierdo = -1;
+	this->derecho = -1;
 	this->registros = new list<Registro*>;
 	this->altura = 1;
 	this->nombreArchivo = nombreArchivo;
@@ -31,11 +31,14 @@ Nodo::Nodo(string nombreArchivo, int idBloque) {
 		this->registros = unNodo->getRegistros();
 		this->altura = unNodo->getAltura();
 	} else {
-		this->izquierdo = 0;
-		this->derecho = 0;
+		this->izquierdo = -1;
+		this->derecho = -1;
 		this->registros = 0;
 		this->altura = 1;
 	}
+}
+int Nodo::getMaxIdReg() {
+	return bloque->getMaxIdReg();
 }
 // ------------------------------------------------------------------------
 // Devuelve la lista de toodos los registros
@@ -69,11 +72,11 @@ int Nodo::getMayorID() {
 	return regTmp->getId();
 }
 
-Nodo* Nodo::getHijoIzquierdo() {
+int Nodo::getHijoIzquierdo() {
 	return this->izquierdo;
 }
 
-Nodo* Nodo::getHijoDerecho() {
+int Nodo::getHijoDerecho() {
 	return this->derecho;
 }
 
@@ -81,16 +84,22 @@ int Nodo::getAltura() {
 	return this->altura;
 }
 
-void Nodo::modificarHijoIzquierdo(Nodo* nuevoNodo) {
+void Nodo::modificarHijoIzquierdo(int nuevoNodo) {
 	this->izquierdo = nuevoNodo;
+	bloque->escribirIdIzq(nuevoNodo);
 }
 
-void Nodo::modificarHijoDerecho(Nodo* nuevoNodo) {
+void Nodo::modificarHijoDerecho(int nuevoNodo) {
 	this->derecho = nuevoNodo;
+	bloque->escribirIdDer(nuevoNodo);
 }
 
 void Nodo::modificarAltura(int nuevaAltura) {
 	this->altura = nuevaAltura;
+}
+
+Bloque* Nodo::getBloque() {
+	return bloque;
 }
 
 bool comparaRegistros(Registro* a, Registro* b) { return a->getId() < b->getId(); }

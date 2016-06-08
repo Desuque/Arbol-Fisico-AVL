@@ -34,6 +34,8 @@ public:
 	void grabar(Nodo* unNodo);
 	void escribirIdIzq(int unId);
 	void escribirIdDer(int unId);
+	int getId();
+	int getMaxIdReg();
 	Nodo* devolverNodo();
 	virtual ~Bloque();
 };

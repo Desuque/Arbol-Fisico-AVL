@@ -12,9 +12,8 @@ class Bloque;
 
 class Nodo {
 private:
-	Nodo* izquierdo;
-	Nodo* derecho;
-	int bytes_libres;
+	int izquierdo;
+	int derecho;
 	list<Registro*>* registros;
 	int altura;
 	int id;
@@ -25,14 +24,12 @@ public:
 	Nodo(string nombreArchivo);
 	Nodo(string nombreArchivo, int idBloque);
 
-	int maxPorNodo = 3; //TODO: en bytes
-	int minPorNodo = 1; //TODO: en bytes
-
 	Bloque* getBloque();
 	int getMenorID();
 	int getMayorID();
-	Nodo* getHijoIzquierdo();
-	Nodo* getHijoDerecho();
+	int getMaxIdReg();
+	int getHijoIzquierdo();
+	int getHijoDerecho();
 	Registro* getRegistroConMayorID();
 	Registro* getRegistroConMenorID();
 	int getAltura();
@@ -43,8 +40,8 @@ public:
 	int getID();
 	bool insertar(Registro* unRegistro);
 
-	void modificarHijoIzquierdo(Nodo* nuevoNodo);
-	void modificarHijoDerecho(Nodo* nuevoNodo);
+	void modificarHijoIzquierdo(int nuevoNodo);
+	void modificarHijoDerecho(int nuevoNodo);
 	void modificarAltura(int nuevaAltura);
 	bool borrarRegistro(int ID);
 	bool existeRegistroConID(int idBuscado);
