@@ -9,12 +9,13 @@ class ArchivoDescrips {
 
 private:
 	string nombre;
+	int offsetLibre;
 
 public:
 	ArchivoDescrips(string nombre);
 	int grabar(string descripcion);
 	int grabarEnEspacioLibre(string descripcion, int offset_libre);
-
+	int getOffsetLibre();
 	string leerBloque(int offset, int tamanio_descripcion);
 	~ArchivoDescrips();
 };

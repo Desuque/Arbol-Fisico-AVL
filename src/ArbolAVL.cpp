@@ -228,7 +228,7 @@ void ArbolAVL::borrarRegistro(int unID) {
 }
 
 Nodo* ArbolAVL::borrarRegistroPorID(Nodo* unNodo, int idBuscado) {
-	/*
+	/**
 	if(unNodo != 0) {
 		int menorID = unNodo->getMenorID();
 		int mayorID = unNodo->getMayorID();
@@ -288,7 +288,7 @@ Nodo* ArbolAVL::borrarRegistroPorID(Nodo* unNodo, int idBuscado) {
 			unNodo->borrarRegistro(idBuscado);
 		}
 	}
-*/
+	**/
 	return unNodo;
 }
 

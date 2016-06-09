@@ -204,7 +204,9 @@ void Bloque::grabar(Nodo* unNodo) {
 			 * no ocupado. Si se testea, previamente tiene que existir el archivo de descripciones, y el espacio realmente debe estar
 			 * vacio (o escrito, en su defecto, ya que es una prueba) para que funcione.
 			 */
-			archivoLibres->grabarEspacioLibre(3500,2000);
+
+			//archivoLibres->grabarEspacioLibre(3500,2000);
+
 			// BETA
 			/** CREO ESPACIO LIBRE PARA TESTEAR
 			* NADA, ESO.
@@ -225,7 +227,9 @@ void Bloque::grabar(Nodo* unNodo) {
 				//Escribo la posicion del archivoDescrips en el archivoArbol
 				archivoArbol->escribirUnInt(offsetArchivoDescrips, offset);
 
-
+				//Actualizo el offset y el espacioLibre en el archivo de libres
+				int nuevoEspacioLibre = archivoLibres->getEspacioLibre() - unRegistro->getDescripcion().size();
+				archivoLibres->actualizarEspacioLibre(archivoDescripciones->getOffsetLibre(), nuevoEspacioLibre);
 
 			}
 			bytes_ocupados += 4; // 4 = tam offset

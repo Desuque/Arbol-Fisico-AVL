@@ -47,24 +47,45 @@ bool ArchivoLibres::hayEspacio(int espacio) {
 	return false;
 }
 
+void ArchivoLibres::actualizarEspacioLibre(int nuevoOffset, int nuevoEspacioLibre) {
+	/** Si se encuentra espacio libre quedan actualizadas las variables pos_offset y pos_espacioLibre
+	 * las cuales se usan para reescribir y actualizar los datos de offset y espacio libre leidos
+	 */
+	fstream archivo;
+	archivo.open(this->nombre.c_str(), ios::in | ios::out | ios::binary );
+
+	archivo.seekp (pos_offset, archivo.beg);
+
+	archivo.write(reinterpret_cast<const char *>(&nuevoOffset), tam_offset);
+	archivo.write(reinterpret_cast<const char *>(&nuevoEspacioLibre), tam_offset);
+
+	archivo.close();
+}
+
 int ArchivoLibres::buscarEspacioLibre(int espacio) {
 	bool found = false;
 
 	fstream archivo;
 	archivo.open(this->nombre.c_str(), ios::binary | ios::in | ios::out );
-	archivo.seekg( ios::beg );
 	archivo.seekg (ios::beg);
 
 	while (!archivo.eof() && !found) {
+		pos_offset = archivo.tellg();
 		archivo.read ((char*)&offset, 4);
+
+		pos_espacioLibre = archivo.tellg();
 		archivo.read ((char*)&espacioLibre, 4);
 
 		if (espacioLibre >= espacio) {
 			found = true;
 
+			cout<<"pos1: "<<pos_offset<<endl;
+			cout<<"pos2: "<<pos_espacioLibre<<endl;
 			//TODO BORRAR EL ESPACIO ENCONTRADO
 			//TODO CREAR UN NUEVO ESPACIO CON EL RESTO EN CASO DE EXISTIR
-
+			//en esta posicion de offset y espacio libre, que las tengo que clcular aca, tengo que
+			//cargar el nuevo offset y espacio libre. En cso de no haber espcio libre de sobra,
+			//en esta posicion se guarda 0:0
 		}
 	}
 	archivo.close();

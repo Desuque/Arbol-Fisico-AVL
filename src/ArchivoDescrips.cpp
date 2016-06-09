@@ -12,6 +12,14 @@ ArchivoDescrips::ArchivoDescrips(string nombre) {
 	//TODO: inicializarArchivo();
 }
 
+/** Devuelve el offset en el que esta posicionado el cursor actualmente en el archivo.
+ * Se utiliza para obtener la posicion final del cursor luego de escribir una descripcion
+ * en un espacio libre. De esta manera se puede actualizar el offset en el archivo de libres.
+ */
+int ArchivoDescrips::getOffsetLibre() {
+	return offsetLibre;
+}
+
 string ArchivoDescrips::leerBloque(int offset, int tamanio_descripcion) {
 	char* unBloque = new char[tamanio_descripcion];
 	fstream archivo (nombre.c_str() , ios::in | ios::binary);
@@ -35,6 +43,8 @@ int ArchivoDescrips::grabarEnEspacioLibre(string descripcion, int offset_libre) 
 	char c_descrip[descripcion.size()];
 	strcpy(c_descrip, descripcion.c_str());
 	archivo.write(c_descrip, descripcion.size());
+
+	this->offsetLibre = archivo.tellp();
 	archivo.close();
 
 	return offset_libre;   //Asi lo guardo en el archivo del arbol
