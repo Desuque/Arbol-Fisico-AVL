@@ -56,9 +56,15 @@ void ArchivoLibres::actualizarEspacioLibre(int nuevoOffset, int nuevoEspacioLibr
 
 	archivo.seekp (pos_offset, archivo.beg);
 
-	archivo.write(reinterpret_cast<const char *>(&nuevoOffset), tam_offset);
-	archivo.write(reinterpret_cast<const char *>(&nuevoEspacioLibre), tam_offset);
-
+	if (nuevoEspacioLibre != 0) {
+		archivo.write(reinterpret_cast<const char *>(&nuevoOffset), tam_offset);
+		archivo.write(reinterpret_cast<const char *>(&nuevoEspacioLibre), tam_offset);
+	} else {
+		//Si no sobra espacio libre, se guarda 0,0
+		int offset_cero = 0;
+		archivo.write(reinterpret_cast<const char *>(&offset_cero), tam_offset);
+		archivo.write(reinterpret_cast<const char *>(&nuevoEspacioLibre), tam_offset);
+	}
 	archivo.close();
 }
 
