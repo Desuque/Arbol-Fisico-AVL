@@ -27,7 +27,7 @@ using namespace std;
 // Si es construido solo con el nombre de archivo -> ya escribe el bloque en el archivo
 Bloque::Bloque(string nombreArchivo) {
 	this->nombreArchivo = nombreArchivo;
-	this->archivoArbol = new Persistencia(nombreArchivo);
+	this->archivoArbol = new Archivo(nombreArchivo);
 	this->id = archivoArbol->leerMayorIdNodo();
 
 	inicializarBloque();
@@ -36,7 +36,7 @@ Bloque::Bloque(string nombreArchivo) {
 // Si es construido solo con el nombre de archivo y id -> asume que ya tiene el bloque escrito en disco
 Bloque::Bloque(string nombreArchivo, int id) {
 	this->nombreArchivo = nombreArchivo;
-	this->archivoArbol = new Persistencia(nombreArchivo);
+	this->archivoArbol = new Archivo(nombreArchivo);
 	this->id = id;
 }
 int Bloque::getId() {
@@ -224,6 +224,8 @@ void Bloque::grabar(Nodo* unNodo) {
 				archivoArbol->escribirUnString("N", offset); //N = No contiene el dato
 				//Escribo la posicion del archivoDescrips en el archivoArbol
 				archivoArbol->escribirUnInt(offsetArchivoDescrips, offset);
+
+
 
 			}
 			bytes_ocupados += 4; // 4 = tam offset

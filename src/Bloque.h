@@ -1,14 +1,14 @@
 #ifndef BLOQUE_H_
 #define BLOQUE_H_
 
+#include "Archivo.h"
 #include "Registro.h"
-#include "Persistencia.h"
 #include "ArchivoDescrips.h"
 #include "ArchivoLibres.h"
 
 using namespace std;
 
-class Persistencia;
+class Archivo;
 
 class Bloque {
 private:
@@ -19,7 +19,7 @@ private:
 	int id;
 	int bytes_ocupados;
 	int cantidad_registros;
-	Persistencia* archivoArbol;
+	Archivo* archivoArbol;
 	ArchivoDescrips* archivoDescripciones;
 	ArchivoLibres* archivoLibres;
 

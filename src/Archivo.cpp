@@ -1,5 +1,5 @@
 /*
- * Persistencia.cpp
+ * Archivo.cpp
  *
  */
 #include <stdio.h>
@@ -8,12 +8,13 @@
 #include <fstream>
 #include <sstream>
 #include <iomanip>
-#include "Persistencia.h"
+
+#include "Archivo.h"
 #include "Registro.h"
 
 using namespace std;
 
-Persistencia::Persistencia(string nombreArchivo) {
+Archivo::Archivo(string nombreArchivo) {
 	buff_bloque = new char[tam_bloque];
 	buff_flagDeTipo = new char[tam_flagDeTipo];
 	buff_codigo = new char[tam_codigo];
@@ -26,7 +27,7 @@ Persistencia::Persistencia(string nombreArchivo) {
 	crearArchivoVacio();
 }
 
-void Persistencia::crearArchivoVacio() {
+void Archivo::crearArchivoVacio() {
 	fstream archivo (nombreArchivo.c_str() , ios::in | ios::binary);
 	if (!archivo) {
 		archivo.open(nombreArchivo.c_str() , ios::out | ios::binary);
@@ -39,7 +40,7 @@ void Persistencia::crearArchivoVacio() {
 	}
 }
 
-char* Persistencia::leerBloque(int idNodo) {
+char* Archivo::leerBloque(int idNodo) {
 	char* unBloque = new char[tam_bloque];
 	fstream archivo (nombreArchivo.c_str() , ios::in | ios::binary);
 
@@ -56,7 +57,7 @@ char* Persistencia::leerBloque(int idNodo) {
 }
 
 
-int Persistencia::leerMayorIdNodo() {
+int Archivo::leerMayorIdNodo() {
 	int buffer;
 	fstream archivo (nombreArchivo.c_str() , ios::in | ios::binary);
 
@@ -72,7 +73,7 @@ int Persistencia::leerMayorIdNodo() {
 	return buffer;
 }
 
-int Persistencia::leerMayorIdReg() {
+int Archivo::leerMayorIdReg() {
 	int buffer;
 	fstream archivo (nombreArchivo.c_str() , ios::in | ios::binary);
 
@@ -88,15 +89,15 @@ int Persistencia::leerMayorIdReg() {
 	return buffer;
 }
 
-int Persistencia::getTamanioMetadatos() {
+int Archivo::getTamanioMetadatos() {
 	return tam_meta_arbol;
 }
 
-int Persistencia::calcularOffsetRegistro(int idNodo) {
+int Archivo::calcularOffsetRegistro(int idNodo) {
 	return (idNodo*tam_bloque) + tam_meta_arbol + tam_meta_nodo;
 }
 
-void Persistencia::escribirUnString(string array, int &unaPos) {
+void Archivo::escribirUnString(string array, int &unaPos) {
 	fstream archivo;
 	archivo.open(nombreArchivo.c_str(), ios::in | ios::out | ios::binary );
 	archivo.seekp(unaPos, ios::beg);
@@ -106,7 +107,7 @@ void Persistencia::escribirUnString(string array, int &unaPos) {
 	unaPos += array.size();
 }
 
-void Persistencia::escribirUnInt(int unInt, int &unaPos) {
+void Archivo::escribirUnInt(int unInt, int &unaPos) {
 	fstream archivo;
 	archivo.open(nombreArchivo.c_str(), ios::in | ios::out | ios::binary );
 	archivo.seekp(unaPos, ios::beg);
@@ -116,17 +117,17 @@ void Persistencia::escribirUnInt(int unInt, int &unaPos) {
 	unaPos += 4;
 }
 
-void Persistencia::escribirMaxIDNodo(int maxID) {
+void Archivo::escribirMaxIDNodo(int maxID) {
 	int i = 0;
 	escribirUnInt(maxID, i);
 }
 
-void Persistencia::escribirMaxIDReg(int maxID) {
+void Archivo::escribirMaxIDReg(int maxID) {
 	int i = 4;
 	escribirUnInt(maxID, i);
 }
 
-void Persistencia::grabarRegistroLongFija(Registro* unRegistro, int idNodo, int padding) {
+void Archivo::grabarRegistroLongFija(Registro* unRegistro, int idNodo, int padding) {
 	string flagDeTipo = "F";
 	strcpy (buff_flagDeTipo, flagDeTipo.c_str());
 

@@ -8,7 +8,7 @@ using namespace std;
 /** El archivo de libres guarda el offset de espacio libre en el archivo de Bloques y en el archivo de Descripciones.
  * Ademas, guarda la cantidad de espacio libre. Devuelve, en caso de encontrar espacio, ambos parametros.
  *
- * Estructura del archivo: offset [4bytes], espacioLibre [4bytes]
+ * Estructura del archivo: offset [4bytes], espacioLibre [4bytes] ... [], [] ...
  *
  */
 
@@ -61,6 +61,10 @@ int ArchivoLibres::buscarEspacioLibre(int espacio) {
 
 		if (espacioLibre >= espacio) {
 			found = true;
+
+			//TODO BORRAR EL ESPACIO ENCONTRADO
+			//TODO CREAR UN NUEVO ESPACIO CON EL RESTO EN CASO DE EXISTIR
+
 		}
 	}
 	archivo.close();

@@ -36,7 +36,6 @@ int ArchivoDescrips::grabarEnEspacioLibre(string descripcion, int offset_libre) 
 	strcpy(c_descrip, descripcion.c_str());
 	archivo.write(c_descrip, descripcion.size());
 	archivo.close();
-	cout<<"c_desc"<<c_descrip<<endl;
 
 	return offset_libre;   //Asi lo guardo en el archivo del arbol
 

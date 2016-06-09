@@ -1,11 +1,11 @@
-#ifndef PERSISTENCIA_H_
-#define PERSISTENCIA_H_
+#ifndef ARCHIVO_H_
+#define ARCHIVO_H_
 #include "ArbolAVL.h"
 #include "Nodo.h"
 #include "Registro.h"
 #include <fstream>
 
-class Persistencia {
+class Archivo {
 
 	/**
 	 * Estructura del bloque fijo
@@ -49,7 +49,7 @@ private:
 	void inicializarNodo(int idNodo);
 
 public:
-	Persistencia(string nombreArchivo);
+	Archivo(string nombreArchivo);
 	char* leerBloque(int id);
 	void escribirNodo(Nodo* unNodo, Registro* unRegistro); // TODO: creo que tiene q ser private
 	Nodo* crearNodo(Registro* unRegistro);
@@ -70,7 +70,7 @@ public:
 	int calcularEspacioLibre(int padding, int tamanioDescripcion);
 	void escribirMetadatosNodo(Nodo* unNodo);  // TODO: creo que tiene q ser private
 	char* calcularEspacioLibreBloque(Registro* unRegistro);
-	~Persistencia();
+	~Archivo();
 };
 
 #endif /* PERSISTENCIA_H */
