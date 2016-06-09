@@ -29,11 +29,8 @@ int ArchivoDescrips::grabarEnEspacioLibre(string descripcion, int offset_libre) 
 	fstream archivo;
 	archivo.open(this->nombre.c_str(), ios::in | ios::out | ios::binary );
 
-	cout<<"offsetlibre:"<<offset_libre<<endl;
-	cout<<nombre<<endl;
 	//Posicion donde arranca la descripcion
-	archivo.seekg (offset_libre, archivo.beg);
-	int offset = archivo.tellg();
+	archivo.seekp (offset_libre, archivo.beg);
 
 	char c_descrip[descripcion.size()];
 	strcpy(c_descrip, descripcion.c_str());
@@ -41,7 +38,7 @@ int ArchivoDescrips::grabarEnEspacioLibre(string descripcion, int offset_libre) 
 	archivo.close();
 	cout<<"c_desc"<<c_descrip<<endl;
 
-	return offset;   //Asi lo guardo en el archivo del arbol
+	return offset_libre;   //Asi lo guardo en el archivo del arbol
 
 }
 
