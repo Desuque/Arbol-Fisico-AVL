@@ -13,10 +13,9 @@ private:
 public:
 	ArchivoDescrips(string nombre);
 	int grabar(string descripcion);
-	string leer(int offset, int tamanio);
 
 
-	char* leerBloque(int offset, int tamanio_descripcion);
+	string leerBloque(int offset, int tamanio_descripcion);
 	~ArchivoDescrips();
 };
 

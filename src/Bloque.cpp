@@ -6,6 +6,8 @@
  */
 
 #include "Bloque.h"
+#include <stdio.h>
+#include <string.h>
 #include <iostream>
 #include<sstream>
 
@@ -49,6 +51,7 @@ Nodo* Bloque::devolverNodo() {
 		return 0;
 	} else {
 		int tamDescr;
+		int offsetDescr;
 		int idReg;
 		char codReg [4];
 		char* descrReg;
@@ -73,17 +76,22 @@ Nodo* Bloque::devolverNodo() {
 			idReg = *(reinterpret_cast<int *>(charBloq + offset));
 			offset += 4;
 			copy(charBloq + offset, charBloq + offset + 3, codReg);
-			codReg[4] = '\0';
+			codReg[3] = '\0';
 			offset += 3;
 			copy(charBloq + offset, charBloq + offset + 1, flagDescr);
 			offset += 1;
-			if (flagDescr[0] = 'S') {
+			if (flagDescr[0] == 'S') {
 				descrReg = new char [tamDescr+1];
 				copy(charBloq + offset, charBloq + offset + tamDescr, descrReg);
 				descrReg[tamDescr] = '\0';
 				offset += tamDescr;
-			} else {
-				// TODO: Leer del arch de descrips
+			} else if (flagDescr[0] == 'N') {
+				descrReg = new char [tamDescr+1];
+				offsetDescr = *(reinterpret_cast<int *>(charBloq + offset));
+				archivoDescripciones = new ArchivoDescrips(nombreArchivo);
+				string desc = archivoDescripciones->leerBloque(offsetDescr, tamDescr);
+				strcpy(descrReg, desc.c_str());
+				descrReg[tamDescr] = '\0';
 				offset += 4;
 			}
 			unRegistro = new Registro(string(codReg), string(descrReg));
@@ -186,19 +194,12 @@ void Bloque::grabar(Nodo* unNodo) {
 
 			//TODO BUSCAR EN EL ARCHIVO DE LIBRES ANTES!!!
 
-			cout<<unRegistro->getDescripcion()<<endl;
 			int offsetArchivoDescrips = archivoDescripciones->grabar(unRegistro->getDescripcion());
 
 			archivoArbol->escribirUnString("N", offset); //N = No contiene el dato
 
-			//Convierto el offset a string para que lo grabe como "descripcion"
-			string c_offsetArchivoDescrips;
-			stringstream convert;
-			convert << offsetArchivoDescrips;
-			c_offsetArchivoDescrips = convert.str();
-
 			//Escribo la posicion del archivoDescrips en el archivoArbol
-			archivoArbol->escribirUnString(c_offsetArchivoDescrips, offset);
+			archivoArbol->escribirUnInt(offsetArchivoDescrips, offset);
 			bytes_ocupados += 4; // 4 = tam offset
 
 			delete archivoDescripciones;

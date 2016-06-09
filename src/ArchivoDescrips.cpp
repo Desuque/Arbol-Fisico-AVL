@@ -12,15 +12,17 @@ ArchivoDescrips::ArchivoDescrips(string nombre) {
 	//TODO: inicializarArchivo();
 }
 
-char* ArchivoDescrips::leerBloque(int offset, int tamanio_descripcion) {
+string ArchivoDescrips::leerBloque(int offset, int tamanio_descripcion) {
 	char* unBloque = new char[tamanio_descripcion];
 	fstream archivo (nombre.c_str() , ios::in | ios::binary);
 
 	archivo.seekg (offset);
 	archivo.read (unBloque, tamanio_descripcion);
+
+	string bloque = string(unBloque);
 	archivo.close();
 
-	return unBloque;
+	return bloque;
 }
 
 int ArchivoDescrips::grabar(string descripcion) {
@@ -42,32 +44,12 @@ int ArchivoDescrips::grabar(string descripcion) {
 	//Posicion donde arranca la descripcion
 	archivo.seekg (0, archivo.end);
 	int offset = archivo.tellg();
-	cout<<"lengtg:"<<offset<<endl;
 
 	char c_descrip[descripcion.size()];
 	strcpy(c_descrip, descripcion.c_str());
 	archivo.write(c_descrip, descripcion.size());
 
-	cout<<"beta"<<endl;
-	char* unBloque = leerBloque(offset, descripcion.size());
-	for(int i=0; i<descripcion.size(); i++) {
-		cout<<unBloque[i];
-	}
-
 	return offset;   //Asi lo guardo en el archivo del arbol
-}
-
-string ArchivoDescrips::leer(int offset, int tamanio) {
-	/*
-	string unaDescr;
-	fstream archivo;
-	archivo.open(this->nombre.c_str(), ios::binary | ios::in);
-	archivo.seekg( offset,  ios::beg );
-
-	archivo.read (unaDescr, tamanio);
-
-	return unaDescr;
-	*/
 }
 
 ArchivoDescrips::~ArchivoDescrips() {
