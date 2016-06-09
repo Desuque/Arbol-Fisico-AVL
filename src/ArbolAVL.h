@@ -18,7 +18,7 @@ private:
 public:
 	ArbolAVL(string nombre);
 
-	void insertar(Registro* unRegistro);
+	void insertar(string codigo, string descripcion);
 	void borrarRegistro(int unID);
 	void print();
 	Nodo* getRaiz();

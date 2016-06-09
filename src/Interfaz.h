@@ -8,9 +8,15 @@
 #ifndef SRC_INTERFAZ_H_
 #define SRC_INTERFAZ_H_
 
+#include <iostream>
+#include <string.h>
+#include "ArbolAVL.h"
+
+using namespace std;
+
 class Interfaz {
 private:
-	int maxParametros = 4;
+	int maxParametros = 6;
 public:
 	Interfaz(int argc, char *argv[]);
 	virtual ~Interfaz();
@@ -23,6 +29,7 @@ private:
 	void modificarInstancia(char *argv[]);
 	void eliminarInstancia(char *argv[]);
 	void listarInstancias(char *argv[]);
+	string renombrarArchivo(string nombreConBin);
 };
 
 #endif /* SRC_INTERFAZ_H_ */

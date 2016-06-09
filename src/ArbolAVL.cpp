@@ -47,7 +47,11 @@ int altura(Nodo* unNodo) {
 	return unNodo->getAltura();
 }
 
-void ArbolAVL::insertar(Registro* unRegistro) {
+//void ArbolAVL::insertar(Registro* unRegistro) {
+void ArbolAVL::insertar(string codigo, string descripcion) {
+	Registro* unRegistro;
+	unRegistro = new Registro(codigo, descripcion);
+
 	unRegistro->setId(maxIdReg);
 	maxIdReg++;
 
@@ -228,6 +232,23 @@ void ArbolAVL::borrarRegistro(int unID) {
 }
 
 Nodo* ArbolAVL::borrarRegistroPorID(Nodo* unNodo, int idBuscado) {
+	if(unNodo != 0) {
+		int menorID = unNodo->getMenorID();
+		int mayorID = unNodo->getMayorID();
+		if (!unNodo->existeRegistroConID(idBuscado)) {
+			if (idBuscado < menorID) {
+				borrarRegistroPorID(devolverNodo(unNodo->getHijoIzquierdo()), idBuscado);
+			}
+			if (idBuscado > mayorID) {
+				borrarRegistroPorID(devolverNodo(unNodo->getHijoIzquierdo()), idBuscado);
+			}
+		} else {
+			unNodo->borrarRegistro(idBuscado);
+		}
+	}
+	return unNodo;
+}
+
 	/**
 	if(unNodo != 0) {
 		int menorID = unNodo->getMenorID();
@@ -288,9 +309,9 @@ Nodo* ArbolAVL::borrarRegistroPorID(Nodo* unNodo, int idBuscado) {
 			unNodo->borrarRegistro(idBuscado);
 		}
 	}
-	**/
-	return unNodo;
 }
+**/
+
 
 Nodo* ArbolAVL::buscarNodoPorID(Nodo* unNodo, int idBuscado) {
 	if(unNodo != 0) {
