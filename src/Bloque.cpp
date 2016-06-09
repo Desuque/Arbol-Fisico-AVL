@@ -190,19 +190,49 @@ void Bloque::grabar(Nodo* unNodo) {
 		archivoArbol->escribirUnString(unRegistro->getCodigo(), offset);
 
 		if ((unRegistro->getDescripcion()).size() > tamanio_max_descrinterna) {
-			archivoDescripciones = new ArchivoDescrips(nombreArchivo);
+			archivoLibres = new ArchivoLibres(nombreArchivo+"_descrips");
 
-			//TODO BUSCAR EN EL ARCHIVO DE LIBRES ANTES!!!
+			// BETA
+			/** CREO ESPACIO LIBRE PARA TESTEAR
+			* NADA, ESO.
+			* TOMATELA'TE DIJE
+			*/
+			archivoLibres->grabarEspacioLibre(0,2000);
+			// BETA
+			/** CREO ESPACIO LIBRE PARA TESTEAR
+			* NADA, ESO.
+			* TOMATELA'TE DIJE
+			*/
 
-			int offsetArchivoDescrips = archivoDescripciones->grabar(unRegistro->getDescripcion());
+			//Si el archivo de libres no tiene espacio o no existe, grabo la descripcion al final del archivo de descripciones
+			if (!archivoLibres->hayEspacio((unRegistro->getDescripcion()).size())) {
+				archivoDescripciones = new ArchivoDescrips(nombreArchivo);
+				int offsetArchivoDescrips = archivoDescripciones->grabar(unRegistro->getDescripcion());
+				archivoArbol->escribirUnString("N", offset); //N = No contiene el dato
 
-			archivoArbol->escribirUnString("N", offset); //N = No contiene el dato
+				//Escribo la posicion del archivoDescrips en el archivoArbol
+				archivoArbol->escribirUnInt(offsetArchivoDescrips, offset);
+				bytes_ocupados += 4; // 4 = tam offset
+				delete archivoDescripciones;
 
-			//Escribo la posicion del archivoDescrips en el archivoArbol
-			archivoArbol->escribirUnInt(offsetArchivoDescrips, offset);
-			bytes_ocupados += 4; // 4 = tam offset
+			//Si el archivo de libres encuentra espacio libre en el archivo de descripciones, utilizo ese espacio para almacenar la descripcion
+			} else {
+				cout<<"Holaaaa"<<endl;
+				cout<<"Reviso el archivo de libres"<<endl;
 
-			delete archivoDescripciones;
+				//refactor
+				archivoDescripciones = new ArchivoDescrips(nombreArchivo);
+				int offsetArchivoDescrips = archivoDescripciones->grabarEnEspacioLibre(unRegistro->getDescripcion(), archivoLibres->getOffset());
+				archivoArbol->escribirUnString("N", offset); //N = No contiene el dato
+
+				//Escribo la posicion del archivoDescrips en el archivoArbol
+				archivoArbol->escribirUnInt(offsetArchivoDescrips, offset);
+				bytes_ocupados += 4; // 4 = tam offset
+				delete archivoDescripciones;
+
+
+			}
+			delete archivoLibres;
 
 		} else {
 			archivoArbol->escribirUnString("S", offset); //S = Si contiene el dato

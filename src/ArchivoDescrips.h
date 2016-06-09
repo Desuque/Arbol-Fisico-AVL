@@ -13,7 +13,7 @@ private:
 public:
 	ArchivoDescrips(string nombre);
 	int grabar(string descripcion);
-
+	int grabarEnEspacioLibre(string descripcion, int offset_libre);
 
 	string leerBloque(int offset, int tamanio_descripcion);
 	~ArchivoDescrips();

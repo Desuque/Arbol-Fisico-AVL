@@ -25,21 +25,29 @@ string ArchivoDescrips::leerBloque(int offset, int tamanio_descripcion) {
 	return bloque;
 }
 
+int ArchivoDescrips::grabarEnEspacioLibre(string descripcion, int offset_libre) {
+	fstream archivo;
+	archivo.open(this->nombre.c_str(), ios::in | ios::out | ios::binary );
+
+	cout<<"offsetlibre:"<<offset_libre<<endl;
+	cout<<nombre<<endl;
+	//Posicion donde arranca la descripcion
+	archivo.seekg (offset_libre, archivo.beg);
+	int offset = archivo.tellg();
+
+	char c_descrip[descripcion.size()];
+	strcpy(c_descrip, descripcion.c_str());
+	archivo.write(c_descrip, descripcion.size());
+	archivo.close();
+	cout<<"c_desc"<<c_descrip<<endl;
+
+	return offset;   //Asi lo guardo en el archivo del arbol
+
+}
+
 int ArchivoDescrips::grabar(string descripcion) {
 	fstream archivo;
 	archivo.open(this->nombre.c_str(), ios::in | ios::out | ios::binary | ios::app );
-
-	  /** TODO hacer archivo de libres
-	  ArchivoLibres* archivoLibres = new ArchivoLibres("descripciones");
-	  int offset = archivoLibres.buscarEspacioLibre(descripcion.size());
-
-	  if (offset >= 0) {
-	 		archivo.seekp(offsetLibre, ios::beg);
-	  } else {
-	  		archivo.seekp( 0,  ios::end );
-	  		offset = ver como obtener el offset;
-	  }
-	**/
 
 	//Posicion donde arranca la descripcion
 	archivo.seekg (0, archivo.end);

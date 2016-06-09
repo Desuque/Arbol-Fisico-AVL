@@ -4,6 +4,7 @@
 #include "Registro.h"
 #include "Persistencia.h"
 #include "ArchivoDescrips.h"
+#include "ArchivoLibres.h"
 
 using namespace std;
 
@@ -20,6 +21,7 @@ private:
 	int cantidad_registros;
 	Persistencia* archivoArbol;
 	ArchivoDescrips* archivoDescripciones;
+	ArchivoLibres* archivoLibres;
 
 	void inicializarBloque();
 	int calcularOffsetRegistros();
