@@ -23,6 +23,11 @@ private:
 	ArchivoDescrips* archivoDescripciones;
 	ArchivoLibres* archivoLibres;
 
+	struct offsetInicioFinBloque {
+	  int off_inicioBloque;
+	  int off_finBloque;
+	} offsetInicioFin;
+
 	void inicializarBloque();
 	int calcularOffsetRegistros();
 	int calcularOffsetMetadatos();
@@ -31,6 +36,8 @@ private:
 	void escribirFlagExistencia();
 	void escribirEspacioLibre();
 	void escribirCantidadRegistros();
+	void buscarOffsetDeRegistro(int id);
+
 public:
 	Bloque(string nombreArchivo);
 	Bloque(string nombreArchivo, int id);
@@ -41,6 +48,7 @@ public:
 	int getId();
 	int getMaxIdReg();
 	Nodo* devolverNodo();
+	void borrarRegistro(int id);
 	virtual ~Bloque();
 };
 

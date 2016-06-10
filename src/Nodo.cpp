@@ -141,6 +141,7 @@ bool Nodo::borrarRegistro(int ID) {
 		unRegistro = *list_iter;
 		if (unRegistro->getId() == ID) {
 			registros->remove(unRegistro);
+			bloque->borrarRegistro(ID);
 			encontrado = true;
 			break;
 		}

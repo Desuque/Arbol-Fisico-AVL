@@ -38,10 +38,10 @@ private:
 	char* buff_flagExisteRegistro;
 	char* buff_hijoIzquierdo;
 	char* buff_hijoDerecho;
-
 	char* bloque;
 
 	string nombreArchivo;
+	int offsetInicioBloque;
 
 	int calcularOffsetRegistro(int idNodo);
 	int calcularOffsetNodo(int idNodo);
@@ -70,6 +70,15 @@ public:
 	int calcularEspacioLibre(int padding, int tamanioDescripcion);
 	void escribirMetadatosNodo(Nodo* unNodo);  // TODO: creo que tiene q ser private
 	char* calcularEspacioLibreBloque(Registro* unRegistro);
+
+
+	/**
+	* Cuando se hace una lectura y se quiere saber en que offset comienza el bloque,
+	* puede obtenerse llamando a esta funcion luego de realizar la lectura (leerBloque)
+	* Se usa por ejemplo, para borrar un registro de un bloque
+	*/
+	int getOffsetInicioBloque();
+	void borrarRegistro(int inicioOffset, int finOffset);
 	~Archivo();
 };
 

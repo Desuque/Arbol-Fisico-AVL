@@ -40,12 +40,17 @@ void Archivo::crearArchivoVacio() {
 	}
 }
 
+int Archivo::getOffsetInicioBloque() {
+	return offsetInicioBloque;
+}
+
 char* Archivo::leerBloque(int idNodo) {
 	char* unBloque = new char[tam_bloque];
 	fstream archivo (nombreArchivo.c_str() , ios::in | ios::binary);
 
 	if (archivo) {
 		archivo.seekg ((idNodo * tam_bloque) + tam_meta_arbol);
+		this->offsetInicioBloque = archivo.tellp();
 		archivo.read (unBloque, tam_bloque);
 		archivo.close();
 	} else {
@@ -126,6 +131,25 @@ void Archivo::escribirMaxIDReg(int maxID) {
 	int i = 4;
 	escribirUnInt(maxID, i);
 }
+
+void Archivo::borrarRegistro(int inicioOffset, int finOffset) {
+	fstream archivo;
+	archivo.open(this->nombreArchivo.c_str(), ios::in | ios::out | ios::binary );
+
+	//Posicion donde arranca la descripcion
+	archivo.seekp (inicioOffset, archivo.beg);
+
+	cout<<"Inicio offset: "<<inicioOffset<<endl;
+	cout<<"Fin offset: "<<finOffset<<endl;
+
+	char* espacioLibre = new char[finOffset-inicioOffset];
+	archivo.write(espacioLibre, finOffset-inicioOffset);
+	archivo.close();
+
+	//TODO Grabar archivo de libres con inicioOffset y tamaño de espacio libre (la resta)
+	delete espacioLibre;
+}
+
 
 void Archivo::grabarRegistroLongFija(Registro* unRegistro, int idNodo, int padding) {
 	string flagDeTipo = "F";

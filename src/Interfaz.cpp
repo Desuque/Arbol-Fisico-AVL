@@ -30,7 +30,7 @@ void Interfaz::msgHelp() {
 	cout<<"En el caso de usar el argumento -q el modo de empleo sera: arbolFisico [nombre grupo] -q [codigo de consulta] [-f path al archivo]."<<endl;
 	cout<<endl;
 	cout<<"Argumentos:"<<endl;
-	cout<<"-a, da en alta en [archivo]. Ej: -a 'Codigo' 'Descripcion' 'productos.bin'."<<endl;
+	cout<<"-a, da en alta en [archivo]. Ej: -a Codigo 'Descripcion' productos.bin."<<endl;
 	cout<<"-b, da de baja en [archivo]. Ej: -b 'ID' 'productos.bin'"<<endl;
 	cout<<"-m, modifica la [categoria]."<<endl;
 	cout<<"-q, realiza una consulta segun el codigo ingresado."<<endl;

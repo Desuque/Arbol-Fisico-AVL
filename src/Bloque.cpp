@@ -20,9 +20,6 @@ using namespace std;
 //     [4b]     [4b]     [3b]       [1b]          [xb]
 // Tam Descr - Id Reg - Codigo - Flag Descr - Descripcion (u offset)
 
-
-
-
 // ------------------------------------------------------------------------
 // Si es construido solo con el nombre de archivo -> ya escribe el bloque en el archivo
 Bloque::Bloque(string nombreArchivo) {
@@ -39,9 +36,83 @@ Bloque::Bloque(string nombreArchivo, int id) {
 	this->archivoArbol = new Archivo(nombreArchivo);
 	this->id = id;
 }
+
 int Bloque::getId() {
 	return this->id;
 }
+
+void Bloque::buscarOffsetDeRegistro(int idRegBuscado) {
+	char* charBloq = archivoArbol->leerBloque(id);
+	int offsetInicioBloque = archivoArbol->getOffsetInicioBloque();
+	int offsetFinDeBloque = 0;
+
+	int tamDescr;
+	int offsetDescr;
+	int idReg;
+	char codReg [4];
+	char* descrReg;
+	char flagDescr [1];
+
+	//Se puede poner directamente cuanto ocupa el offset hasta aca, pero no saco las variables
+	//porque queda mas claro de donde sale
+	int offset = 0;
+	offset += 1;
+	int espLibre = *(reinterpret_cast<int *>(charBloq + offset));
+	offset += 4;
+	int cantRegs = *(reinterpret_cast<int *>(charBloq + offset));
+	offset += 4;
+	int idIzq = *(reinterpret_cast<int *>(charBloq + offset));
+	offset += 4;
+	int idDer = *(reinterpret_cast<int *>(charBloq + offset));
+	offset += 4;
+
+	// Registros
+	int i = 0;
+	bool encontrado = false;
+
+	while ((!encontrado) && (i<cantRegs)) {
+		tamDescr = *(reinterpret_cast<int *>(charBloq + offset));
+		offset += 4;
+		idReg = *(reinterpret_cast<int *>(charBloq + offset));
+
+		if (idReg == idRegBuscado) {
+			encontrado = true;
+			offsetInicioBloque += (offset-4); //Me posiciono en donde empieza el tamDescr
+		}
+
+		offset += 4;
+		copy(charBloq + offset, charBloq + offset + 3, codReg);
+		codReg[3] = '\0';
+		offset += 3;
+		copy(charBloq + offset, charBloq + offset + 1, flagDescr);
+		offset += 1;
+		if (flagDescr[0] == 'S') {
+			offset += tamDescr;
+			offsetFinDeBloque = offset; //Hasta aca hay que borrar
+		} else if (flagDescr[0] == 'N') {
+			offsetDescr = *(reinterpret_cast<int *>(charBloq + offset));
+			archivoDescripciones = new ArchivoDescrips(nombreArchivo);
+			string desc = archivoDescripciones->leerBloque(offsetDescr, tamDescr);
+			offset += 4;
+			offsetFinDeBloque = offset; //Hasta aca hay que borrar
+
+			//TODO borrarDescripcionDeArchivoDescripciones(offsetDescr, tamDescr);
+		}
+		i++;
+	}
+	offsetInicioFin.off_inicioBloque = offsetInicioBloque;
+	offsetInicioFin.off_finBloque = offsetFinDeBloque;
+}
+
+void Bloque::borrarRegistro(int idReg) {
+	//TODO
+	//No estoy seguro que pasa si intentas borrar un bloque que no existe, despues lo testeo
+	//voy por el camino feliz
+
+	buscarOffsetDeRegistro(idReg);
+	archivoArbol->borrarRegistro(offsetInicioFin.off_inicioBloque, offsetInicioFin.off_finBloque);
+}
+
 // ------------------------------------------------------------------------
 // Parsea todo el bloque y devuelve el nodo correspondiente
 Nodo* Bloque::devolverNodo() {
