@@ -27,7 +27,7 @@ void Interfaz::msgHelp() {
 	cout<<"==================================="<<endl;
 	cout<<endl;
 	cout<<"Modo de empleo: arbolesFisicos [-argumento] [ID/Codigo/Descripcion] [path al archivo]."<<endl;
-	cout<<"En el caso de usar el argumento -q el modo de empleo sera: arbolFisico [nombre grupo] -q [codigo de consulta] [-f path al archivo]."<<endl;
+	cout<<"En el caso de usar el argumento -q el modo de empleo sera: arbolFisico -q [codigo de consulta] [-f path al archivo]."<<endl;
 	cout<<endl;
 	cout<<"Argumentos:"<<endl;
 	cout<<"-a, da en alta en [archivo]. Ej: -a Codigo 'Descripcion' productos.bin."<<endl;
@@ -36,22 +36,11 @@ void Interfaz::msgHelp() {
 	cout<<"-q, realiza una consulta segun el codigo ingresado."<<endl;
 	cout<<endl;
 	cout<<"Codigos de consulta:"<<endl;
-	cout<<"A Búsqueda de Vendedor por Identificador."<<endl;
-	cout<<"B Búsqueda de Vendedor por Nombre."<<endl;
-	cout<<"C Búsqueda de Venta por Código de Vendedor."<<endl;
-	cout<<"D Búsqueda de Venta por Código de Producto."<<endl;
-	cout<<"E Búsqueda de Producto por Identificador."<<endl;
-	cout<<"F Búsqueda de Producto por Nombre."<<endl;
-	cout<<"G Búsqueda de Grupo por Identificador."<<endl;
-	cout<<"H Búsqueda de Vendedor por Identificador, con el índice."<<endl;
-	cout<<"I Búsqueda de Vendedor por Nombre, con el índice."<<endl;
-	cout<<"J Búsqueda de Venta por Código de Vendedor, con el índice."<<endl;
-	cout<<"K Búsqueda de Venta por Código de Producto, con el índice."<<endl;
-	cout<<"L Búsqueda de Producto por Identificador, con el índice."<<endl;
-	cout<<"M Búsqueda de Producto por Nombre, con el índice."<<endl;
-	cout<<"N Búsqueda de Grupo por Identificador, con el índice."<<endl;
-	cout<<"O Informe: Listado de ventas por Vendedor."<<endl;
-	cout<<"P Informe: Ahorro de espacio por compresión."<<endl;
+	/**
+	 * Solo un unico codigo de consulta por ID, ya que las que se publicaron no corresponden con este trabajo
+	 * Devuelve el codigo y la descripcion
+	 */
+	cout<<"A Búsqueda de por Identificador."<<endl;
 	cout<<endl;
 	cout<<"-f, (Solo con argumento -q) indica que se guardará el resultado en un archivo, de no utlizarse, se mostrará por pantalla."<<endl;
 }
@@ -65,13 +54,13 @@ void Interfaz::validarParametros(int argc, char *argv[]) {
 	}
 	if ( string(argv[1]) == "-a" ) {
 		/**
-		 * Ej de uso: -a "ABC" "Descripcion" "productos.bin"
+		 * Ej de uso: -a "ABC" "Descripcion" productos.bin
 		 */
 		crearInstancia(argv);
 	}
 	if ( string(argv[1]) == "-b" ) {
 		/**
-		* Ej de uso: -b "ID" "productos.bin"
+		* Ej de uso: -b "ID" productos.bin
 		*/
 		eliminarInstancia(argv);
 	}
