@@ -142,12 +142,12 @@ void Archivo::borrarRegistro(int inicioOffset, int finOffset) {
 	cout<<"Inicio offset: "<<inicioOffset<<endl;
 	cout<<"Fin offset: "<<finOffset<<endl;
 
-	char* espacioLibre = new char[finOffset-inicioOffset];
-	archivo.write(espacioLibre, finOffset-inicioOffset);
+	int unInt = 0;
+	archivo.write(reinterpret_cast<const char *>(&unInt), finOffset-inicioOffset);
 	archivo.close();
 
 	//TODO Grabar archivo de libres con inicioOffset y tamaño de espacio libre (la resta)
-	delete espacioLibre;
+	//delete espacioLibre;
 }
 
 

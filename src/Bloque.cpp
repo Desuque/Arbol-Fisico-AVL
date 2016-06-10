@@ -88,7 +88,7 @@ void Bloque::buscarOffsetDeRegistro(int idRegBuscado) {
 		offset += 1;
 		if (flagDescr[0] == 'S') {
 			offset += tamDescr;
-			offsetFinDeBloque = offset; //Hasta aca hay que borrar
+			offsetFinDeBloque = offset+8; //Hasta aca hay que borrar, el+8 es porque algo hace mal
 		} else if (flagDescr[0] == 'N') {
 			offsetDescr = *(reinterpret_cast<int *>(charBloq + offset));
 			archivoDescripciones = new ArchivoDescrips(nombreArchivo);
