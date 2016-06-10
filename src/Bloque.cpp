@@ -14,8 +14,8 @@
 using namespace std;
 
 // ---------------    Bloque    -------------------------------
-//     [1b]         [4b]      [4b]     [4b]
-// Flag Existe - Esp Libre - Id Izq - Id Der - Registros
+//     [1b]         [4b]      [4b]        [4b]      [4b]      =  17b de tamanio_meta
+// Flag Existe - Esp Libre - Cant Regs - Id Izq - Id Der - Registros
 // ---------------    Registro    -------------------------------
 //     [4b]     [4b]     [3b]       [1b]          [xb]
 // Tam Descr - Id Reg - Codigo - Flag Descr - Descripcion (u offset)
@@ -62,6 +62,8 @@ Nodo* Bloque::devolverNodo() {
 		offset += 1;
 		int espLibre = *(reinterpret_cast<int *>(charBloq + offset));
 		offset += 4;
+		int altura = *(reinterpret_cast<int *>(charBloq + offset));
+		offset += 4;
 		int cantRegs = *(reinterpret_cast<int *>(charBloq + offset));
 		offset += 4;
 		int idIzq = *(reinterpret_cast<int *>(charBloq + offset));
@@ -99,6 +101,8 @@ Nodo* Bloque::devolverNodo() {
 			delete descrReg;
 		}
 
+		unNodo->modificarAltura(altura);
+
 		return unNodo;
 	}
 }
@@ -109,15 +113,16 @@ void Bloque::inicializarBloque() {
 	archivoArbol->escribirMaxIDNodo(id + 1);
 	bytes_ocupados = tamanio_meta;
 	cantidad_registros = 0;
-	escribirMetaDatos(-1, -1);
+	escribirMetaDatos(-1, -1, -1);
 }
 void Bloque::escribirBloqueVacio() {
 	int offset = calcularOffsetMetadatos();
 	archivoArbol->escribirNull(offset, tamanio);
 }
-void Bloque::escribirMetaDatos(int idIzq, int idDer) {
+void Bloque::escribirMetaDatos(int idIzq, int idDer, int altura) {
 	escribirFlagExistencia();
 	escribirEspacioLibre();
+	escribirAltura(altura);
 	escribirCantidadRegistros();
 	escribirIdIzq(idIzq);
 	escribirIdDer(idDer);
@@ -136,10 +141,28 @@ void Bloque::escribirEspacioLibre() {
 	archivoArbol->escribirUnInt(espacioLibre, offset);
 }
 // ------------------------------------------------------------------------
+// Escribe el metadato altura en su lugar correspondiente
+void Bloque::escribirAltura(int altura) {
+	int offset = calcularOffsetMetadatos() + 5;
+	archivoArbol->escribirUnInt(altura, offset);
+}
+// ------------------------------------------------------------------------
 // Escribe el metadato de cuantos registros tiene el nodo en el bloque
 void Bloque::escribirCantidadRegistros() {
-	int offset = calcularOffsetMetadatos() + 5;
+	int offset = calcularOffsetMetadatos() + 9;
 	archivoArbol->escribirUnInt(cantidad_registros, offset);
+}
+// ------------------------------------------------------------------------
+// Escribe el id del bloque izq
+void Bloque::escribirIdIzq(int unId) {
+	int offset = calcularOffsetMetadatos() + 13;
+	archivoArbol->escribirUnInt(unId, offset);
+}
+// ------------------------------------------------------------------------
+// Escribe el id del bloque der
+void Bloque::escribirIdDer(int unId) {
+	int offset = calcularOffsetMetadatos() + 17;
+	archivoArbol->escribirUnInt(unId, offset);
 }
 // ------------------------------------------------------------------------
 // Determina a partir de que offset se empiezan a escribir los metadatos del bloque
@@ -150,18 +173,6 @@ int Bloque::calcularOffsetMetadatos() {
 // Determina a partir de que offset se empiezan a escribir los registros del bloque
 int Bloque::calcularOffsetRegistros() {
 	return (id * tamanio) + archivoArbol->getTamanioMetadatos() + tamanio_meta;
-}
-// ------------------------------------------------------------------------
-// Escribe el id del bloque izq
-void Bloque::escribirIdIzq(int unId) {
-	int offset = calcularOffsetMetadatos() + 9;
-	archivoArbol->escribirUnInt(unId, offset);
-}
-// ------------------------------------------------------------------------
-// Escribe el id del bloque der
-void Bloque::escribirIdDer(int unId) {
-	int offset = calcularOffsetMetadatos() + 13;
-	archivoArbol->escribirUnInt(unId, offset);
 }
 // ------------------------------------------------------------------------
 // Calcula si entra el nuevo registro en cuestion el el bloque
@@ -202,26 +213,6 @@ void Bloque::grabar(Nodo* unNodo) {
 		if ((unRegistro->getDescripcion()).size() > tamanio_max_descrinterna) {
 			archivoLibres = new ArchivoLibres(nombreArchivo+"_descrips");
 			archivoDescripciones = new ArchivoDescrips(nombreArchivo);
-
-			// BETA
-			/** CREO ESPACIO LIBRE PARA TESTEAR
-			* NADA, ESO.
-			* TOMATELA'TE DIJE
-			*/
-
-			/**ACLARACION: Es necesario que realmente haya espacio libre y no que el archivo se va a crear gracias a esta accion
-			 * si esa zona del archivo no esta definida esto no va a grabar nada, porque no inventa espacio, ocupa el espacio
-			 * no ocupado. Si se testea, previamente tiene que existir el archivo de descripciones, y el espacio realmente debe estar
-			 * vacio (o escrito, en su defecto, ya que es una prueba) para que funcione.
-			 */
-
-			//archivoLibres->grabarEspacioLibre(3500,2000);
-
-			// BETA
-			/** CREO ESPACIO LIBRE PARA TESTEAR
-			* NADA, ESO.
-			* TOMATELA'TE DIJE
-			*/
 
 			//Si el archivo de libres no tiene espacio o no existe, grabo la descripcion al final del archivo de descripciones
 			if (!archivoLibres->hayEspacio((unRegistro->getDescripcion()).size())) {
@@ -264,7 +255,7 @@ void Bloque::grabar(Nodo* unNodo) {
 	}
 
 	archivoArbol->escribirMaxIDReg(maxIdReg);
-	escribirMetaDatos(unNodo->getHijoIzquierdo(), unNodo->getHijoDerecho());
+	escribirMetaDatos(unNodo->getHijoIzquierdo(), unNodo->getHijoDerecho(), unNodo->getAltura());
 }
 
 int Bloque::getMaxIdReg() {

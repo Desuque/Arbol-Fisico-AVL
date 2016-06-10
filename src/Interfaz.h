@@ -29,6 +29,7 @@ private:
 	void modificarInstancia(char *argv[]);
 	void eliminarInstancia(char *argv[]);
 	void listarInstancias(char *argv[]);
+	void mostrarInsertar(string codigo, ArbolAVL* unArbol);
 	string renombrarArchivo(string nombreConBin);
 };
 

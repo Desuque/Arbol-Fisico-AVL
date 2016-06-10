@@ -24,6 +24,7 @@ public:
 	Nodo* getRaiz();
 	Nodo* buscarNodoPorID(Nodo* unNodo, int idBuscado);
 	Nodo* borrarRegistroPorID(Nodo* unNodo, int idBuscado);
+	int getMaxRegistroID();
 	virtual ~ArbolAVL();
 
 private:

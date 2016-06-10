@@ -13,7 +13,7 @@ class Archivo;
 class Bloque {
 private:
 	static const int tamanio = 4096;
-	static const int tamanio_meta = 17;
+	static const int tamanio_meta = 21;
 	static const int tamanio_max_descrinterna = 1000;
 	string nombreArchivo;
 	int id;
@@ -35,9 +35,10 @@ private:
 	int leerMayorIdReg();
 	void escribirFlagExistencia();
 	void escribirEspacioLibre();
+	void escribirAltura(int altura);
 	void escribirCantidadRegistros();
 	void escribirBloqueVacio();
-	void escribirMetaDatos(int idIzq, int idDer);
+	void escribirMetaDatos(int idIzq, int idDer, int altura);
 
 public:
 	Bloque(string nombreArchivo);

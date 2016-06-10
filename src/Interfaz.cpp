@@ -89,17 +89,31 @@ string Interfaz::renombrarArchivo(string nombreConBin) {
 	return str;
 }
 
+void Interfaz::mostrarInsertar(string codigo, ArbolAVL* unArbol) {
+	cout << "El registro con Codigo: '"<< codigo << "' ha sido insertado con el ID: " << unArbol->getMaxRegistroID() << endl;
+}
+
 void Interfaz::crearInstancia(char *argv[]) {
 	string nombre = renombrarArchivo(string(argv[4]));
 
 	ArbolAVL* arbol = new ArbolAVL(nombre);
 
 	arbol->insertar(argv[2], argv[3]);
-	arbol->print();
+	mostrarInsertar(argv[2], arbol);
+
+	arbol->print(); //TODO: Dejar solo para pruebas
 
 	delete arbol;
 }
+/*
+void Interfaz::listarRegistros(string nombre) {
+	ArbolAVL* arbol = new ArbolAVL(nombre);
 
+	arbol->print(); //TODO: Solo para pruebas
+
+	delete arbol;
+}
+*/
 void Interfaz::eliminarInstancia(char *argv[]) {
 	string nombre = renombrarArchivo(string(argv[3]));
 

@@ -207,6 +207,10 @@ void ArbolAVL::print() {
 	preOrder(raiz);
 }
 
+int ArbolAVL::getMaxRegistroID() {
+	return this->raiz->getMaxIdReg();
+}
+
 void ArbolAVL::preOrder(Nodo* unNodo) {
 	Registro* unRegistro;
 
