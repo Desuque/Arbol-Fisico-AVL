@@ -35,12 +35,13 @@ void Interfaz::msgHelp() {
 	cout<<"-m, modifica el [archivo]. Ej: -m 'ID' 'Nuevo Codigo' 'Nueva Descripcion' productos.bin"<<endl;
 	cout<<"-q, realiza una consulta segun el codigo ingresado. Ej: -q 'Codigo' 'ID' [-f] productos.bin"<<endl;
 	cout<<"[-f], opcional"<<endl;
+	cout<<endl;
 	cout<<"Codigos de consulta:"<<endl;
 	/**
 	 * Solo un unico codigo de consulta por ID, ya que las que se publicaron no corresponden con este trabajo
 	 * Devuelve el codigo y la descripcion
 	 */
-	cout<<"A Búsqueda de por Identificador."<<endl;
+	cout<<"A Búsqueda por Identificador."<<endl;
 	cout<<endl;
 	cout<<"-f, (Solo con argumento -q) indica que se guardará el resultado en un archivo, de no utlizarse, se mostrará por pantalla."<<endl;
 }
@@ -141,12 +142,18 @@ void Interfaz::listarInstancias(char *argv[]) {
 		} else {
 			string nombre = renombrarArchivo(string(argv[5]));
 			ArbolAVL* arbol = new ArbolAVL(nombre);
-			arbol->getRegistro(atoi(argv[3]));
-
+			unRegistro = arbol->getRegistro(atoi(argv[3]));
+			crearArchivoSalida(unRegistro);
 			//TODO grabar a un archivo de salida el resultado de la busqueda
 			delete arbol;
 		}
 	}
+}
+
+void Interfaz::crearArchivoSalida(Registro* unRegistro) {
+	fstream fs("Salida.txt", ios::app);
+	fs << "Codigo: " << unRegistro->getCodigo() << " , Descripcion: " << unRegistro->getDescripcion() <<endl;
+	fs.close();
 }
 
 Interfaz::~Interfaz() {

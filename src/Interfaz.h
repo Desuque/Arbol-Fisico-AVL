@@ -31,6 +31,7 @@ private:
 	void listarInstancias(char *argv[]);
 	void mostrarInsertar(string codigo, ArbolAVL* unArbol);
 	string renombrarArchivo(string nombreConBin);
+	void crearArchivoSalida(Registro* unRegistro);
 };
 
 #endif /* SRC_INTERFAZ_H_ */
