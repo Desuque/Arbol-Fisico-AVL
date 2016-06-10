@@ -36,6 +36,8 @@ private:
 	void escribirFlagExistencia();
 	void escribirEspacioLibre();
 	void escribirCantidadRegistros();
+	void escribirBloqueVacio();
+	void escribirMetaDatos(int idIzq, int idDer);
 
 public:
 	Bloque(string nombreArchivo);
@@ -47,8 +49,6 @@ public:
 	int getId();
 	int getMaxIdReg();
 	Nodo* devolverNodo();
-	void borrarRegistro(int id);
-	void buscarOffsetDeRegistro(int id);
 	virtual ~Bloque();
 };
 

@@ -41,78 +41,6 @@ int Bloque::getId() {
 	return this->id;
 }
 
-void Bloque::buscarOffsetDeRegistro(int idRegBuscado) {
-	char* charBloq = archivoArbol->leerBloque(id);
-	int offsetInicioBloque = archivoArbol->getOffsetInicioBloque();
-	int offsetFinDeBloque = 0;
-
-	int tamDescr;
-	int offsetDescr;
-	int idReg;
-	char codReg [4];
-	char* descrReg;
-	char flagDescr [1];
-
-	//Se puede poner directamente cuanto ocupa el offset hasta aca, pero no saco las variables
-	//porque queda mas claro de donde sale
-	int offset = 0;
-	offset += 1;
-	int espLibre = *(reinterpret_cast<int *>(charBloq + offset));
-	offset += 4;
-	int cantRegs = *(reinterpret_cast<int *>(charBloq + offset));
-	offset += 4;
-	int idIzq = *(reinterpret_cast<int *>(charBloq + offset));
-	offset += 4;
-	int idDer = *(reinterpret_cast<int *>(charBloq + offset));
-	offset += 4;
-
-	// Registros
-	int i = 0;
-	bool encontrado = false;
-
-	while ((!encontrado) && (i<cantRegs)) {
-		tamDescr = *(reinterpret_cast<int *>(charBloq + offset));
-		offset += 4;
-		idReg = *(reinterpret_cast<int *>(charBloq + offset));
-
-		if (idReg == idRegBuscado) {
-			encontrado = true;
-			offsetInicioBloque += (offset-4); //Me posiciono en donde empieza el tamDescr
-		}
-
-		offset += 4;
-		copy(charBloq + offset, charBloq + offset + 3, codReg);
-		codReg[3] = '\0';
-		offset += 3;
-		copy(charBloq + offset, charBloq + offset + 1, flagDescr);
-		offset += 1;
-		if (flagDescr[0] == 'S') {
-			offset += tamDescr;
-			offsetFinDeBloque = offset+8; //Hasta aca hay que borrar, el+8 es porque algo hace mal
-		} else if (flagDescr[0] == 'N') {
-			offsetDescr = *(reinterpret_cast<int *>(charBloq + offset));
-			archivoDescripciones = new ArchivoDescrips(nombreArchivo);
-			string desc = archivoDescripciones->leerBloque(offsetDescr, tamDescr);
-			offset += 4;
-			offsetFinDeBloque = offset; //Hasta aca hay que borrar
-
-			//TODO borrarDescripcionDeArchivoDescripciones(offsetDescr, tamDescr);
-		}
-		i++;
-	}
-	offsetInicioFin.off_inicioBloque = offsetInicioBloque;
-	offsetInicioFin.off_finBloque = offsetFinDeBloque;
-}
-
-void Bloque::borrarRegistro(int idReg) {
-	//TODO
-	//No estoy seguro que pasa si intentas borrar un bloque que no existe, despues lo testeo
-	//voy por el camino feliz
-
-	buscarOffsetDeRegistro(idReg);
-	archivoArbol->borrarRegistro(offsetInicioFin.off_inicioBloque, offsetInicioFin.off_finBloque);
-}
-
 // ------------------------------------------------------------------------
 // Parsea todo el bloque y devuelve el nodo correspondiente
 Nodo* Bloque::devolverNodo() {
@@ -177,13 +105,22 @@ Nodo* Bloque::devolverNodo() {
 // ------------------------------------------------------------------------
 // Escribe el bloque entero en el archivo (con sus metadatos correspondientes)
 void Bloque::inicializarBloque() {
-	// TODO: Escribir los 4kb vacios
+	escribirBloqueVacio();
 	archivoArbol->escribirMaxIDNodo(id + 1);
-	escribirFlagExistencia();
 	bytes_ocupados = tamanio_meta;
-	escribirEspacioLibre();
 	cantidad_registros = 0;
+	escribirMetaDatos(-1, -1);
+}
+void Bloque::escribirBloqueVacio() {
+	int offset = calcularOffsetMetadatos();
+	archivoArbol->escribirNull(offset, tamanio);
+}
+void Bloque::escribirMetaDatos(int idIzq, int idDer) {
+	escribirFlagExistencia();
+	escribirEspacioLibre();
 	escribirCantidadRegistros();
+	escribirIdIzq(idIzq);
+	escribirIdDer(idDer);
 }
 // ------------------------------------------------------------------------
 // Escribe la "E" de que el bloque existe
@@ -217,13 +154,13 @@ int Bloque::calcularOffsetRegistros() {
 // ------------------------------------------------------------------------
 // Escribe el id del bloque izq
 void Bloque::escribirIdIzq(int unId) {
-	int offset = calcularOffsetMetadatos() + 8;
+	int offset = calcularOffsetMetadatos() + 9;
 	archivoArbol->escribirUnInt(unId, offset);
 }
 // ------------------------------------------------------------------------
 // Escribe el id del bloque der
 void Bloque::escribirIdDer(int unId) {
-	int offset = calcularOffsetMetadatos() + 12;
+	int offset = calcularOffsetMetadatos() + 13;
 	archivoArbol->escribirUnInt(unId, offset);
 }
 // ------------------------------------------------------------------------
@@ -252,6 +189,8 @@ void Bloque::grabar(Nodo* unNodo) {
 	int offset = calcularOffsetRegistros();
 	list<Registro*>* registros = unNodo->getRegistros();
 	Registro* unRegistro;
+
+	escribirBloqueVacio();
 
 	for(list<Registro*>::iterator list_iter = registros->begin(); list_iter != registros->end(); list_iter++) {
 		unRegistro = *list_iter;
@@ -325,10 +264,7 @@ void Bloque::grabar(Nodo* unNodo) {
 	}
 
 	archivoArbol->escribirMaxIDReg(maxIdReg);
-	escribirIdIzq(unNodo->getHijoIzquierdo());
-	escribirIdDer(unNodo->getHijoDerecho());
-	escribirEspacioLibre();
-	escribirCantidadRegistros();
+	escribirMetaDatos(unNodo->getHijoIzquierdo(), unNodo->getHijoDerecho());
 }
 
 int Bloque::getMaxIdReg() {

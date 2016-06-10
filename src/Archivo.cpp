@@ -122,6 +122,17 @@ void Archivo::escribirUnInt(int unInt, int &unaPos) {
 	unaPos += 4;
 }
 
+void Archivo::escribirNull(int offset, int tamanio) {
+	char buffer[tamanio];
+	std::fill(buffer, buffer + tamanio, '\0');
+
+	fstream archivo;
+	archivo.open(nombreArchivo.c_str(), ios::in | ios::out | ios::binary );
+	archivo.seekp(offset, ios::beg);
+	archivo.write(buffer, sizeof(char) * tamanio);
+	archivo.close();
+}
+
 void Archivo::escribirMaxIDNodo(int maxID) {
 	int i = 0;
 	escribirUnInt(maxID, i);
@@ -130,69 +141,4 @@ void Archivo::escribirMaxIDNodo(int maxID) {
 void Archivo::escribirMaxIDReg(int maxID) {
 	int i = 4;
 	escribirUnInt(maxID, i);
-}
-
-void Archivo::borrarRegistro(int inicioOffset, int finOffset) {
-	fstream archivo;
-	archivo.open(this->nombreArchivo.c_str(), ios::in | ios::out | ios::binary );
-
-	//Posicion donde arranca la descripcion
-	archivo.seekp (inicioOffset, archivo.beg);
-
-	cout<<"Inicio offset: "<<inicioOffset<<endl;
-	cout<<"Fin offset: "<<finOffset<<endl;
-
-	int unInt = 0;
-	archivo.write(reinterpret_cast<const char *>(&unInt), finOffset-inicioOffset);
-	archivo.close();
-
-	//TODO Grabar archivo de libres con inicioOffset y tamaño de espacio libre (la resta)
-	//delete espacioLibre;
-}
-
-
-void Archivo::grabarRegistroLongFija(Registro* unRegistro, int idNodo, int padding) {
-	string flagDeTipo = "F";
-	strcpy (buff_flagDeTipo, flagDeTipo.c_str());
-
-	string codigo = unRegistro->getCodigo();
-	ostringstream codigo_padding; //Relleno los espacios para mantener el bloque
-	codigo_padding<<setfill('0')<<setw(tam_codigo);
-	codigo_padding<<codigo;
-	codigo = codigo_padding.str();
-	strcpy (buff_codigo, (codigo).c_str());
-
-	int tam_descrip = unRegistro->getTamanioDescripcion();
-	string s_tam_desc; //Convierto el tamanio de la descripcion a string
-	stringstream convert;
-	convert << tam_descrip;
-	s_tam_desc = convert.str();
-	ostringstream tam_descrip_padding; //Relleno los espacios para mantener el bloque
-	tam_descrip_padding<<setfill('0')<<setw(tam_descripcion);
-	tam_descrip_padding<<s_tam_desc;
-	s_tam_desc = tam_descrip_padding.str();
-	strcpy(buff_tam_descripcion, (s_tam_desc).c_str());
-
-	//Pido memoria segun la longitud de la descripcion
-	buff_descripcion = new char [unRegistro->getTamanioDescripcion()];
-	strcpy (buff_descripcion, (unRegistro->getDescripcion()).c_str());
-
-	strcpy (buff_hijoIzquierdo, "V");
-	strcpy (buff_hijoDerecho, "V");
-	strcpy (buff_flagExisteRegistro, "0");
-
-	//Creo el bloque
-	strcat (buff_bloque, buff_flagDeTipo);
-	strcat (buff_bloque, buff_codigo);
-	strcat (buff_bloque, buff_tam_descripcion);
-	strcat (buff_bloque, buff_descripcion);
-	strcat (buff_bloque, buff_hijoIzquierdo);
-	strcat (buff_bloque, buff_hijoDerecho);
-	strcat (buff_bloque, buff_flagExisteRegistro);
-
-	for(int i=0; i<tam_bloque; i++) {
-		cout<<buff_bloque[i];
-	}
-	//escribir(buff_bloque, idNodo, tam_bloque, 4);
-
 }

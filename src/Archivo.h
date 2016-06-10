@@ -62,11 +62,11 @@ public:
 	void escribirMaxIDNodo(int maxID);
 	void escribirMaxIDReg(int maxID);
 	void escribirRegistro(Nodo* unNodo, Registro* unRegistro);  // TODO: creo que tiene q ser private
+	void escribirNull(int offset, int tamanio);
 
 	int getTamanioMetadatos();
 
 	//El padding sirve para grabar mas de un registro sabiendo hasta donde esta cargado
-	void grabarRegistroLongFija(Registro* unRegistro, int idNodo, int padding);
 	int calcularEspacioLibre(int padding, int tamanioDescripcion);
 	void escribirMetadatosNodo(Nodo* unNodo);  // TODO: creo que tiene q ser private
 	char* calcularEspacioLibreBloque(Registro* unRegistro);
@@ -78,7 +78,6 @@ public:
 	* Se usa por ejemplo, para borrar un registro de un bloque
 	*/
 	int getOffsetInicioBloque();
-	void borrarRegistro(int inicioOffset, int finOffset);
 	~Archivo();
 };
 
