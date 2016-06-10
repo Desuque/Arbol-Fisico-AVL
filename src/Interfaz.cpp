@@ -152,7 +152,7 @@ void Interfaz::listarInstancias(char *argv[]) {
 
 void Interfaz::crearArchivoSalida(Registro* unRegistro) {
 	fstream fs("Salida.txt", ios::app);
-	fs << "Codigo: " << unRegistro->getCodigo() << " , Descripcion: " << unRegistro->getDescripcion() <<endl;
+	fs << "Codigo: " << unRegistro->getCodigo() << " , Descripcion: " << unRegistro->getDescripcion();
 	fs.close();
 }
 
