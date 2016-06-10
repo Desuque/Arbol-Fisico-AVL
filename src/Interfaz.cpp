@@ -32,7 +32,7 @@ void Interfaz::msgHelp() {
 	cout<<"Argumentos:"<<endl;
 	cout<<"-a, da en alta en [archivo]. Ej: -a Codigo 'Descripcion' productos.bin."<<endl;
 	cout<<"-b, da de baja en [archivo]. Ej: -b 'ID' 'productos.bin'"<<endl;
-	cout<<"-m, modifica la [categoria]."<<endl;
+	cout<<"-m, modifica el [archivo]. Ej: -m 'ID' 'Nuevo Codigo' 'Nueva Descripcion' productos.bin"<<endl;
 	cout<<"-q, realiza una consulta segun el codigo ingresado."<<endl;
 	cout<<endl;
 	cout<<"Codigos de consulta:"<<endl;
@@ -76,6 +76,9 @@ void Interfaz::validarParametros(int argc, char *argv[]) {
 		eliminarInstancia(argv);
 	}
 	if ( string(argv[1]) == "-m" ) {
+		/**
+		* Ej de uso: -m "ID" "Nuevo Codigo" "Nueva Descripcion" productos.bin
+		*/
 		modificarInstancia(argv);
 	}
 	if ( string(argv[1]) == "-q" ) {
@@ -125,7 +128,12 @@ void Interfaz::eliminarInstancia(char *argv[]) {
 }
 
 void Interfaz::modificarInstancia(char *argv[]) {
-	//TODO
+	string nombre = renombrarArchivo(string(argv[5]));
+	ArbolAVL* arbol = new ArbolAVL(nombre);
+	arbol->modificarRegistro(atoi(argv[2]), string(argv[3]), string(argv[4]));
+	arbol->print();
+
+	delete arbol;
 }
 
 void Interfaz::listarInstancias(char *argv[]) {

@@ -231,6 +231,32 @@ void ArbolAVL::preOrder(Nodo* unNodo) {
 	}
 }
 
+void ArbolAVL::modificarRegistro(int unID, string nuevoCodigo, string nuevaDescripcion) {
+	raiz = modificarRegistroPorID(raiz, unID, nuevoCodigo, nuevaDescripcion);
+}
+
+Nodo* ArbolAVL::modificarRegistroPorID(Nodo* unNodo, int idBuscado, string nuevoCodigo, string nuevaDescripcion) {
+	if(unNodo != 0) {
+		int menorID = unNodo->getMenorID();
+		int mayorID = unNodo->getMayorID();
+		if (!unNodo->existeRegistroConID(idBuscado)) {
+			if (idBuscado < menorID) {
+				modificarRegistroPorID(devolverNodo(unNodo->getHijoIzquierdo()), idBuscado, nuevoCodigo, nuevaDescripcion);
+			}
+			if (idBuscado > mayorID) {
+				modificarRegistroPorID(devolverNodo(unNodo->getHijoIzquierdo()), idBuscado, nuevoCodigo, nuevaDescripcion);
+			}
+		} else {
+			if (unNodo->modificarRegistro(idBuscado, nuevoCodigo, nuevaDescripcion)) {
+				cout<<"El registro con ID: "<<idBuscado<<" fue modificado con exito."<<endl;
+			} else {
+				cout<<"El registro con ID: "<<idBuscado<<" no existe."<<endl;
+			}
+		}
+	}
+	return unNodo;
+}
+
 void ArbolAVL::borrarRegistro(int unID) {
 	raiz = borrarRegistroPorID(raiz, unID);
 }
@@ -247,11 +273,16 @@ Nodo* ArbolAVL::borrarRegistroPorID(Nodo* unNodo, int idBuscado) {
 				borrarRegistroPorID(devolverNodo(unNodo->getHijoIzquierdo()), idBuscado);
 			}
 		} else {
-			unNodo->borrarRegistro(idBuscado);
+			if (unNodo->borrarRegistro(idBuscado)) {
+				cout<<"El registro con ID: "<<idBuscado<<" fue eliminado con exito."<<endl;
+			} else {
+				cout<<"El registro con ID: "<<idBuscado<<" no existe."<<endl;
+			}
 		}
 	}
 	return unNodo;
 }
+
 
 	/**
 	if(unNodo != 0) {

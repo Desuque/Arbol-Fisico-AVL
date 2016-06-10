@@ -13,6 +13,14 @@ void Registro::setId(int unId) {
 	this->id = unId;
 }
 
+void Registro::setCodigo(string nuevoCodigo) {
+	this->codigo = nuevoCodigo;
+}
+
+void Registro::setDescripcion(string nuevaDescripcion) {
+	this->descripcion = nuevaDescripcion;
+}
+
 int Registro::getId() {
 	return this->id;
 }

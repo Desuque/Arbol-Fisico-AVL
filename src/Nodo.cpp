@@ -133,6 +133,24 @@ bool Nodo::esHoja() {
 	return this->altura == 1;
 }
 
+bool Nodo::modificarRegistro(int ID, string nuevoCodigo, string nuevaDescripcion) {
+	bool encontrado = false;
+	Registro* unRegistro;
+
+	for(list<Registro*>::iterator list_iter = registros->begin(); list_iter != registros->end(); list_iter++) {
+		unRegistro = *list_iter;
+			if (unRegistro->getId() == ID) {
+				unRegistro->setCodigo(nuevoCodigo);
+				unRegistro->setDescripcion(nuevaDescripcion);
+				bloque->grabar(this);
+				encontrado = true;
+				break;
+			}
+	}
+
+	return encontrado;
+}
+
 bool Nodo::borrarRegistro(int ID) {
 	bool encontrado = false;
 	Registro* unRegistro;

@@ -15,6 +15,8 @@ class Registro {
 	public:
 		Registro(string codigo, string descripcion);
 		void setId(int unId);
+		void setCodigo(string nuevoCodigo);
+		void setDescripcion(string nuevaDescripcion);
 		int getId();
 		string getCodigo();
 		string getDescripcion();
