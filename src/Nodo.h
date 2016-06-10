@@ -39,6 +39,7 @@ public:
 	bool esHoja();
 	int getID();
 	bool insertar(Registro* unRegistro);
+	Registro* getRegistro(int unID);
 
 	void modificarHijoIzquierdo(int nuevoNodo);
 	void modificarHijoDerecho(int nuevoNodo);

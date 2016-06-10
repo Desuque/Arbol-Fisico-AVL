@@ -231,6 +231,34 @@ void ArbolAVL::preOrder(Nodo* unNodo) {
 	}
 }
 
+Registro* ArbolAVL::getRegistro(int unId) {
+	Registro* registro;
+	buscarRegistro(unId, registro);
+	return registro;
+}
+
+void ArbolAVL::buscarRegistro(int unID, Registro* &registro) {
+	raiz = buscarRegistroPorID(raiz, unID, registro);
+}
+
+Nodo* ArbolAVL::buscarRegistroPorID(Nodo* unNodo, int idBuscado, Registro* &unRegistro) {
+	if(unNodo != 0) {
+		int menorID = unNodo->getMenorID();
+		int mayorID = unNodo->getMayorID();
+		if (!unNodo->existeRegistroConID(idBuscado)) {
+			if (idBuscado < menorID) {
+				buscarRegistroPorID(devolverNodo(unNodo->getHijoIzquierdo()), idBuscado, unRegistro);
+			}
+			if (idBuscado > mayorID) {
+				buscarRegistroPorID(devolverNodo(unNodo->getHijoIzquierdo()), idBuscado, unRegistro);
+			}
+		} else {
+			unRegistro = unNodo->getRegistro(idBuscado);
+		}
+	}
+return unNodo;
+}
+
 void ArbolAVL::modificarRegistro(int unID, string nuevoCodigo, string nuevaDescripcion) {
 	raiz = modificarRegistroPorID(raiz, unID, nuevoCodigo, nuevaDescripcion);
 }

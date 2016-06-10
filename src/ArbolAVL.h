@@ -26,6 +26,8 @@ public:
 	Nodo* borrarRegistroPorID(Nodo* unNodo, int idBuscado);
 	int getMaxRegistroID();
 	void modificarRegistro(int unID, string nuevoCodigo, string nuevaDescripcion);
+	Registro* getRegistro(int unId);
+	void buscarRegistro(int unID, Registro* &registro);
 	virtual ~ArbolAVL();
 
 private:
@@ -39,6 +41,8 @@ private:
 	Nodo* cargarRaiz();
 	Nodo* devolverNodo(int unId);
 	Nodo* modificarRegistroPorID(Nodo* unNodo, int idBuscado, string nuevoCodigo, string nuevaDescripcion);
+	Nodo* buscarRegistroPorID(Nodo* unNodo, int idBuscado, Registro* &unRegistro);
+
 };
 
 #endif /* ARBOLAVL_H */

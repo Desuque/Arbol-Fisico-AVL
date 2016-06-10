@@ -33,8 +33,8 @@ void Interfaz::msgHelp() {
 	cout<<"-a, da en alta en [archivo]. Ej: -a Codigo 'Descripcion' productos.bin."<<endl;
 	cout<<"-b, da de baja en [archivo]. Ej: -b 'ID' 'productos.bin'"<<endl;
 	cout<<"-m, modifica el [archivo]. Ej: -m 'ID' 'Nuevo Codigo' 'Nueva Descripcion' productos.bin"<<endl;
-	cout<<"-q, realiza una consulta segun el codigo ingresado."<<endl;
-	cout<<endl;
+	cout<<"-q, realiza una consulta segun el codigo ingresado. Ej: -q 'Codigo' 'ID' [-f] productos.bin"<<endl;
+	cout<<"[-f], opcional"<<endl;
 	cout<<"Codigos de consulta:"<<endl;
 	/**
 	 * Solo un unico codigo de consulta por ID, ya que las que se publicaron no corresponden con este trabajo
@@ -71,6 +71,9 @@ void Interfaz::validarParametros(int argc, char *argv[]) {
 		modificarInstancia(argv);
 	}
 	if ( string(argv[1]) == "-q" ) {
+		/**
+		 * Ej de uso: -q 'A' 'ID' [-f] productos.bin
+		 */
 		listarInstancias(argv);
 	}
 }
@@ -126,7 +129,24 @@ void Interfaz::modificarInstancia(char *argv[]) {
 }
 
 void Interfaz::listarInstancias(char *argv[]) {
-	//TODO
+	Registro* unRegistro;
+	if (string(argv[2]) == "A") { //No hay otro argumento que A, pero lo agrego por si esto cambia
+		if (string(argv[4]) != "-f") {
+			string nombre = renombrarArchivo(string(argv[4]));
+			ArbolAVL* arbol = new ArbolAVL(nombre);
+			unRegistro = arbol->getRegistro(atoi(argv[3]));
+			cout<<"Codigo: "<<unRegistro->getCodigo()<<endl;
+			cout<<"Descripcion: "<<unRegistro->getDescripcion()<<endl;
+			delete arbol;
+		} else {
+			string nombre = renombrarArchivo(string(argv[5]));
+			ArbolAVL* arbol = new ArbolAVL(nombre);
+			arbol->getRegistro(atoi(argv[3]));
+
+			//TODO grabar a un archivo de salida el resultado de la busqueda
+			delete arbol;
+		}
+	}
 }
 
 Interfaz::~Interfaz() {

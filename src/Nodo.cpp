@@ -168,6 +168,20 @@ bool Nodo::borrarRegistro(int ID) {
 	return encontrado;
 }
 
+Registro* Nodo::getRegistro(int unID) {
+	bool encontrado = false;
+	Registro* unRegistro;
+
+	for(list<Registro*>::iterator list_iter = registros->begin(); list_iter != registros->end(); list_iter++) {
+		unRegistro = *list_iter;
+		if (unRegistro->getId() == unID) {
+			encontrado = true;
+			break;
+		}
+	}
+	return unRegistro;
+}
+
 bool Nodo::existeRegistroConID(int idBuscado) {
 	bool encontrado = false;
 	Registro* unRegistro;
