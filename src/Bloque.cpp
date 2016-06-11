@@ -14,8 +14,8 @@
 using namespace std;
 
 // ---------------    Bloque    -------------------------------
-//     [1b]         [4b]      [4b]        [4b]      [4b]      =  17b de tamanio_meta
-// Flag Existe - Esp Libre - Cant Regs - Id Izq - Id Der - Registros
+//     [1b]         [4b]      [4b]      [4b]       [4b]    [4b]      =  17b de tamanio_meta
+// Flag Existe - Esp Libre - Altura - Cant Regs - Id Izq - Id Der - Registros
 // ---------------    Registro    -------------------------------
 //     [4b]     [4b]     [3b]       [1b]          [xb]
 // Tam Descr - Id Reg - Codigo - Flag Descr - Descripcion (u offset)
@@ -44,7 +44,7 @@ int Bloque::getId() {
 // ------------------------------------------------------------------------
 // Parsea todo el bloque y devuelve el nodo correspondiente
 Nodo* Bloque::devolverNodo() {
-	char* charBloq = archivoArbol->leerBloque(id);
+	char* charBloq = archivoArbol->leerBloque(id, tamanio);
 
 	if (charBloq[0] != 'E') {
 		return 0;
@@ -101,7 +101,9 @@ Nodo* Bloque::devolverNodo() {
 			delete descrReg;
 		}
 
-		unNodo->modificarAltura(altura);
+		unNodo->setHijoIzquierdo(idIzq);
+		unNodo->setHijoDerecho(idDer);
+		unNodo->setAltura(altura);
 
 		return unNodo;
 	}
@@ -185,7 +187,10 @@ bool Bloque::entra(Registro* &unRegistro) {
 		tamanioRealRegistro = tamanioRealRegistro - unRegistro->getTamanioDescripcion() + 4;
 	}
 
-	if (unNodo->getTamanio() + tamanioRealRegistro > tamanio) {
+	cout<<unNodo->getTamanio()+ tamanioRealRegistro + tamanio_meta<<endl;
+	//cout<<tamanioRealRegistro<<endl;
+
+	if (unNodo->getTamanio() + tamanioRealRegistro + tamanio_meta > tamanio) {
 		return false;
 	}
 

@@ -38,9 +38,15 @@ int Registro::getTamanioDescripcion() {
 }
 
 int Registro::getTamanio() {
+	int tamanoTamDescr = 4;
 	int tamanoId = 4;
 	int tamanoCodigo = 3;
+	int tamanoFlagDescr = 1;
 	int tamanoDescr = string(this->descripcion).size();
 
-	return tamanoId + tamanoCodigo + tamanoDescr;
+	if (tamanoDescr > 1000) {  //TODO: sacar el hardcodeo
+		tamanoDescr = 4;
+	}
+
+	return tamanoTamDescr + tamanoId + tamanoCodigo + tamanoFlagDescr + tamanoDescr;
 }

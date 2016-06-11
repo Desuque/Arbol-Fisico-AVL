@@ -16,7 +16,7 @@ private:
 	int derecho;
 	list<Registro*>* registros;
 	int altura;
-	int id;
+	//int id;
 	Bloque* bloque;
 	string nombreArchivo;
 
@@ -37,10 +37,15 @@ public:
 	list<Registro*>* getRegistros();
 	bool estaEnUnderflow();
 	bool esHoja();
-	int getID();
+	//int getID();
 	bool insertar(Registro* unRegistro);
 	Registro* getRegistro(int unID);
-
+	Nodo* reescribirEn(int id);
+	// Set = Solo realiza los cambios en memoria
+	void setHijoIzquierdo(int idIzq);
+	void setHijoDerecho(int idDer);
+	void setAltura(int altura);
+	// Modificar = Escribe los cambios en disco
 	void modificarHijoIzquierdo(int nuevoNodo);
 	void modificarHijoDerecho(int nuevoNodo);
 	void modificarAltura(int nuevaAltura);

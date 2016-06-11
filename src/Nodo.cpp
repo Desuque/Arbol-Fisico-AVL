@@ -1,10 +1,3 @@
-/*
- * Nodo.cpp
- *
- *  Created on: 26 de may. de 2016
- *      Author: desuque
- */
-
 #include "Nodo.h"
 
 using namespace std;
@@ -36,6 +29,8 @@ Nodo::Nodo(string nombreArchivo, int idBloque) {
 		this->registros = 0;
 		this->altura = 1;
 	}
+
+	this->nombreArchivo = nombreArchivo;
 }
 int Nodo::getMaxIdReg() {
 	return bloque->getMaxIdReg();
@@ -52,9 +47,11 @@ int Nodo::getTamanio() {
 	Registro* unRegistro;
 	int tamanio = 0;
 
-	for(list<Registro*>::iterator list_iter = registros->begin(); list_iter != registros->end(); list_iter++) {
-		unRegistro = *list_iter;
-		tamanio += unRegistro->getTamanio();
+	if (registros != 0) {
+		for(list<Registro*>::iterator list_iter = registros->begin(); list_iter != registros->end(); list_iter++) {
+			unRegistro = *list_iter;
+			tamanio += unRegistro->getTamanio();
+		}
 	}
 
 	return tamanio;
@@ -84,18 +81,26 @@ int Nodo::getAltura() {
 	return this->altura;
 }
 
+void Nodo::setHijoIzquierdo(int nuevoNodo) {
+	this->izquierdo = nuevoNodo;
+}
+void Nodo::setHijoDerecho(int nuevoNodo) {
+	this->derecho = nuevoNodo;
+}
+void Nodo::setAltura(int nuevaAltura) {
+	this->altura = nuevaAltura;
+}
 void Nodo::modificarHijoIzquierdo(int nuevoNodo) {
 	this->izquierdo = nuevoNodo;
 	bloque->escribirIdIzq(nuevoNodo);
 }
-
 void Nodo::modificarHijoDerecho(int nuevoNodo) {
 	this->derecho = nuevoNodo;
 	bloque->escribirIdDer(nuevoNodo);
 }
-
 void Nodo::modificarAltura(int nuevaAltura) {
 	this->altura = nuevaAltura;
+	bloque->escribirAltura(nuevaAltura);
 }
 
 Bloque* Nodo::getBloque() {
@@ -120,6 +125,13 @@ bool Nodo::insertar(Registro* unRegistro) {
 
 		return false;
 	}
+}
+
+Nodo* Nodo::reescribirEn(int id) {
+	bloque = new Bloque(nombreArchivo, id);
+	bloque->grabar(this);
+
+	return this;
 }
 
 bool Nodo::estaEnUnderflow() {

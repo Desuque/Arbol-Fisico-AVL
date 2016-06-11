@@ -36,6 +36,7 @@ private:
 	int rotacionDerecha(Nodo *unNodo);
 	int rotacionIzquierda(Nodo *unNodo);
 	int getDiferenciaAlturaHijos(Nodo* unNodo);
+	int obtenerId(Nodo* unNodo);
 	void preOrder(Nodo* root);
 	void balancear(Nodo* unNodo);
 	Nodo* cargarRaiz();

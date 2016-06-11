@@ -12,7 +12,7 @@ class Archivo;
 
 class Bloque {
 private:
-	static const int tamanio = 4096;
+	static const int tamanio = 150;
 	static const int tamanio_meta = 21;
 	static const int tamanio_max_descrinterna = 1000;
 	string nombreArchivo;
@@ -23,19 +23,13 @@ private:
 	ArchivoDescrips* archivoDescripciones;
 	ArchivoLibres* archivoLibres;
 
-	struct offsetInicioFinBloque {
-	  int off_inicioBloque;
-	  int off_finBloque;
-	} offsetInicioFin;
-
 	void inicializarBloque();
 	int calcularOffsetRegistros();
-	int calcularOffsetMetadatos();
+	int calcularOffsetMetadatos();  //TODO: Deberia esta en Archivo.h y ser calcularOffsetBloque(bloque, tamanio)
 	int leerMayorIdBloque();
 	int leerMayorIdReg();
 	void escribirFlagExistencia();
 	void escribirEspacioLibre();
-	void escribirAltura(int altura);
 	void escribirCantidadRegistros();
 	void escribirBloqueVacio();
 	void escribirMetaDatos(int idIzq, int idDer, int altura);
@@ -47,6 +41,7 @@ public:
 	void grabar(Nodo* unNodo);
 	void escribirIdIzq(int unId);
 	void escribirIdDer(int unId);
+	void escribirAltura(int altura);
 	int getId();
 	int getMaxIdReg();
 	Nodo* devolverNodo();

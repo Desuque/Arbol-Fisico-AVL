@@ -186,12 +186,32 @@ int ArbolAVL::rotacionDerecha(Nodo *unNodo) {
 	return izq->getBloque()->getId();
 }
 
+int ArbolAVL::obtenerId(Nodo* unNodo) {
+	if (unNodo != 0) {
+		if (unNodo->getBloque() != 0) {
+			return unNodo->getBloque()->getId();
+		}
+	}
+
+	return -1;
+}
+
 int ArbolAVL::rotacionIzquierda(Nodo *unNodo) {
 	Nodo *der = devolverNodo(unNodo->getHijoDerecho());
 	Nodo *izq = devolverNodo(der->getHijoIzquierdo());
 
-	der->modificarHijoIzquierdo(unNodo->getBloque()->getId());
-	unNodo->modificarHijoDerecho(izq->getBloque()->getId());
+	// Si es la raiz tengo que reescribirla
+	if (unNodo->getBloque()->getId() == 0) {
+
+		int idNodo = unNodo->getBloque()->getId();
+		int idDer = der->getBloque()->getId();
+
+		der = der->reescribirEn(idNodo);
+		unNodo = unNodo->reescribirEn(idDer);
+	}
+
+	der->modificarHijoIzquierdo(obtenerId(unNodo));
+	unNodo->modificarHijoDerecho(obtenerId(izq));
 
 	unNodo->modificarAltura(calcMax(altura(devolverNodo(unNodo->getHijoIzquierdo())), altura(devolverNodo(unNodo->getHijoDerecho()))) + 1);
 	der->modificarAltura(calcMax(altura(devolverNodo(der->getHijoIzquierdo())), altura(devolverNodo(der->getHijoDerecho()))) + 1);

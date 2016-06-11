@@ -15,9 +15,10 @@ class Archivo {
 	 */
 
 private:
-	static const int maxCharDescr = 1000;
 
-	int tam_bloque = 4096;
+	int tam_meta_arbol = 8; //Tamaño de todos los metadatos del arbol
+	/*
+	static const int maxCharDescr = 1000;
 	int tam_espacioLibre = 4;
 	int tam_flagDeTipo = 1; // 1 o 0 segun bloque de long fija (1) o bloque de long variable (0)
 	int tam_codigo = 8; // Tamaño del codigo
@@ -26,9 +27,8 @@ private:
 	int tam_hijoIzquierdo = 4; // Tamaño del ID del hijo izquierdo
 	int tam_hijoDerecho = 4;
 	int tam_meta_id = 4; //Tamaño metadato mayor id registro, mayor id nodo
-	int tam_meta_arbol = tam_meta_id*2; //Tamaño de todos los metadatos del arbol
 	int tam_meta_nodo = 16;
-
+	int tam_bloque = 150;  //TODO: MAL -> esta definido 2 veces!!
 	char* buff_espacioLibre;
 	char* buff_bloque;
 	char* buff_flagDeTipo;
@@ -39,18 +39,18 @@ private:
 	char* buff_hijoIzquierdo;
 	char* buff_hijoDerecho;
 	char* bloque;
+	*/
 
 	string nombreArchivo;
 	int offsetInicioBloque;
 
-	int calcularOffsetRegistro(int idNodo);
 	int calcularOffsetNodo(int idNodo);
 	void crearArchivoVacio();
 	void inicializarNodo(int idNodo);
 
 public:
 	Archivo(string nombreArchivo);
-	char* leerBloque(int id);
+	char* leerBloque(int id, int tamBloque);
 	void escribirNodo(Nodo* unNodo, Registro* unRegistro); // TODO: creo que tiene q ser private
 	Nodo* crearNodo(Registro* unRegistro);
 	bool insertar(Nodo* unNodo, Registro* unRegistro);
@@ -77,7 +77,9 @@ public:
 	* puede obtenerse llamando a esta funcion luego de realizar la lectura (leerBloque)
 	* Se usa por ejemplo, para borrar un registro de un bloque
 	*/
+	/*
 	int getOffsetInicioBloque();
+	*/
 	~Archivo();
 };
 

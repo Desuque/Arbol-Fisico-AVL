@@ -15,6 +15,7 @@
 using namespace std;
 
 Archivo::Archivo(string nombreArchivo) {
+	/*
 	buff_bloque = new char[tam_bloque];
 	buff_flagDeTipo = new char[tam_flagDeTipo];
 	buff_codigo = new char[tam_codigo];
@@ -22,6 +23,7 @@ Archivo::Archivo(string nombreArchivo) {
 	buff_flagExisteRegistro = new char[tam_flagExisteRegistro];
 	buff_hijoIzquierdo = new char[tam_hijoIzquierdo];
 	buff_hijoDerecho = new char[tam_hijoDerecho];
+*/
 
 	this->nombreArchivo = nombreArchivo + ".bin";
 	crearArchivoVacio();
@@ -32,26 +34,28 @@ void Archivo::crearArchivoVacio() {
 	if (!archivo) {
 		archivo.open(nombreArchivo.c_str() , ios::out | ios::binary);
 		// FIX: Escribo los metadatos iniciales en 0
-		int i = 0;
-		escribirUnInt(0, i);
-		escribirUnInt(0, i);
+		//int i = 0;
+		//escribirUnInt(0, i);
+		//escribirUnInt(0, i);
+		escribirNull(0, 8);
+		archivo.close();
 	} else {
 		archivo.close();
 	}
 }
-
+/*
 int Archivo::getOffsetInicioBloque() {
 	return offsetInicioBloque;
 }
-
-char* Archivo::leerBloque(int idNodo) {
-	char* unBloque = new char[tam_bloque];
+*/
+char* Archivo::leerBloque(int idNodo, int tamBloque) {
+	char* unBloque = new char[tamBloque];
 	fstream archivo (nombreArchivo.c_str() , ios::in | ios::binary);
 
 	if (archivo) {
-		archivo.seekg ((idNodo * tam_bloque) + tam_meta_arbol);
+		archivo.seekg ((idNodo * tamBloque) + tam_meta_arbol);
 		this->offsetInicioBloque = archivo.tellp();
-		archivo.read (unBloque, tam_bloque);
+		archivo.read (unBloque, tamBloque);
 		archivo.close();
 	} else {
 		unBloque[0] = 'E';
@@ -96,10 +100,6 @@ int Archivo::leerMayorIdReg() {
 
 int Archivo::getTamanioMetadatos() {
 	return tam_meta_arbol;
-}
-
-int Archivo::calcularOffsetRegistro(int idNodo) {
-	return (idNodo*tam_bloque) + tam_meta_arbol + tam_meta_nodo;
 }
 
 void Archivo::escribirUnString(string array, int &unaPos) {
