@@ -15,39 +15,21 @@
 using namespace std;
 
 Archivo::Archivo(string nombreArchivo) {
-	/*
-	buff_bloque = new char[tam_bloque];
-	buff_flagDeTipo = new char[tam_flagDeTipo];
-	buff_codigo = new char[tam_codigo];
-	buff_tam_descripcion = new char[tam_descripcion];
-	buff_flagExisteRegistro = new char[tam_flagExisteRegistro];
-	buff_hijoIzquierdo = new char[tam_hijoIzquierdo];
-	buff_hijoDerecho = new char[tam_hijoDerecho];
-*/
-
 	this->nombreArchivo = nombreArchivo + ".bin";
-	crearArchivoVacio();
+	verificarArchivo();
 }
 
-void Archivo::crearArchivoVacio() {
+void Archivo::verificarArchivo() {
 	fstream archivo (nombreArchivo.c_str() , ios::in | ios::binary);
 	if (!archivo) {
 		archivo.open(nombreArchivo.c_str() , ios::out | ios::binary);
-		// FIX: Escribo los metadatos iniciales en 0
-		//int i = 0;
-		//escribirUnInt(0, i);
-		//escribirUnInt(0, i);
 		escribirNull(0, 8);
 		archivo.close();
 	} else {
 		archivo.close();
 	}
 }
-/*
-int Archivo::getOffsetInicioBloque() {
-	return offsetInicioBloque;
-}
-*/
+
 char* Archivo::leerBloque(int idNodo, int tamBloque) {
 	char* unBloque = new char[tamBloque];
 	fstream archivo (nombreArchivo.c_str() , ios::in | ios::binary);
@@ -64,7 +46,6 @@ char* Archivo::leerBloque(int idNodo, int tamBloque) {
 
 	return unBloque;
 }
-
 
 int Archivo::leerMayorIdNodo() {
 	int buffer;
