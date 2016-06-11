@@ -152,6 +152,9 @@ bool Nodo::modificarRegistro(int ID, string nuevoCodigo, string nuevaDescripcion
 	for(list<Registro*>::iterator list_iter = registros->begin(); list_iter != registros->end(); list_iter++) {
 		unRegistro = *list_iter;
 			if (unRegistro->getId() == ID) {
+				if (unRegistro->getDescripcion().size() > 1000) {
+					bloque->borrarDescripcionArchivoDescrips(unRegistro->getId());
+				}
 				unRegistro->setCodigo(nuevoCodigo);
 				unRegistro->setDescripcion(nuevaDescripcion);
 				bloque->grabar(this);

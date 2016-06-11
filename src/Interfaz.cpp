@@ -144,7 +144,6 @@ void Interfaz::listarInstancias(char *argv[]) {
 			ArbolAVL* arbol = new ArbolAVL(nombre);
 			unRegistro = arbol->getRegistro(atoi(argv[3]));
 			crearArchivoSalida(unRegistro);
-			//TODO grabar a un archivo de salida el resultado de la busqueda
 			delete arbol;
 		}
 	}

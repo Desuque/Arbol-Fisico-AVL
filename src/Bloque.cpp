@@ -196,6 +196,56 @@ bool Bloque::entra(Registro* &unRegistro) {
 
 	return true;
 }
+
+void Bloque::borrarDescripcionArchivoDescrips(int idRegistro) {
+	char* charBloq = archivoArbol->leerBloque(id, tamanio);
+
+	int tamDescr;
+	int offsetDescr;
+	int idReg;
+	char codReg [4];
+	char* descrReg;
+	char flagDescr [1];
+
+	int offset = 0;
+	offset += 1;
+	int espLibre = *(reinterpret_cast<int *>(charBloq + offset));
+	offset += 4;
+	int altura = *(reinterpret_cast<int *>(charBloq + offset));
+	offset += 4;
+	int cantRegs = *(reinterpret_cast<int *>(charBloq + offset));
+	offset += 4;
+	int idIzq = *(reinterpret_cast<int *>(charBloq + offset));
+	offset += 4;
+	int idDer = *(reinterpret_cast<int *>(charBloq + offset));
+	offset += 4;
+	// Registros
+	for (int i = 0; i < cantRegs; i++) {
+		tamDescr = *(reinterpret_cast<int *>(charBloq + offset));
+		offset += 4;
+		idReg = *(reinterpret_cast<int *>(charBloq + offset));
+		offset += 4;
+		copy(charBloq + offset, charBloq + offset + 3, codReg);
+		codReg[3] = '\0';
+		offset += 3;
+		copy(charBloq + offset, charBloq + offset + 1, flagDescr);
+		offset += 1;
+
+		//Como se esta queriendo borrar la descripcion guardada en el archivo de descripciones
+		//el flagDescr[0] si o si es N
+		descrReg = new char [tamDescr+1];
+		offsetDescr = *(reinterpret_cast<int *>(charBloq + offset));
+
+		if (idReg == idRegistro) {
+			archivoDescripciones = new ArchivoDescrips(nombreArchivo);
+			archivoDescripciones->eliminarDescripcion(offsetDescr, tamDescr);
+			break;
+		}
+		offset += 4;
+	}
+}
+
+
 // ------------------------------------------------------------------------
 // Ya sabiendo que entra, reescribe toodo el nodo. Haciendo update de los metadatos necesarios
 void Bloque::grabar(Nodo* unNodo) {

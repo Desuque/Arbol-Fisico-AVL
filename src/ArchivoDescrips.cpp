@@ -20,6 +20,28 @@ int ArchivoDescrips::getOffsetLibre() {
 	return offsetLibre;
 }
 
+void ArchivoDescrips::escribirNull(int offset, int tamanio) {
+	char buffer[tamanio];
+	std::fill(buffer, buffer + tamanio, '\0');
+
+	fstream archivo;
+	archivo.open(nombre.c_str(), ios::in | ios::out | ios::binary );
+	archivo.seekp(offset, ios::beg);
+	archivo.write(buffer, sizeof(char) * tamanio);
+	archivo.close();
+}
+
+void ArchivoDescrips::eliminarDescripcion(int offset, int tamanio) {
+	escribirNull(offset, tamanio);
+
+	string nombreSinBin = nombre;
+	nombreSinBin.resize((nombreSinBin.size())-4);
+
+	archivoLibres = new ArchivoLibres(nombreSinBin+"_descrips");
+	archivoLibres->grabarEspacioLibre(offset, tamanio);
+	delete archivoLibres;
+}
+
 string ArchivoDescrips::leerBloque(int offset, int tamanio_descripcion) {
 	char* unBloque = new char[tamanio_descripcion];
 	fstream archivo (nombre.c_str() , ios::in | ios::binary);

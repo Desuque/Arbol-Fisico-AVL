@@ -45,6 +45,7 @@ public:
 	int getId();
 	int getMaxIdReg();
 	Nodo* devolverNodo();
+	void borrarDescripcionArchivoDescrips(int idRegistro);
 	virtual ~Bloque();
 };
 
