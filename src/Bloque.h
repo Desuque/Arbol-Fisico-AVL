@@ -12,7 +12,7 @@ class Archivo;
 
 class Bloque {
 private:
-	static const int tamanio = 150;
+	static const int tamanio = 4096;
 	static const int tamanio_meta = 21;
 	static const int tamanio_max_descrinterna = 1000;
 	string nombreArchivo;
