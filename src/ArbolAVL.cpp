@@ -47,7 +47,6 @@ int altura(Nodo* unNodo) {
 	return unNodo->getAltura();
 }
 
-//void ArbolAVL::insertar(Registro* unRegistro) {
 void ArbolAVL::insertar(string codigo, string descripcion) {
 	Registro* unRegistro;
 	unRegistro = new Registro(codigo, descripcion);
@@ -75,23 +74,22 @@ Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro) {
 	if (unNodo == 0) {
 		return crearNodo(unRegistro);
 	} else {
-		/*
 		if (unRegistro->getId() < unNodo->getMenorID()) {
 			if (unNodo->getHijoIzquierdo() == 0) {
 				if (!unNodo->insertar(unRegistro)) {
-					unNodo->modificarHijoIzquierdo(insertarEnNodo(unNodo->getHijoIzquierdo(), unRegistro));
+					Nodo* nuevoNodo = crearNodo(unRegistro);
+					unNodo->modificarHijoIzquierdo(nuevoNodo->getBloque()->getId());
 				}
 			} else {
-				if (unRegistro->getId() > (unNodo->getHijoIzquierdo())->getMayorID()) {
+				if (unRegistro->getId() > (devolverNodo(unNodo->getHijoIzquierdo()))->getMayorID()) {
 					if (!unNodo->insertar(unRegistro)) {
-						unNodo->modificarHijoIzquierdo(insertarEnNodo(unNodo->getHijoIzquierdo(), unRegistro));
+						unNodo->modificarHijoIzquierdo(insertarEnNodo(devolverNodo(unNodo->getHijoIzquierdo()), unRegistro)->getBloque()->getId());
 					}
 				} else {
-					unNodo->modificarHijoIzquierdo(insertarEnNodo(unNodo->getHijoIzquierdo(), unRegistro));
+					unNodo->modificarHijoIzquierdo(insertarEnNodo(devolverNodo(unNodo->getHijoIzquierdo()), unRegistro)->getBloque()->getId());
 				}
 			}
 		} else {
-			*/
 			if (unRegistro->getId() > unNodo->getMayorID()) {
 				if (unNodo->getHijoDerecho() == -1) {
 					if (!unNodo->insertar(unRegistro)) {
@@ -99,32 +97,27 @@ Nodo* ArbolAVL::insertarEnNodo(Nodo* unNodo, Registro* unRegistro) {
 						unNodo->modificarHijoDerecho(nuevoNodo->getBloque()->getId());
 					}
 				} else {
-					/*
-					if (unRegistro->getId() < unNodo->getHijoDerecho()->getMenorID()) {
+					if (unRegistro->getId() < devolverNodo(unNodo->getHijoDerecho())->getMenorID()) {
 						if (!unNodo->insertar(unRegistro)) {
-							unNodo->modificarHijoDerecho(insertarEnNodo(unNodo->getHijoDerecho(), unRegistro));
+							unNodo->modificarHijoDerecho(insertarEnNodo(devolverNodo(unNodo->getHijoDerecho()), unRegistro)->getBloque()->getId());
 						}
 					} else {
-					*/
 						Nodo* nuevoNodo = insertarEnNodo(devolverNodo(unNodo->getHijoDerecho()), unRegistro);
 						unNodo->modificarHijoDerecho(nuevoNodo->getBloque()->getId());
-					/*}*/
+					}
 				}
-			}/* else {
+			} else {
 				if (!unNodo->insertar(unRegistro)) {
 					Registro* mayorRegistro = unNodo->getRegistroConMayorID();
 					Registro* tmpRegistro = new Registro(mayorRegistro->getCodigo(), mayorRegistro->getDescripcion());
 					tmpRegistro->setId(mayorRegistro->getId());
 
 					unNodo->borrarRegistro(tmpRegistro->getId());
-					unNodo->modificarHijoDerecho(insertarEnNodo(unNodo->getHijoDerecho(), tmpRegistro));
-					insertarEnNodo(unNodo, unRegistro); //TODO: Esto seguramente este mal, tendria que asignarle el return a algo
+					unNodo->modificarHijoDerecho(insertarEnNodo(devolverNodo(unNodo->getHijoDerecho()), tmpRegistro)->getBloque()->getId());
+					insertarEnNodo(unNodo, unRegistro);
 				}
 			}
 		}
-			*/
-
-		//archivoArbol->grabar(unNodo, unRegistro);
 
 	}
 

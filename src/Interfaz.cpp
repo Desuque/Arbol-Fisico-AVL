@@ -97,7 +97,7 @@ void Interfaz::crearInstancia(char *argv[]) {
 	arbol->insertar(argv[2], argv[3]);
 	mostrarInsertar(argv[2], arbol);
 
-	arbol->print(); //TODO: Dejar solo para pruebas
+	//arbol->print(); //TODO: Dejar solo para pruebas
 
 	delete arbol;
 }
@@ -115,7 +115,7 @@ void Interfaz::eliminarInstancia(char *argv[]) {
 
 	ArbolAVL* arbol = new ArbolAVL(nombre);
 	arbol->borrarRegistro(atoi(argv[2]));
-	arbol->print();
+	//arbol->print();
 
 	delete arbol;
 }
@@ -124,7 +124,7 @@ void Interfaz::modificarInstancia(char *argv[]) {
 	string nombre = renombrarArchivo(string(argv[5]));
 	ArbolAVL* arbol = new ArbolAVL(nombre);
 	arbol->modificarRegistro(atoi(argv[2]), string(argv[3]), string(argv[4]));
-	arbol->print();
+	//arbol->print();
 
 	delete arbol;
 }

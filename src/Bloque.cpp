@@ -191,7 +191,7 @@ bool Bloque::entra(Registro* &unRegistro) {
 		tamanioRealRegistro = tamanioRealRegistro - unRegistro->getTamanioDescripcion() + 4;
 	}
 
-	cout<<unNodo->getTamanio()+ tamanioRealRegistro + tamanio_meta<<endl;
+	//cout<<unNodo->getTamanio()+ tamanioRealRegistro + tamanio_meta<<endl;
 	//cout<<tamanioRealRegistro<<endl;
 
 	if (unNodo->getTamanio() + tamanioRealRegistro + tamanio_meta > tamanio) {
