@@ -42,6 +42,7 @@ public:
 	void escribirIdIzq(int unId);
 	void escribirIdDer(int unId);
 	void escribirAltura(int altura);
+	bool estaEnUnderflow(Nodo* unNodo);
 	int getId();
 	int getMaxIdReg();
 	Nodo* devolverNodo();

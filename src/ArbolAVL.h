@@ -23,7 +23,7 @@ public:
 	void print();
 	Nodo* getRaiz();
 	Nodo* buscarNodoPorID(Nodo* unNodo, int idBuscado);
-	Nodo* borrarRegistroPorID(Nodo* unNodo, int idBuscado);
+	Nodo* borrarRegistroPorID(Nodo* unNodo, int idBuscado, bool &existiaRegistro);
 	int getMaxRegistroID();
 	void modificarRegistro(int unID, string nuevoCodigo, string nuevaDescripcion);
 	Registro* getRegistro(int unId);
@@ -39,6 +39,7 @@ private:
 	int obtenerId(Nodo* unNodo);
 	void preOrder(Nodo* root);
 	void balancear(Nodo* unNodo);
+	Nodo* solucionarUnderflow(Nodo* unNodo);
 	Nodo* cargarRaiz();
 	Nodo* devolverNodo(int unId);
 	Nodo* modificarRegistroPorID(Nodo* unNodo, int idBuscado, string nuevoCodigo, string nuevaDescripcion);

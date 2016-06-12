@@ -135,9 +135,11 @@ Nodo* Nodo::reescribirEn(int id) {
 }
 
 bool Nodo::estaEnUnderflow() {
+	if (this->altura > 1) {
+		return bloque->estaEnUnderflow(this);
+	}
 
-	//TODO:
-	// return bloque->estaEnUnderflow();
+	return false;
 }
 
 bool Nodo::esHoja() {

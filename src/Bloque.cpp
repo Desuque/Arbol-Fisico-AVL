@@ -25,7 +25,6 @@ using namespace std;
 Bloque::Bloque(string nombreArchivo) {
 	this->nombreArchivo = nombreArchivo;
 	this->archivoArbol = new Archivo(nombreArchivo);
-	this->id = archivoArbol->leerMayorIdNodo();
 
 	inicializarBloque();
 }
@@ -111,11 +110,16 @@ Nodo* Bloque::devolverNodo() {
 // ------------------------------------------------------------------------
 // Escribe el bloque entero en el archivo (con sus metadatos correspondientes)
 void Bloque::inicializarBloque() {
-	escribirBloqueVacio();
+	// TODO: Si no hay espacio libre en el archvo de libres ->
+	this->id = archivoArbol->leerMayorIdNodo();
 	archivoArbol->escribirMaxIDNodo(id + 1);
+	// TODO: else this->id = leerDeLibres()
+
+	escribirBloqueVacio();
 	bytes_ocupados = tamanio_meta;
 	cantidad_registros = 0;
 	escribirMetaDatos(-1, -1, -1);
+
 }
 void Bloque::escribirBloqueVacio() {
 	int offset = calcularOffsetMetadatos();
@@ -315,6 +319,35 @@ void Bloque::grabar(Nodo* unNodo) {
 
 int Bloque::getMaxIdReg() {
 	return archivoArbol->leerMayorIdReg();
+}
+
+bool Bloque::estaEnUnderflow(Nodo* unNodo) {
+	bytes_ocupados = tamanio_meta;
+	list<Registro*>* registros = unNodo->getRegistros();
+	Registro* unRegistro;
+
+	for(list<Registro*>::iterator list_iter = registros->begin(); list_iter != registros->end(); list_iter++) {
+		unRegistro = *list_iter;
+		if ((unRegistro->getDescripcion()).size() > tamanio_max_descrinterna) {
+			bytes_ocupados += 4; // 4 = tam offset
+		} else {
+			bytes_ocupados += unRegistro->getDescripcion().size();
+		}
+		bytes_ocupados += 4; // Tam descr
+		bytes_ocupados += 4; // ID
+		bytes_ocupados += 3; // Codigo
+		bytes_ocupados += 1; // Flag descr
+	}
+
+	cout<<(tamanio / 2)<<endl;
+	cout<<(bytes_ocupados)<<endl;
+
+	if (bytes_ocupados < (tamanio / 2)) {
+		return true;
+	} else {
+		return false;
+	}
+
 }
 
 Bloque::~Bloque() {
