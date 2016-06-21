@@ -316,7 +316,6 @@ Nodo* ArbolAVL::modificarRegistroPorID(Nodo* unNodo, int idBuscado, string nuevo
 
 void ArbolAVL::borrarRegistro(int unID) {
 	bool existiaRegistro = false;
-	// TODO: Ver q pasa cuando el bloque queda vacio
 	raiz = borrarRegistroPorID(raiz, unID, existiaRegistro);
 
 	if (existiaRegistro) {
@@ -330,10 +329,10 @@ Nodo* ArbolAVL::borrarRegistroPorID(Nodo* unNodo, int idBuscado, bool &existiaRe
 	if(unNodo != 0) {
 		int menorID = unNodo->getMenorID();
 		int mayorID = unNodo->getMayorID();
-		if (idBuscado < menorID) {
+		if ((idBuscado < menorID) && (menorID != NULL)) {
 			borrarRegistroPorID(devolverNodo(unNodo->getHijoIzquierdo()), idBuscado, existiaRegistro);
 		} else {
-			if (idBuscado > mayorID) {
+			if ((idBuscado > mayorID) && (mayorID != NULL)) {
 				borrarRegistroPorID(devolverNodo(unNodo->getHijoDerecho()), idBuscado, existiaRegistro);
 			} else {
 				existiaRegistro = unNodo->borrarRegistro(idBuscado);

@@ -1,4 +1,5 @@
 #include "Nodo.h"
+#include <iostream>
 
 using namespace std;
 
@@ -57,16 +58,27 @@ int Nodo::getTamanio() {
 	return tamanio;
 }
 // ------------------------------------------------------------------------
-// Devuelve el nodo con el id mas pequenio
+// Devuelve el registro con el id mas pequenio
 int Nodo::getMenorID() {
-	Registro* regTmp = registros->front();
-	return regTmp->getId();
+	Registro* regTmp;
+	if (!registros->empty()) {
+		regTmp = registros->front();
+		return regTmp->getId();
+	} else {
+		return NULL;
+	}
 }
+
 // ------------------------------------------------------------------------
-// Devuelve el nodo con el id mas grande
+// Devuelve el registro con el id mas grande
 int Nodo::getMayorID() {
-	Registro* regTmp = registros->back();
-	return regTmp->getId();
+	Registro* regTmp;
+	if(!registros->empty()) {
+		regTmp = registros->back();
+		return regTmp->getId();
+	} else {
+		return NULL;
+	}
 }
 
 int Nodo::getHijoIzquierdo() {
@@ -170,7 +182,6 @@ bool Nodo::modificarRegistro(int ID, string nuevoCodigo, string nuevaDescripcion
 bool Nodo::borrarRegistro(int ID) {
 	bool encontrado = false;
 	Registro* unRegistro;
-
 	for(list<Registro*>::iterator list_iter = registros->begin(); list_iter != registros->end(); list_iter++) {
 		unRegistro = *list_iter;
 		if (unRegistro->getId() == ID) {
