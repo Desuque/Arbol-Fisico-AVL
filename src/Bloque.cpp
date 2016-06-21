@@ -9,7 +9,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <iostream>
-#include<sstream>
+#include <sstream>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -23,17 +24,35 @@ using namespace std;
 // ------------------------------------------------------------------------
 // Si es construido solo con el nombre de archivo -> ya escribe el bloque en el archivo
 Bloque::Bloque(string nombreArchivo) {
+	this->tamanio = setearTamanioBloque();
+
 	this->nombreArchivo = nombreArchivo;
 	this->archivoArbol = new Archivo(nombreArchivo);
-
 	inicializarBloque();
 }
 // ------------------------------------------------------------------------
 // Si es construido solo con el nombre de archivo y id -> asume que ya tiene el bloque escrito en disco
 Bloque::Bloque(string nombreArchivo, int id) {
+	this->tamanio = setearTamanioBloque();
+
 	this->nombreArchivo = nombreArchivo;
 	this->archivoArbol = new Archivo(nombreArchivo);
 	this->id = id;
+}
+
+int Bloque::setearTamanioBloque() {
+	fstream archivo (archivoConfigTamBloque.c_str() , ios::in | ios::binary);
+	char* c_tamBloque = new char();
+	int tamanioBloque;
+
+	while(!archivo.eof()) {
+		archivo >> c_tamBloque;
+	}
+	archivo.close();
+	tamanioBloque = atoi(c_tamBloque);
+	delete c_tamBloque;
+
+	return tamanioBloque;
 }
 
 int Bloque::getId() {

@@ -30,6 +30,8 @@ void Interfaz::msgHelp() {
 	cout<<"En el caso de usar el argumento -q el modo de empleo sera: arbolFisico -q [codigo de consulta] [-f path al archivo]."<<endl;
 	cout<<endl;
 	cout<<"Argumentos:"<<endl;
+	cout<<"-conf, guarda el tamaño del bloque en un archivo de configuracion. Ej: -conf 4096 (Valor en bytes)."<<endl;
+	cout<<endl;
 	cout<<"-a, da en alta en [archivo]. Ej: -a Codigo 'Descripcion' productos.bin."<<endl;
 	cout<<"-b, da de baja en [archivo]. Ej: -b 'ID' 'productos.bin'"<<endl;
 	cout<<"-m, modifica el [archivo]. Ej: -m 'ID' 'Nuevo Codigo' 'Nueva Descripcion' productos.bin"<<endl;
@@ -47,36 +49,64 @@ void Interfaz::msgHelp() {
 }
 
 void Interfaz::validarParametros(int argc, char *argv[]) {
-	if ( argc > this->maxParametros ) {
+	if (argc > this->maxParametros) {
 		msgError();
 	}
-	if ( string(argv[1]) == "--help" ) {
-		msgHelp();
-	}
-	if ( string(argv[1]) == "-a" ) {
+	if ((string(argv[1]) == "-a") && (existeArchivoDeConfiguracion())) {
 		/**
-		 * Ej de uso: -a "ABC" "Descripcion" productos.bin
-		 */
+		* Ej de uso: -a "ABC" "Descripcion" productos.bin
+		*/
 		crearInstancia(argv);
 	}
-	if ( string(argv[1]) == "-b" ) {
+	if ((string(argv[1]) == "-b") && (existeArchivoDeConfiguracion())) {
 		/**
 		* Ej de uso: -b "ID" productos.bin
 		*/
 		eliminarInstancia(argv);
 	}
-	if ( string(argv[1]) == "-m" ) {
+	if ((string(argv[1]) == "-m") && (existeArchivoDeConfiguracion())) {
 		/**
 		* Ej de uso: -m "ID" "Nuevo Codigo" "Nueva Descripcion" productos.bin
 		*/
 		modificarInstancia(argv);
 	}
-	if ( string(argv[1]) == "-q" ) {
+	if ((string(argv[1]) == "-q") && (existeArchivoDeConfiguracion())) {
 		/**
-		 * Ej de uso: -q 'A' 'ID' [-f] productos.bin
-		 */
+		* Ej de uso: -q 'A' 'ID' [-f] productos.bin
+		*/
 		listarInstancias(argv);
 	}
+
+	if ( string(argv[1]) == "-conf" ) {
+		/**
+		 * Setea el tamaño del bloque en bytes
+		 * Ej de uso: -conf 4096
+		 */
+		setearTamanioBloque(argv);
+	}
+
+	if ( string(argv[1]) == "--help" ) {
+		msgHelp();
+	}
+}
+
+bool Interfaz::existeArchivoDeConfiguracion() {
+	fstream archivo (archivoConfigTamBloque.c_str() , ios::in | ios::binary);
+	if (archivo) {
+		return true;
+	} else {
+		cout<<"No se encontro el archivo de configuracion, por lo tanto no es posible setear el tamaño del bloque."<<endl;
+		cout<<"Es necesario que el archivo de configuracion exista antes de realizar cualquier accion sobre el arbol."<<endl;
+	}
+	return false;
+}
+
+void Interfaz::setearTamanioBloque(char *argv[]) {
+	ofstream fs(archivoConfigTamBloque.c_str());
+	fs << argv[2];
+	fs.close();
+
+	cout<<"Se ha seteado el tamaño del bloque en " << argv[2] << " bytes." <<endl;
 }
 
 string Interfaz::renombrarArchivo(string nombreConBin) {

@@ -12,7 +12,8 @@ class Archivo;
 
 class Bloque {
 private:
-	static const int tamanio = 4096;
+	string archivoConfigTamBloque = "tamBloque.conf";
+	int tamanio;
 	static const int tamanio_meta = 21;
 	static const int tamanio_max_descrinterna = 1000;
 	string nombreArchivo;
@@ -22,17 +23,6 @@ private:
 	Archivo* archivoArbol;
 	ArchivoDescrips* archivoDescripciones;
 	ArchivoLibres* archivoLibres;
-
-	void inicializarBloque();
-	int calcularOffsetRegistros();
-	int calcularOffsetMetadatos();  //TODO: Deberia esta en Archivo.h y ser calcularOffsetBloque(bloque, tamanio)
-	int leerMayorIdBloque();
-	int leerMayorIdReg();
-	void escribirFlagExistencia();
-	void escribirEspacioLibre();
-	void escribirCantidadRegistros();
-	void escribirBloqueVacio();
-	void escribirMetaDatos(int idIzq, int idDer, int altura);
 
 public:
 	Bloque(string nombreArchivo);
@@ -48,6 +38,19 @@ public:
 	Nodo* devolverNodo();
 	void borrarDescripcionArchivoDescrips(int idRegistro);
 	virtual ~Bloque();
+
+private:
+	void inicializarBloque();
+	int calcularOffsetRegistros();
+	int calcularOffsetMetadatos();  //TODO: Deberia esta en Archivo.h y ser calcularOffsetBloque(bloque, tamanio)
+	int leerMayorIdBloque();
+	int leerMayorIdReg();
+	void escribirFlagExistencia();
+	void escribirEspacioLibre();
+	void escribirCantidadRegistros();
+	void escribirBloqueVacio();
+	void escribirMetaDatos(int idIzq, int idDer, int altura);
+	int setearTamanioBloque();
 };
 
 #endif   /* BLOQUE_H */
