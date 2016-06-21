@@ -148,7 +148,7 @@ bool Nodo::esHoja() {
 }
 
 bool Nodo::modificarRegistro(int ID, string nuevoCodigo, string nuevaDescripcion) {
-	bool encontrado = false;
+	bool modificado = false;
 	Registro* unRegistro;
 
 	for(list<Registro*>::iterator list_iter = registros->begin(); list_iter != registros->end(); list_iter++) {
@@ -160,12 +160,11 @@ bool Nodo::modificarRegistro(int ID, string nuevoCodigo, string nuevaDescripcion
 				unRegistro->setCodigo(nuevoCodigo);
 				unRegistro->setDescripcion(nuevaDescripcion);
 				bloque->grabar(this);
-				encontrado = true;
+				modificado = true;
 				break;
 			}
 	}
-
-	return encontrado;
+	return modificado;
 }
 
 bool Nodo::borrarRegistro(int ID) {
@@ -187,7 +186,7 @@ bool Nodo::borrarRegistro(int ID) {
 
 Registro* Nodo::getRegistro(int unID) {
 	bool encontrado = false;
-	Registro* unRegistro;
+	Registro* unRegistro = NULL;
 
 	for(list<Registro*>::iterator list_iter = registros->begin(); list_iter != registros->end(); list_iter++) {
 		unRegistro = *list_iter;

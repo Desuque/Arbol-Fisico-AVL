@@ -32,6 +32,7 @@ private:
 	void mostrarInsertar(string codigo, ArbolAVL* unArbol);
 	string renombrarArchivo(string nombreConBin);
 	void crearArchivoSalida(Registro* unRegistro);
+	bool registroExiste(Registro* unRegistro, int ID);
 };
 
 #endif /* SRC_INTERFAZ_H_ */

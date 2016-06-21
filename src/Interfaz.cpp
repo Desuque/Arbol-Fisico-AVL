@@ -129,6 +129,16 @@ void Interfaz::modificarInstancia(char *argv[]) {
 	delete arbol;
 }
 
+bool Interfaz::registroExiste(Registro* unRegistro, int ID) {
+	bool existe = false;
+	if (unRegistro == NULL) {
+		cout<<"El registro con ID: "<<ID<<" no existe. No es posible listarlo."<<endl;
+	} else {
+		existe = true;
+	}
+	return existe;
+}
+
 void Interfaz::listarInstancias(char *argv[]) {
 	Registro* unRegistro;
 	if (string(argv[2]) == "A") { //No hay otro argumento que A, pero lo agrego por si esto cambia
@@ -136,14 +146,18 @@ void Interfaz::listarInstancias(char *argv[]) {
 			string nombre = renombrarArchivo(string(argv[4]));
 			ArbolAVL* arbol = new ArbolAVL(nombre);
 			unRegistro = arbol->getRegistro(atoi(argv[3]));
-			cout<<"Codigo: "<<unRegistro->getCodigo()<<endl;
-			cout<<"Descripcion: "<<unRegistro->getDescripcion()<<endl;
+			if (registroExiste(unRegistro, atoi(argv[3]))) {
+				cout<<"Codigo: "<<unRegistro->getCodigo()<<endl;
+				cout<<"Descripcion: "<<unRegistro->getDescripcion()<<endl;
+			}
 			delete arbol;
 		} else {
 			string nombre = renombrarArchivo(string(argv[5]));
 			ArbolAVL* arbol = new ArbolAVL(nombre);
 			unRegistro = arbol->getRegistro(atoi(argv[3]));
-			crearArchivoSalida(unRegistro);
+			if (registroExiste(unRegistro, atoi(argv[3]))) {
+				crearArchivoSalida(unRegistro);
+			}
 			delete arbol;
 		}
 	}

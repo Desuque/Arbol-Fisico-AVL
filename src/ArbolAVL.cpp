@@ -274,7 +274,7 @@ Nodo* ArbolAVL::buscarRegistroPorID(Nodo* unNodo, int idBuscado, Registro* &unRe
 				buscarRegistroPorID(devolverNodo(unNodo->getHijoIzquierdo()), idBuscado, unRegistro);
 			}
 			if (idBuscado > mayorID) {
-				buscarRegistroPorID(devolverNodo(unNodo->getHijoIzquierdo()), idBuscado, unRegistro);
+				buscarRegistroPorID(devolverNodo(unNodo->getHijoDerecho()), idBuscado, unRegistro);
 			}
 		} else {
 			unRegistro = unNodo->getRegistro(idBuscado);
@@ -284,25 +284,30 @@ return unNodo;
 }
 
 void ArbolAVL::modificarRegistro(int unID, string nuevoCodigo, string nuevaDescripcion) {
-	raiz = modificarRegistroPorID(raiz, unID, nuevoCodigo, nuevaDescripcion);
+	bool existiaRegistro = false;
+	raiz = modificarRegistroPorID(raiz, unID, nuevoCodigo, nuevaDescripcion, existiaRegistro);
+
+	if (existiaRegistro) {
+		cout<<"El registro con ID: "<<unID<<" fue modificado con exito."<<endl;
+	} else {
+		cout<<"El registro con ID: "<<unID<<" no existe, no es posible modificarlo."<<endl;
+	}
 }
 
-Nodo* ArbolAVL::modificarRegistroPorID(Nodo* unNodo, int idBuscado, string nuevoCodigo, string nuevaDescripcion) {
+Nodo* ArbolAVL::modificarRegistroPorID(Nodo* unNodo, int idBuscado, string nuevoCodigo, string nuevaDescripcion, bool &existiaRegistro) {
 	if(unNodo != 0) {
 		int menorID = unNodo->getMenorID();
 		int mayorID = unNodo->getMayorID();
 		if (!unNodo->existeRegistroConID(idBuscado)) {
 			if (idBuscado < menorID) {
-				modificarRegistroPorID(devolverNodo(unNodo->getHijoIzquierdo()), idBuscado, nuevoCodigo, nuevaDescripcion);
+				modificarRegistroPorID(devolverNodo(unNodo->getHijoIzquierdo()), idBuscado, nuevoCodigo, nuevaDescripcion, existiaRegistro);
 			}
-			if (idBuscado > mayorID) {
-				modificarRegistroPorID(devolverNodo(unNodo->getHijoIzquierdo()), idBuscado, nuevoCodigo, nuevaDescripcion);
+			else if (idBuscado > mayorID) {
+				modificarRegistroPorID(devolverNodo(unNodo->getHijoDerecho()), idBuscado, nuevoCodigo, nuevaDescripcion, existiaRegistro);
 			}
 		} else {
 			if (unNodo->modificarRegistro(idBuscado, nuevoCodigo, nuevaDescripcion)) {
-				cout<<"El registro con ID: "<<idBuscado<<" fue modificado con exito."<<endl;
-			} else {
-				cout<<"El registro con ID: "<<idBuscado<<" no existe."<<endl;
+				existiaRegistro = true;
 			}
 		}
 	}

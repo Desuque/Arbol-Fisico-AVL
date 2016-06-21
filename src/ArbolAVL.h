@@ -42,7 +42,7 @@ private:
 	Nodo* solucionarUnderflow(Nodo* unNodo);
 	Nodo* cargarRaiz();
 	Nodo* devolverNodo(int unId);
-	Nodo* modificarRegistroPorID(Nodo* unNodo, int idBuscado, string nuevoCodigo, string nuevaDescripcion);
+	Nodo* modificarRegistroPorID(Nodo* unNodo, int idBuscado, string nuevoCodigo, string nuevaDescripcion, bool &existiaRegistro);
 	Nodo* buscarRegistroPorID(Nodo* unNodo, int idBuscado, Registro* &unRegistro);
 
 };
