@@ -35,8 +35,6 @@ private:
 	string renombrarArchivo(string nombreConBin);
 	void crearArchivoSalida(Registro* unRegistro);
 	bool registroExiste(Registro* unRegistro, int ID);
-	void setearTamanioBloque(char *argv[]);
-	bool existeArchivoDeConfiguracion();
 };
 
 #endif /* SRC_INTERFAZ_H_ */

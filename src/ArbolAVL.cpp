@@ -18,12 +18,12 @@ ArbolAVL::ArbolAVL(string nombre) {
 }
 
 Nodo* ArbolAVL::cargarRaiz() {
-	Nodo* unNodo = devolverNodo(idRaiz);
+	Nodo* unNodo = new Nodo(this->nombre, 0);
 
-	if (unNodo == 0) {
-		maxIdReg = 0;
-	} else {
-		maxIdReg = unNodo->getMaxIdReg() + 1;
+	maxIdReg = unNodo->getMaxIdReg() + 1;
+
+	if (unNodo->getRegistros() == 0) {
+		unNodo = 0;
 	}
 
 	return unNodo;
@@ -269,18 +269,23 @@ Nodo* ArbolAVL::buscarRegistroPorID(Nodo* unNodo, int idBuscado, Registro* &unRe
 	if(unNodo != 0) {
 		int menorID = unNodo->getMenorID();
 		int mayorID = unNodo->getMayorID();
-		if (!unNodo->existeRegistroConID(idBuscado)) {
-			if (idBuscado < menorID) {
-				buscarRegistroPorID(devolverNodo(unNodo->getHijoIzquierdo()), idBuscado, unRegistro);
-			}
+		if (idBuscado < menorID) {
+			buscarRegistroPorID(devolverNodo(unNodo->getHijoIzquierdo()), idBuscado, unRegistro);
+		} else {
 			if (idBuscado > mayorID) {
 				buscarRegistroPorID(devolverNodo(unNodo->getHijoDerecho()), idBuscado, unRegistro);
+			} else {
+				if (unNodo->existeRegistroConID(idBuscado)) {
+					unRegistro = unNodo->getRegistro(idBuscado);
+				} else {
+					unRegistro = NULL; // En interfaz pregunta si es NULL
+				}
 			}
-		} else {
-			unRegistro = unNodo->getRegistro(idBuscado);
 		}
+	} else {
+		unRegistro = NULL; // En interfaz pregunta si es NULL
 	}
-return unNodo;
+	return unNodo;
 }
 
 void ArbolAVL::modificarRegistro(int unID, string nuevoCodigo, string nuevaDescripcion) {
@@ -298,16 +303,17 @@ Nodo* ArbolAVL::modificarRegistroPorID(Nodo* unNodo, int idBuscado, string nuevo
 	if(unNodo != 0) {
 		int menorID = unNodo->getMenorID();
 		int mayorID = unNodo->getMayorID();
-		if (!unNodo->existeRegistroConID(idBuscado)) {
-			if (idBuscado < menorID) {
-				modificarRegistroPorID(devolverNodo(unNodo->getHijoIzquierdo()), idBuscado, nuevoCodigo, nuevaDescripcion, existiaRegistro);
-			}
-			else if (idBuscado > mayorID) {
-				modificarRegistroPorID(devolverNodo(unNodo->getHijoDerecho()), idBuscado, nuevoCodigo, nuevaDescripcion, existiaRegistro);
-			}
+		if (idBuscado < menorID) {
+			modificarRegistroPorID(devolverNodo(unNodo->getHijoIzquierdo()), idBuscado, nuevoCodigo, nuevaDescripcion, existiaRegistro);
 		} else {
-			if (unNodo->modificarRegistro(idBuscado, nuevoCodigo, nuevaDescripcion)) {
-				existiaRegistro = true;
+			if (idBuscado > mayorID) {
+				modificarRegistroPorID(devolverNodo(unNodo->getHijoDerecho()), idBuscado, nuevoCodigo, nuevaDescripcion, existiaRegistro);
+			} else {
+				if (unNodo->existeRegistroConID(idBuscado)) {
+					if (unNodo->modificarRegistro(idBuscado, nuevoCodigo, nuevaDescripcion)) {
+						existiaRegistro = true;
+					}
+				}
 			}
 		}
 	}

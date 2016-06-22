@@ -9,11 +9,11 @@ class Archivo {
 
 
 	// ---------------    Arbol    -------------------------------
-	//     [4b]         [4b]   =  8b de tam_meta_arbol
-	// Max ID Nodo - Max ID Reg
+	//     [4b]         [4b]           [4b]    =  12b de tam_meta_arbol
+	// Max ID Nodo - Max ID Reg - Tamano Bloque
 
 private:
-	static const int tam_meta_arbol = 8;
+	static const int tam_meta_arbol = 12;
 
 	string nombreArchivo;
 	int offsetInicioBloque;
@@ -21,6 +21,7 @@ private:
 	int calcularOffsetNodo(int idNodo); //TODO: Implementar en esta clase
 	void verificarArchivo();
 	void inicializarNodo(int idNodo);
+	void pedirTamanioBloque();
 
 public:
 	Archivo(string nombreArchivo);
@@ -28,7 +29,7 @@ public:
 	char* leerBloque(int id, int tamBloque);
 	int leerMayorIdNodo();
 	int leerMayorIdReg();
-
+	int leerTamanioBloque();
 	void escribirUnInt(int unInt, int &unaPos);
 	void escribirUnString(string array, int &unaPos);
 	void escribirNull(int offset, int tamanio);

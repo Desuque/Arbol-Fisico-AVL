@@ -24,23 +24,22 @@ using namespace std;
 // ------------------------------------------------------------------------
 // Si es construido solo con el nombre de archivo -> ya escribe el bloque en el archivo
 Bloque::Bloque(string nombreArchivo) {
-	this->tamanio = setearTamanioBloque();
-
 	this->nombreArchivo = nombreArchivo;
 	this->archivoArbol = new Archivo(nombreArchivo);
+	this->tamanio = setearTamanioBloque();
 	inicializarBloque();
 }
 // ------------------------------------------------------------------------
 // Si es construido solo con el nombre de archivo y id -> asume que ya tiene el bloque escrito en disco
 Bloque::Bloque(string nombreArchivo, int id) {
-	this->tamanio = setearTamanioBloque();
-
 	this->nombreArchivo = nombreArchivo;
 	this->archivoArbol = new Archivo(nombreArchivo);
+	this->tamanio = setearTamanioBloque();
 	this->id = id;
 }
 
 int Bloque::setearTamanioBloque() {
+	/*
 	fstream archivo (archivoConfigTamBloque.c_str() , ios::in | ios::binary);
 	char* c_tamBloque = new char();
 	int tamanioBloque;
@@ -53,6 +52,8 @@ int Bloque::setearTamanioBloque() {
 	delete c_tamBloque;
 
 	return tamanioBloque;
+	*/
+	return archivoArbol->leerTamanioBloque();
 }
 
 int Bloque::getId() {
@@ -116,8 +117,10 @@ Nodo* Bloque::devolverNodo() {
 			unRegistro = new Registro(string(codReg), string(descrReg));
 			unRegistro->setId(idReg);
 			unNodo->getRegistros()->push_back(unRegistro);
-			delete descrReg;
+			//delete[] descrReg; - Aca traia problemas para la prueba5
 		}
+
+		delete[] descrReg;
 
 		unNodo->setHijoIzquierdo(idIzq);
 		unNodo->setHijoDerecho(idDer);
@@ -132,7 +135,7 @@ void Bloque::inicializarBloque() {
 	archivoLibres = new ArchivoLibres(nombreArchivo);
 
 	if (archivoLibres->hayEspacio(tamanio)) {
-		int idBloqueLibre = ((archivoLibres->getOffset()) / (tamanio+8)); //8 es el tamaño de la metadata (maxIDNodo, maxIDReg) TODO NO HARDCODEAR
+		int idBloqueLibre = ((archivoLibres->getOffset()) / (tamanio + archivoArbol->getTamanioMetadatos()));
 		this->id = idBloqueLibre;
 		archivoLibres->actualizarEspacioLibre(0,0);
 	} else {
@@ -263,8 +266,6 @@ void Bloque::borrarDescripcionArchivoDescrips(int idRegistro) {
 		copy(charBloq + offset, charBloq + offset + 1, flagDescr);
 		offset += 1;
 
-		//Como se esta queriendo borrar la descripcion guardada en el archivo de descripciones
-		//el flagDescr[0] si o si es N
 		descrReg = new char [tamDescr+1];
 		offsetDescr = *(reinterpret_cast<int *>(charBloq + offset));
 
@@ -273,11 +274,15 @@ void Bloque::borrarDescripcionArchivoDescrips(int idRegistro) {
 			archivoDescripciones->eliminarDescripcion(offsetDescr, tamDescr);
 			break;
 		}
-		offset += 4;
+		if (flagDescr[0] == 'S') {
+			offset += tamDescr;
+		} else {
+			offset += 4;
+		}
 	}
 }
 
-void Bloque::persistirRegistros(Nodo* unNodo, int maxIdReg) {
+void Bloque::persistirRegistros(Nodo* unNodo, int &maxIdReg) {
 	bytes_ocupados = tamanio_meta;
 	cantidad_registros = 0;
 	int offset = calcularOffsetRegistros();
