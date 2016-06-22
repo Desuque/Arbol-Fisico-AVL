@@ -360,9 +360,24 @@ Nodo* ArbolAVL::solucionarUnderflow(Nodo* unNodo) {
 		while ((unNodo->estaEnUnderflow()) && (nodoHijo != 0)) {
 
 			unRegistro = nodoHijo->getRegistroConMenorID();
-			borrarRegistro(unRegistro->getId()); // Si por sacar del hijo, este queda en UF -> pasara por esta rutina automaticamente
-			unNodo->insertar(unRegistro);
 
+			/**
+			 * Se desactiva la salida estandar para poder solucionar el underflow
+			 * sin mostrar que un registro se ha borrado (en realidad se mueve).
+			 * De esta forma el underflow se hace transparente al usuario.
+			 */
+			streambuf* orig_buf = cout.rdbuf();
+			cout.rdbuf(0);
+
+			//Se borra el registro a mover sin mostrar el mensaje de "Registro borrado con exito"
+			borrarRegistro(unRegistro->getId()); // Si por sacar del hijo, este queda en UF -> pasara por esta rutina automaticamente
+
+			/**
+			 * Reactivo la salida estandar luego de solucionado el underflow
+			 */
+			cout.rdbuf(orig_buf);
+
+			unNodo->insertar(unRegistro);
 			nodoHijo = devolverNodo(unNodo->getHijoDerecho());
 		}
 	}

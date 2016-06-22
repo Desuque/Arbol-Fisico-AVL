@@ -358,9 +358,6 @@ bool Bloque::estaEnUnderflow(Nodo* unNodo) {
 		bytes_ocupados += 1; // Flag descr
 	}
 
-	cout<<(tamanio / 2)<<endl;
-	cout<<(bytes_ocupados)<<endl;
-
 	if (bytes_ocupados < (tamanio / 2)) {
 		return true;
 	} else {
