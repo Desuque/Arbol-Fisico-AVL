@@ -331,9 +331,22 @@ Nodo* ArbolAVL::borrarRegistroPorID(Nodo* unNodo, int idBuscado, bool &existiaRe
 		int mayorID = unNodo->getMayorID();
 		if ((idBuscado < menorID) && (menorID != NULL)) {
 			borrarRegistroPorID(devolverNodo(unNodo->getHijoIzquierdo()), idBuscado, existiaRegistro);
+
+			//Quito la referencia al hijo
+			Nodo* hijoIzq = devolverNodo(unNodo->getHijoIzquierdo());
+			if (hijoIzq == 0) {
+				unNodo->modificarHijoIzquierdo(-1);
+			}
 		} else {
 			if ((idBuscado > mayorID) && (mayorID != NULL)) {
 				borrarRegistroPorID(devolverNodo(unNodo->getHijoDerecho()), idBuscado, existiaRegistro);
+
+				//Quito la referencia al hijo
+				Nodo* hijoDer = devolverNodo(unNodo->getHijoDerecho());
+				if (hijoDer == 0 ) {
+					unNodo->modificarHijoDerecho(-1);
+				}
+
 			} else {
 				existiaRegistro = unNodo->borrarRegistro(idBuscado);
 				if (existiaRegistro) {

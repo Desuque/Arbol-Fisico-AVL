@@ -334,7 +334,6 @@ void Bloque::grabar(Nodo* unNodo) {
 	int maxIdReg = archivoArbol->leerMayorIdReg();
 	escribirBloqueVacio();
 
-	//BETA aca estaba el for
 	if (unNodo->getCantidadDeRegistros() != 0) {
 		persistirRegistros(unNodo, maxIdReg);
 		archivoArbol->escribirMaxIDReg(maxIdReg);
@@ -343,16 +342,14 @@ void Bloque::grabar(Nodo* unNodo) {
 		/**
 		 * Escribo espacio libre de bloque
 		 */
-		cout<<"entre"<<endl;
-		cout<<unNodo->getCantidadDeRegistros()<<endl;
-
 		archivoLibres = new ArchivoLibres(nombreArchivo);
-		int offset = tamanio * id;
+		int offset = calcularOffsetMetadatos();
 		int espacioLibre = tamanio;
 		//Grabo archivo de libres
 		archivoLibres->grabarEspacioLibre(offset, espacioLibre);
 		//Libero espacio en el archivo de bloques
 		archivoArbol->escribirNull(offset, espacioLibre);
+
 		delete archivoLibres;
 	}
 }
