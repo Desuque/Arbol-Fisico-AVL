@@ -35,6 +35,7 @@ public:
 	int getAltura();
 	int getTamanio();
 	list<Registro*>* getRegistros();
+	int getCantidadDeRegistros();
 	bool estaEnUnderflow();
 	bool esHoja();
 	//int getID();

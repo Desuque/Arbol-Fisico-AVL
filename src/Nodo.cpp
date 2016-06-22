@@ -36,6 +36,11 @@ Nodo::Nodo(string nombreArchivo, int idBloque) {
 int Nodo::getMaxIdReg() {
 	return bloque->getMaxIdReg();
 }
+
+int Nodo::getCantidadDeRegistros() {
+	return registros->size();
+}
+
 // ------------------------------------------------------------------------
 // Devuelve la lista de toodos los registros
 list<Registro*>* Nodo::getRegistros() {

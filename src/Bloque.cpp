@@ -268,18 +268,12 @@ void Bloque::borrarDescripcionArchivoDescrips(int idRegistro) {
 	}
 }
 
-
-// ------------------------------------------------------------------------
-// Ya sabiendo que entra, reescribe toodo el nodo. Haciendo update de los metadatos necesarios
-void Bloque::grabar(Nodo* unNodo) {
+void Bloque::persistirRegistros(Nodo* unNodo, int maxIdReg) {
 	bytes_ocupados = tamanio_meta;
 	cantidad_registros = 0;
-	int maxIdReg = archivoArbol->leerMayorIdReg();
 	int offset = calcularOffsetRegistros();
 	list<Registro*>* registros = unNodo->getRegistros();
 	Registro* unRegistro;
-
-	escribirBloqueVacio();
 
 	for(list<Registro*>::iterator list_iter = registros->begin(); list_iter != registros->end(); list_iter++) {
 		unRegistro = *list_iter;
@@ -331,9 +325,36 @@ void Bloque::grabar(Nodo* unNodo) {
 			maxIdReg = unRegistro->getId();
 		}
 	}
+}
 
-	archivoArbol->escribirMaxIDReg(maxIdReg);
-	escribirMetaDatos(unNodo->getHijoIzquierdo(), unNodo->getHijoDerecho(), unNodo->getAltura());
+
+// ------------------------------------------------------------------------
+// Ya sabiendo que entra, reescribe toodo el nodo. Haciendo update de los metadatos necesarios
+void Bloque::grabar(Nodo* unNodo) {
+	int maxIdReg = archivoArbol->leerMayorIdReg();
+	escribirBloqueVacio();
+
+	//BETA aca estaba el for
+	if (unNodo->getCantidadDeRegistros() != 0) {
+		persistirRegistros(unNodo, maxIdReg);
+		archivoArbol->escribirMaxIDReg(maxIdReg);
+		escribirMetaDatos(unNodo->getHijoIzquierdo(), unNodo->getHijoDerecho(), unNodo->getAltura());
+	} else {
+		/**
+		 * Escribo espacio libre de bloque
+		 */
+		cout<<"entre"<<endl;
+		cout<<unNodo->getCantidadDeRegistros()<<endl;
+
+		archivoLibres = new ArchivoLibres(nombreArchivo);
+		int offset = tamanio * id;
+		int espacioLibre = tamanio;
+		//Grabo archivo de libres
+		archivoLibres->grabarEspacioLibre(offset, espacioLibre);
+		//Libero espacio en el archivo de bloques
+		archivoArbol->escribirNull(offset, espacioLibre);
+		delete archivoLibres;
+	}
 }
 
 int Bloque::getMaxIdReg() {

@@ -51,6 +51,7 @@ private:
 	void escribirBloqueVacio();
 	void escribirMetaDatos(int idIzq, int idDer, int altura);
 	int setearTamanioBloque();
+	void persistirRegistros(Nodo* unNodo, int maxIdReg);
 };
 
 #endif   /* BLOQUE_H */
