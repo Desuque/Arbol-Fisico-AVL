@@ -129,21 +129,30 @@ Nodo* Bloque::devolverNodo() {
 // ------------------------------------------------------------------------
 // Escribe el bloque entero en el archivo (con sus metadatos correspondientes)
 void Bloque::inicializarBloque() {
-	// TODO: Si no hay espacio libre en el archvo de libres ->
-	this->id = archivoArbol->leerMayorIdNodo();
-	archivoArbol->escribirMaxIDNodo(id + 1);
-	// TODO: else this->id = leerDeLibres()
+	archivoLibres = new ArchivoLibres(nombreArchivo);
+
+	if (archivoLibres->hayEspacio(tamanio)) {
+		int idBloqueLibre = ((archivoLibres->getOffset()) / (tamanio+8)); //8 es el tamaño de la metadata (maxIDNodo, maxIDReg) TODO NO HARDCODEAR
+		this->id = idBloqueLibre;
+		archivoLibres->actualizarEspacioLibre(0,0);
+	} else {
+		this->id = archivoArbol->leerMayorIdNodo();
+		archivoArbol->escribirMaxIDNodo(id + 1);
+	}
 
 	escribirBloqueVacio();
 	bytes_ocupados = tamanio_meta;
 	cantidad_registros = 0;
 	escribirMetaDatos(-1, -1, -1);
 
+	delete archivoLibres;
 }
+
 void Bloque::escribirBloqueVacio() {
 	int offset = calcularOffsetMetadatos();
 	archivoArbol->escribirNull(offset, tamanio);
 }
+
 void Bloque::escribirMetaDatos(int idIzq, int idDer, int altura) {
 	escribirFlagExistencia();
 	escribirEspacioLibre();
