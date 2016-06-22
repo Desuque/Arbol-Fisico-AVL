@@ -84,11 +84,6 @@ int ArchivoLibres::buscarEspacioLibre(int espacio) {
 
 		if (espacioLibre >= espacio) {
 			found = true;
-			//TODO BORRAR EL ESPACIO ENCONTRADO
-			//TODO CREAR UN NUEVO ESPACIO CON EL RESTO EN CASO DE EXISTIR
-			//en esta posicion de offset y espacio libre, que las tengo que clcular aca, tengo que
-			//cargar el nuevo offset y espacio libre. En cso de no haber espcio libre de sobra,
-			//en esta posicion se guarda 0:0
 		}
 	}
 	archivo.close();
