@@ -5,7 +5,7 @@
 using namespace std;
 
 Registro::Registro(string codigo, string descripcion) {
-	this->codigo = codigo;
+	setCodigo(codigo);
 	this->descripcion = descripcion;
 }
 
@@ -14,6 +14,14 @@ void Registro::setId(int unId) {
 }
 
 void Registro::setCodigo(string nuevoCodigo) {
+	/**
+	 * Se rellena el espacio restante en caso de que el tamaño del codigo ingresado sea menor al maximo fijado para el TP.
+	 */
+	if (nuevoCodigo.size() < maxLongCodigo) {
+		for (int i= nuevoCodigo.size(); i < maxLongCodigo; i++) {
+			nuevoCodigo += " ";
+		}
+	}
 	this->codigo = nuevoCodigo;
 }
 

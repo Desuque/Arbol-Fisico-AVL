@@ -11,6 +11,7 @@ class Registro {
 		int id;
 		string codigo;
 		string descripcion;
+		static const int maxLongCodigo = 3;
 
 	public:
 		Registro(string codigo, string descripcion);

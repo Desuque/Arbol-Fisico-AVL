@@ -195,8 +195,9 @@ void Interfaz::listarInstancias(char *argv[]) {
 
 void Interfaz::crearArchivoSalida(Registro* unRegistro) {
 	fstream fs("Salida.txt", ios::app);
-	fs << "Codigo: " << unRegistro->getCodigo() << " , Descripcion: " << unRegistro->getDescripcion();
+	fs << "Codigo: " << unRegistro->getCodigo() << " , Descripcion: " << unRegistro->getDescripcion() <<endl;
 	fs.close();
+	cout<<"Se genero el archivo de consulta con exito."<<endl;
 }
 
 Interfaz::~Interfaz() {
