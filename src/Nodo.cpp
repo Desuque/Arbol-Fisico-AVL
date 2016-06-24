@@ -133,6 +133,7 @@ bool Nodo::insertar(Registro* unRegistro) {
 	}
 	if (bloque->entra(unRegistro)) {
 
+		liberarDescripsLargas();
 		registros->push_back(unRegistro);
 		registros->sort(comparaRegistros);
 		bloque->grabar(this);
@@ -141,6 +142,16 @@ bool Nodo::insertar(Registro* unRegistro) {
 	} else {
 
 		return false;
+	}
+}
+
+void Nodo::liberarDescripsLargas() {
+	Registro* unRegistro;
+	for(list<Registro*>::iterator list_iter = registros->begin(); list_iter != registros->end(); list_iter++) {
+		unRegistro = *list_iter;
+		if (unRegistro->getDescripcion().size() > 1000) {
+			bloque->borrarDescripcionArchivoDescrips(unRegistro->getId());
+		}
 	}
 }
 
@@ -176,6 +187,7 @@ bool Nodo::modificarRegistro(int ID, string nuevoCodigo, string nuevaDescripcion
 				}
 				unRegistro->setCodigo(nuevoCodigo);
 				unRegistro->setDescripcion(nuevaDescripcion);
+				liberarDescripsLargas();
 				bloque->grabar(this);
 				modificado = true;
 				break;

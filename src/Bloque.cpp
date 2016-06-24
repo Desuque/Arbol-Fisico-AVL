@@ -316,8 +316,8 @@ void Bloque::persistirRegistros(Nodo* unNodo, int &maxIdReg) {
 
 				//Actualizo el offset y el espacioLibre en el archivo de libres
 				int nuevoEspacioLibre = archivoLibres->getEspacioLibre() - unRegistro->getDescripcion().size();
-				archivoLibres->actualizarEspacioLibre(archivoDescripciones->getOffsetLibre(), nuevoEspacioLibre);
-
+				//archivoLibres->actualizarEspacioLibre(archivoDescripciones->getOffsetLibre(), nuevoEspacioLibre);
+				archivoLibres->grabarEspacioLibre(archivoLibres->getOffset(), nuevoEspacioLibre);
 			}
 			bytes_ocupados += 4; // 4 = tam offset
 			delete archivoLibres;

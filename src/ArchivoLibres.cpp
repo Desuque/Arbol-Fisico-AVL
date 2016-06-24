@@ -27,10 +27,47 @@ int ArchivoLibres::getEspacioLibre() {
 }
 
 void ArchivoLibres::grabarEspacioLibre(int offset, int espacioLibre) {
+	/*
 	fstream archivo;
 	archivo.open(nombre.c_str(), ios::in | ios::out | ios::binary | ios::app );
 	archivo.write(reinterpret_cast<const char *>(&offset), tam_offset);
 	archivo.write(reinterpret_cast<const char *>(&espacioLibre), tam_espacioLibre);
+	archivo.close();
+	*/
+	int tmpOffset;
+	int tmpLibre;
+	bool found = false;
+
+	fstream archivo;
+	archivo.open(nombre.c_str(), ios::binary | ios::in | ios::out );
+
+	if (archivo) {
+
+		archivo.seekg (ios::beg);
+
+		while (!archivo.eof() && !found) {
+			pos_offset = archivo.tellg();
+			archivo.read ((char*)&tmpOffset, 4);
+
+			pos_espacioLibre = archivo.tellg();
+			archivo.read ((char*)&tmpLibre, 4);
+
+			if (tmpOffset == offset) {
+				archivo.seekp (pos_espacioLibre, ios::beg);
+				archivo.write(reinterpret_cast<const char *>(&espacioLibre), tam_espacioLibre);
+				found = true;
+			}
+		}
+	}
+
+	if (!found) {
+		archivo.close();
+		archivo.open(nombre.c_str(), ios::binary | ios::out | ios::app );
+		archivo.seekp (ios::end);
+		archivo.write(reinterpret_cast<const char *>(&offset), tam_offset);
+		archivo.write(reinterpret_cast<const char *>(&espacioLibre), tam_espacioLibre);
+	}
+
 	archivo.close();
 }
 

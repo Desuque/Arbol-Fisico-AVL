@@ -53,6 +53,7 @@ public:
 	bool borrarRegistro(int ID);
 	bool existeRegistroConID(int idBuscado);
 	bool modificarRegistro(int ID, string nuevoCodigo, string nuevaDescripcion);
+	void liberarDescripsLargas();
 	virtual ~Nodo();
 
 };
