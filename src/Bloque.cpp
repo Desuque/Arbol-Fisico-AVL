@@ -297,7 +297,7 @@ void Bloque::persistirRegistros(Nodo* unNodo, int &maxIdReg) {
 		archivoArbol->escribirUnString(unRegistro->getCodigo(), offset);
 
 		if ((unRegistro->getDescripcion()).size() > tamanio_max_descrinterna) {
-			archivoLibres = new ArchivoLibres(nombreArchivo+"_descrips");
+			archivoLibres = new ArchivoLibres(nombreArchivo+"_descrips_descrips");
 			archivoDescripciones = new ArchivoDescrips(nombreArchivo);
 
 			//Si el archivo de libres no tiene espacio o no existe, grabo la descripcion al final del archivo de descripciones
