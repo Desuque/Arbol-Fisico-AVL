@@ -118,13 +118,20 @@ Nodo* Bloque::devolverNodo() {
 void Bloque::inicializarBloque() {
 	archivoLibres = new ArchivoLibres(nombreArchivo);
 
-	if (archivoLibres->hayEspacio(tamanio)) {
-		int idBloqueLibre = ((archivoLibres->getOffset()) / (tamanio + archivoArbol->getTamanioMetadatos()));
+	if (archivoLibres->getEspacioEnOffset(archivoArbol->getTamanioMetadatos()) == tamanio) {
+		// Me fijo si la raiz esta libre -> entonces escribo ahi si o si
+		int idBloqueLibre = 0;
 		this->id = idBloqueLibre;
 		archivoLibres->actualizarEspacioLibre(0,0);
 	} else {
-		this->id = archivoArbol->leerMayorIdNodo();
-		archivoArbol->escribirMaxIDNodo(id + 1);
+		if (archivoLibres->hayEspacio(tamanio)) {
+			int idBloqueLibre = ((archivoLibres->getOffset()) / (tamanio + archivoArbol->getTamanioMetadatos()));
+			this->id = idBloqueLibre;
+			archivoLibres->actualizarEspacioLibre(0,0);
+		} else {
+			this->id = archivoArbol->leerMayorIdNodo();
+			archivoArbol->escribirMaxIDNodo(id + 1);
+		}
 	}
 
 	escribirBloqueVacio();

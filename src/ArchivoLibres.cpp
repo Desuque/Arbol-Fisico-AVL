@@ -135,6 +135,36 @@ int ArchivoLibres::buscarEspacioLibre(int espacio) {
 	}
 }
 
+int ArchivoLibres::getEspacioEnOffset(int unOffset) {
+	bool found = false;
+	int tmpOffset;
+	int tmpEspacioLibre;
+
+	fstream archivo;
+	archivo.open(this->nombre.c_str(), ios::binary | ios::in );
+	archivo.seekg (ios::beg);
+
+	if (archivo) {
+		while (!archivo.eof() && !found) {
+			pos_offset = archivo.tellg();
+			archivo.read ((char*)&tmpOffset, 4);
+			pos_espacioLibre = archivo.tellg();
+			archivo.read ((char*)&tmpEspacioLibre, 4);
+
+			if (tmpOffset == unOffset) {
+				found = true;
+			}
+		}
+		archivo.close();
+	}
+
+	if (found) {
+		return tmpEspacioLibre;
+	} else {
+		return -1;
+	}
+}
+
 ArchivoLibres::~ArchivoLibres() {
 
 }

@@ -23,6 +23,7 @@ public:
 	bool hayEspacio(int espacio);
 	void grabarEspacioLibre(int offset, int espacioLibre);
 	int getOffset();
+	int getEspacioEnOffset(int unOffset);
 	int getEspacioLibre();
 	void actualizarEspacioLibre(int nuevoOffset, int nuevoEspacioLibre);
 	~ArchivoLibres();
