@@ -72,7 +72,6 @@ char* Archivo::leerBloque(int idNodo, int tamBloque) {
 }
 
 char* Archivo::leerPorcionBloque(int idNodo, int offset, int tamanio, int tamBloque) {
-	cout<<"entre";
 	char* porcionBloque = new char[tamanio];
 	fstream archivo (nombreArchivo.c_str() , ios::in | ios::binary);
 

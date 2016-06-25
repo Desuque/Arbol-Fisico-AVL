@@ -292,11 +292,8 @@ void Bloque::persistirRegistros(Nodo* unNodo, int &maxIdReg) {
 
 			archivoLibres = new ArchivoLibres(nombreArchivo+"_descrips");
 			archivoDescripciones = new ArchivoDescrips(nombreArchivo);
-			cout<<"entre";
-			//int offsetSinAvanzar = offset;
-			//Obtengo el offset de la descripcion larga
+
 			int offsetArchivoDescrips = atoi(archivoArbol->leerPorcionBloque(id, offset+1, 4, tamanio));
-			//offset = offsetSinAvanzar;
 
 			if (archivoDescripciones->existeDescripcion(unRegistro->getDescripcion(), offsetArchivoDescrips)) {
 				archivoArbol->escribirUnString("N", offset); //N = No contiene el dato
@@ -319,8 +316,8 @@ void Bloque::persistirRegistros(Nodo* unNodo, int &maxIdReg) {
 
 					//Actualizo el offset y el espacioLibre en el archivo de libres
 					int nuevoEspacioLibre = archivoLibres->getEspacioLibre() - unRegistro->getDescripcion().size();
-					//archivoLibres->actualizarEspacioLibre(archivoDescripciones->getOffsetLibre(), nuevoEspacioLibre);
-					archivoLibres->grabarEspacioLibre(archivoLibres->getOffset(), nuevoEspacioLibre);
+
+					archivoLibres->actualizarEspacioLibre(archivoDescripciones->getOffsetLibre(), nuevoEspacioLibre);
 				}
 			}
 			bytes_ocupados += 4; // 4 = tam offset
