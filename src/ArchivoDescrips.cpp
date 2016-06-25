@@ -20,6 +20,16 @@ int ArchivoDescrips::getOffsetLibre() {
 	return offsetLibre;
 }
 
+bool ArchivoDescrips::existeDescripcion(string descripcion, int offset) {
+	string descrip = leerBloque(offset, descripcion.size());
+
+	if (descrip == descripcion) {
+		return true;
+	}
+
+	return false;
+}
+
 void ArchivoDescrips::escribirNull(int offset, int tamanio) {
 	char buffer[tamanio];
 	std::fill(buffer, buffer + tamanio, '\0');
@@ -37,7 +47,7 @@ void ArchivoDescrips::eliminarDescripcion(int offset, int tamanio) {
 	string nombreSinBin = nombre;
 	nombreSinBin.resize((nombreSinBin.size())-4);
 
-	archivoLibres = new ArchivoLibres(nombreSinBin+"_descrips");
+	archivoLibres = new ArchivoLibres(nombreSinBin);
 	archivoLibres->grabarEspacioLibre(offset, tamanio);
 	delete archivoLibres;
 }

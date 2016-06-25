@@ -23,6 +23,7 @@ class Registro {
 		string getDescripcion();
 		int getTamanio();
 		int getTamanioDescripcion();
+		~Registro();
 };
 
 #endif /* REGISTRO_H */

@@ -11,6 +11,7 @@
 #include <iostream>
 #include <sstream>
 #include <stdlib.h>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -39,20 +40,6 @@ Bloque::Bloque(string nombreArchivo, int id) {
 }
 
 int Bloque::setearTamanioBloque() {
-	/*
-	fstream archivo (archivoConfigTamBloque.c_str() , ios::in | ios::binary);
-	char* c_tamBloque = new char();
-	int tamanioBloque;
-
-	while(!archivo.eof()) {
-		archivo >> c_tamBloque;
-	}
-	archivo.close();
-	tamanioBloque = atoi(c_tamBloque);
-	delete c_tamBloque;
-
-	return tamanioBloque;
-	*/
 	return archivoArbol->leerTamanioBloque();
 }
 
@@ -117,10 +104,7 @@ Nodo* Bloque::devolverNodo() {
 			unRegistro = new Registro(string(codReg), string(descrReg));
 			unRegistro->setId(idReg);
 			unNodo->getRegistros()->push_back(unRegistro);
-			//delete[] descrReg; - Aca traia problemas para la prueba5
 		}
-
-		delete[] descrReg;
 
 		unNodo->setHijoIzquierdo(idIzq);
 		unNodo->setHijoDerecho(idDer);
@@ -242,31 +226,39 @@ void Bloque::borrarDescripcionArchivoDescrips(int idRegistro) {
 	char* descrReg;
 	char flagDescr [1];
 
+	// ---------------    Bloque    -------------------------------
+	//     [1b]         [4b]      [4b]      [4b]       [4b]    [4b]      =  17b de tamanio_meta
+	// Flag Existe - Esp Libre - Altura - Cant Regs - Id Izq - Id Der - Registros
+	// ---------------    Registro    -------------------------------
+	//     [4b]     [4b]     [3b]       [1b]          [xb]
+	// Tam Descr - Id Reg - Codigo - Flag Descr - Descripcion (u offset)
+
+
 	int offset = 0;
-	offset += 1;
+	offset += 1; //Flag existe
 	int espLibre = *(reinterpret_cast<int *>(charBloq + offset));
-	offset += 4;
+	offset += 4; //Esp libre
 	int altura = *(reinterpret_cast<int *>(charBloq + offset));
-	offset += 4;
+	offset += 4; //Altura
 	int cantRegs = *(reinterpret_cast<int *>(charBloq + offset));
-	offset += 4;
+	offset += 4; //Cant Regs
 	int idIzq = *(reinterpret_cast<int *>(charBloq + offset));
-	offset += 4;
+	offset += 4; //Id Izq
 	int idDer = *(reinterpret_cast<int *>(charBloq + offset));
-	offset += 4;
+	offset += 4; //Id Der
 	// Registros
 	for (int i = 0; i < cantRegs; i++) {
 		tamDescr = *(reinterpret_cast<int *>(charBloq + offset));
-		offset += 4;
+		offset += 4; //Tam descrip
 		idReg = *(reinterpret_cast<int *>(charBloq + offset));
-		offset += 4;
+		offset += 4; //Id Reg
 		copy(charBloq + offset, charBloq + offset + 3, codReg);
 		codReg[3] = '\0';
-		offset += 3;
+		offset += 3; //Codigo
 		copy(charBloq + offset, charBloq + offset + 1, flagDescr);
-		offset += 1;
+		offset += 1; //Flag Descr
 
-		descrReg = new char [tamDescr+1];
+		descrReg = new char [tamDescr+1]; //Descripcion
 		offsetDescr = *(reinterpret_cast<int *>(charBloq + offset));
 
 		if (idReg == idRegistro) {
@@ -297,37 +289,49 @@ void Bloque::persistirRegistros(Nodo* unNodo, int &maxIdReg) {
 		archivoArbol->escribirUnString(unRegistro->getCodigo(), offset);
 
 		if ((unRegistro->getDescripcion()).size() > tamanio_max_descrinterna) {
-			archivoLibres = new ArchivoLibres(nombreArchivo+"_descrips_descrips");
+
+			archivoLibres = new ArchivoLibres(nombreArchivo+"_descrips");
 			archivoDescripciones = new ArchivoDescrips(nombreArchivo);
+			cout<<"entre";
+			//int offsetSinAvanzar = offset;
+			//Obtengo el offset de la descripcion larga
+			int offsetArchivoDescrips = atoi(archivoArbol->leerPorcionBloque(id, offset+1, 4, tamanio));
+			//offset = offsetSinAvanzar;
 
-			//Si el archivo de libres no tiene espacio o no existe, grabo la descripcion al final del archivo de descripciones
-			if (!archivoLibres->hayEspacio((unRegistro->getDescripcion()).size())) {
-				int offsetArchivoDescrips = archivoDescripciones->grabar(unRegistro->getDescripcion());
+			if (archivoDescripciones->existeDescripcion(unRegistro->getDescripcion(), offsetArchivoDescrips)) {
 				archivoArbol->escribirUnString("N", offset); //N = No contiene el dato
 				//Escribo la posicion del archivoDescrips en el archivoArbol
 				archivoArbol->escribirUnInt(offsetArchivoDescrips, offset);
-
-			//Si el archivo de libres encuentra espacio libre en el archivo de descripciones, utilizo ese espacio para almacenar la descripcion
 			} else {
-				int offsetArchivoDescrips = archivoDescripciones->grabarEnEspacioLibre(unRegistro->getDescripcion(), archivoLibres->getOffset());
-				archivoArbol->escribirUnString("N", offset); //N = No contiene el dato
-				//Escribo la posicion del archivoDescrips en el archivoArbol
-				archivoArbol->escribirUnInt(offsetArchivoDescrips, offset);
+				//Si el archivo de libres no tiene espacio o no existe, grabo la descripcion al final del archivo de descripciones
+				if (!archivoLibres->hayEspacio((unRegistro->getDescripcion()).size())) {
+					int offsetArchivoDescrips = archivoDescripciones->grabar(unRegistro->getDescripcion());
+					archivoArbol->escribirUnString("N", offset); //N = No contiene el dato
+					//Escribo la posicion del archivoDescrips en el archivoArbol
+					archivoArbol->escribirUnInt(offsetArchivoDescrips, offset);
 
-				//Actualizo el offset y el espacioLibre en el archivo de libres
-				int nuevoEspacioLibre = archivoLibres->getEspacioLibre() - unRegistro->getDescripcion().size();
-				//archivoLibres->actualizarEspacioLibre(archivoDescripciones->getOffsetLibre(), nuevoEspacioLibre);
-				archivoLibres->grabarEspacioLibre(archivoLibres->getOffset(), nuevoEspacioLibre);
+				//Si el archivo de libres encuentra espacio libre en el archivo de descripciones, utilizo ese espacio para almacenar la descripcion
+				} else {
+					int offsetArchivoDescrips = archivoDescripciones->grabarEnEspacioLibre(unRegistro->getDescripcion(), archivoLibres->getOffset());
+					archivoArbol->escribirUnString("N", offset); //N = No contiene el dato
+					//Escribo la posicion del archivoDescrips en el archivoArbol
+					archivoArbol->escribirUnInt(offsetArchivoDescrips, offset);
+
+					//Actualizo el offset y el espacioLibre en el archivo de libres
+					int nuevoEspacioLibre = archivoLibres->getEspacioLibre() - unRegistro->getDescripcion().size();
+					//archivoLibres->actualizarEspacioLibre(archivoDescripciones->getOffsetLibre(), nuevoEspacioLibre);
+					archivoLibres->grabarEspacioLibre(archivoLibres->getOffset(), nuevoEspacioLibre);
+				}
 			}
 			bytes_ocupados += 4; // 4 = tam offset
 			delete archivoLibres;
 			delete archivoDescripciones;
 
-		} else {
-			archivoArbol->escribirUnString("S", offset); //S = Si contiene el dato
-			archivoArbol->escribirUnString(unRegistro->getDescripcion(), offset);
-			bytes_ocupados += unRegistro->getDescripcion().size();
-		}
+			} else {
+				archivoArbol->escribirUnString("S", offset); //S = Si contiene el dato
+				archivoArbol->escribirUnString(unRegistro->getDescripcion(), offset);
+				bytes_ocupados += unRegistro->getDescripcion().size();
+			}
 
 		bytes_ocupados += 4; // Tam descr
 		bytes_ocupados += 4; // ID

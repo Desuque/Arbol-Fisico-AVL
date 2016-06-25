@@ -58,3 +58,7 @@ int Registro::getTamanio() {
 
 	return tamanoTamDescr + tamanoId + tamanoCodigo + tamanoFlagDescr + tamanoDescr;
 }
+
+Registro::~Registro() {
+
+}

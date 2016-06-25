@@ -133,7 +133,7 @@ bool Nodo::insertar(Registro* unRegistro) {
 	}
 	if (bloque->entra(unRegistro)) {
 
-		liberarDescripsLargas();
+		//liberarDescripsLargas();
 		registros->push_back(unRegistro);
 		registros->sort(comparaRegistros);
 		bloque->grabar(this);
@@ -145,6 +145,7 @@ bool Nodo::insertar(Registro* unRegistro) {
 	}
 }
 
+/**
 void Nodo::liberarDescripsLargas() {
 	Registro* unRegistro;
 	for(list<Registro*>::iterator list_iter = registros->begin(); list_iter != registros->end(); list_iter++) {
@@ -154,6 +155,7 @@ void Nodo::liberarDescripsLargas() {
 		}
 	}
 }
+**/
 
 Nodo* Nodo::reescribirEn(int id) {
 	bloque = new Bloque(nombreArchivo, id);
@@ -187,7 +189,7 @@ bool Nodo::modificarRegistro(int ID, string nuevoCodigo, string nuevaDescripcion
 				}
 				unRegistro->setCodigo(nuevoCodigo);
 				unRegistro->setDescripcion(nuevaDescripcion);
-				liberarDescripsLargas();
+				//liberarDescripsLargas();
 				bloque->grabar(this);
 				modificado = true;
 				break;
@@ -202,6 +204,11 @@ bool Nodo::borrarRegistro(int ID) {
 	for(list<Registro*>::iterator list_iter = registros->begin(); list_iter != registros->end(); list_iter++) {
 		unRegistro = *list_iter;
 		if (unRegistro->getId() == ID) {
+
+			if ((unRegistro->getDescripcion()).size() > 1000 ) { //hardcodeado, revisar
+				bloque->borrarDescripcionArchivoDescrips(ID);
+			}
+
 			registros->remove(unRegistro);
 			bloque->grabar(this);
 			encontrado = true;

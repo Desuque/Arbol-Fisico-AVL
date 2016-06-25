@@ -50,7 +50,6 @@ int altura(Nodo* unNodo) {
 void ArbolAVL::insertar(string codigo, string descripcion) {
 	Registro* unRegistro;
 	unRegistro = new Registro(codigo, descripcion);
-
 	unRegistro->setId(maxIdReg);
 	maxIdReg++;
 

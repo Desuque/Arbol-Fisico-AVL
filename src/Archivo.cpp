@@ -51,6 +51,7 @@ void Archivo::pedirTamanioBloque() {
 	  }
 	  cout << "Numero invalido, por favor vuelva a intentar" << endl;
 	}
+
 }
 
 char* Archivo::leerBloque(int idNodo, int tamBloque) {
@@ -68,6 +69,18 @@ char* Archivo::leerBloque(int idNodo, int tamBloque) {
 
 
 	return unBloque;
+}
+
+char* Archivo::leerPorcionBloque(int idNodo, int offset, int tamanio, int tamBloque) {
+	cout<<"entre";
+	char* porcionBloque = new char[tamanio];
+	fstream archivo (nombreArchivo.c_str() , ios::in | ios::binary);
+
+	archivo.seekg ((idNodo * tamBloque) + tam_meta_arbol + offset);
+	archivo.read (porcionBloque, tamanio);
+	archivo.close();
+
+	return porcionBloque;
 }
 
 int Archivo::leerMayorIdNodo() {
@@ -161,4 +174,8 @@ void Archivo::escribirMaxIDNodo(int maxID) {
 void Archivo::escribirMaxIDReg(int maxID) {
 	int i = 4;
 	escribirUnInt(maxID, i);
+}
+
+Archivo::~Archivo() {
+	// TODO Auto-generated destructor stub
 }

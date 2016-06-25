@@ -20,6 +20,7 @@ public:
 	int getOffsetLibre();
 	string leerBloque(int offset, int tamanio_descripcion);
 	void eliminarDescripcion(int offset, int tamanio);
+	bool existeDescripcion(string descripcion, int offset);
 	~ArchivoDescrips();
 
 private:

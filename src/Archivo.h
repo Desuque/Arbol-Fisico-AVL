@@ -37,6 +37,7 @@ public:
 	void escribirMaxIDReg(int maxID);
 
 	int getTamanioMetadatos();
+	char* leerPorcionBloque(int idNodo, int offset, int tamanio, int tamBloque);
 	~Archivo();
 };
 
