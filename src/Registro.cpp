@@ -22,6 +22,9 @@ void Registro::setCodigo(string nuevoCodigo) {
 			nuevoCodigo += " ";
 		}
 	}
+	if (nuevoCodigo.size() > maxLongCodigo) {
+		nuevoCodigo.resize(maxLongCodigo);
+	}
 	this->codigo = nuevoCodigo;
 }
 
